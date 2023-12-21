@@ -10,7 +10,7 @@ import com.main.model.Customer;
 import com.main.repository.CustomerRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
-//Controller
+
 @RestController
 public class CustomerController {
 	
@@ -26,7 +26,7 @@ public class CustomerController {
 	@GetMapping("/register")
 	public ModelAndView m1()
 	{
-		return new ModelAndView("SocialMedia");
+		return new ModelAndView("CustomerReg");
 	}
 	
 	
@@ -35,7 +35,7 @@ public class CustomerController {
 	@PostMapping("/insertCustomer")
 	public ModelAndView m2(HttpServletRequest req)
 	{
-		ModelAndView mv = new ModelAndView("Home");
+		ModelAndView mv = new ModelAndView("Success");
 		
 		
 		String fname = req.getParameter("fname");
@@ -49,5 +49,8 @@ public class CustomerController {
 		return mv;
 		
 	}
+	
+	
+	
 	
 }

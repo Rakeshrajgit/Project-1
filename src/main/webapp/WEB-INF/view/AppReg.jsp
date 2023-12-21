@@ -7,7 +7,7 @@
     <title>CustomerForm</title>
 
     
-    
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style type="text/css">
     
 
@@ -161,7 +161,7 @@ form
 
      <div id = "form">
         <div id="FormHeader">
-            <img src="FormTitle.png" alt="IdealScore" width="1000px" height="85px">     
+            <img src="../FormTitle.png" alt="Ideal Score" width="1000px" height="85px">     
         </div>
 
         <div id="formBody">
@@ -302,7 +302,13 @@ form
                 Customer Signature
             </div>
 
-            <input type="submit" value="Submit">
+
+    <div class="d-grid gap-4 col-10 mx-auto">
+  
+  <input type="submit" class="btn btn-primary"  value="Submit"/>
+    </div>
+
+            
             
           </form>
 
