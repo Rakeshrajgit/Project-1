@@ -16,15 +16,15 @@ public class AdminModel {
 	String name;
 	String email;
 	String password;
-	String utype;
 	
 	
-	public AdminModel(String name, String email, String password, String utype) {
+	
+	public AdminModel(String name, String email, String password) {
 		
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.utype = utype;
+		
 	}
 	
 	public AdminModel() {}
@@ -49,17 +49,12 @@ public class AdminModel {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getUtype() {
-		return utype;
-	}
-	public void setUtype(String utype) {
-		this.utype = utype;
-	}
+	
 
 	@Override
 	public String toString() {
 		return "AdminModel [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", utype="
-				+ utype + "]";
+				 + "]";
 	}
 	
 	

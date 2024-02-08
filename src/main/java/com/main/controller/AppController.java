@@ -28,7 +28,7 @@ public class AppController {
 		return "Welcome to Spring Application";
 	}
 	
-	@GetMapping("/Home")
+	@GetMapping("/")
 	public ModelAndView m1()
 	{
 		return new ModelAndView("Home");

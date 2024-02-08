@@ -42,7 +42,7 @@
                     <div class="form-outline mb-4">
                     <label class="form-label" for="form3Example3">Name</label>
                       <input type="text" name="name" id="form3Example3" class="form-control form-control-lg"
-                        placeholder="Enter a valid email address" />
+                        placeholder="Enter name" />
                       
                     </div>
           
@@ -50,7 +50,7 @@
                     <div class="form-outline mb-3">
                     <label class="form-label" for="form3Example4">Email</label>
                       <input type="email" name="email" id="form3Example4" class="form-control form-control-lg"
-                        placeholder="Enter password" />
+                        placeholder="Enter email" />
                       
                     </div>
                     
@@ -61,24 +61,7 @@
                         placeholder="Enter password" />
                       
                     </div>
-                    
-                    
-                     <div class="form-outline mb-3">
-       
-                      <label class="form-label" for="form3Example4">User Type</label>
-                      <select name="utype" id="form3Example4" class="form-control form-control-lg"> 
-						<option>choose</option>
-						<option name="utype">Super Admin</option>
-						<option name="utype">Admin</option>
-						<option name="utype">customer support</option>
-					  </select >
-                      
-                    </div>
-                    
-                    
-                 
-
-
+                
           
                     <div class="d-flex justify-content-between align-items-center">
                       <!-- Checkbox -->

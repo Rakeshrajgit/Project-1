@@ -198,7 +198,7 @@
          </div>
        
          <div class = "three">
-        <label for="number">Phone Number <span style="color:red">*</span> </label> <br />
+        <label for="number">What's App Number <span style="color:red">*</span> </label> <br />
        <span class="phnoOption">
         <select>
             <option>+91</option>

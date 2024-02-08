@@ -20,12 +20,18 @@ public class AdminController {
 	AdminRepo am;
 	
 	
-	@GetMapping("/")
+	@GetMapping("/adminreg")
 	public ModelAndView m1()
 	{
 		return new ModelAndView("AdminRegister");
 	}
 	
+	
+	@GetMapping("/adminlogin")
+	public ModelAndView m2()
+	{
+		return new ModelAndView("AdminLogin");
+	}
 	
 	
 	@PostMapping("AdminReg")
@@ -34,8 +40,8 @@ public class AdminController {
 		String name=req.getParameter("name");
 		String email=req.getParameter("email");
 		String password=req.getParameter("pwd");
-		String utype=req.getParameter("utype");
-		AdminModel a=new AdminModel(name,email,password,utype);
+		
+		AdminModel a=new AdminModel(name,email,password);
 		am.save(a);
 		return new ModelAndView("AdminLogin");
 	}
@@ -72,7 +78,7 @@ public class AdminController {
 		if(am.findByEmailAndPassword(em, pw)!=null)
 		{
 			
-			mv= new ModelAndView("HomePage");
+			mv= new ModelAndView("dashboard");
 		}
 		else
 		{

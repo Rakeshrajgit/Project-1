@@ -195,7 +195,7 @@
 </head>
 <body>
 
-    <h2 id="leadformtitle">Lead Add Form</h2>
+    <h2 id="leadformtitle">Lead Phone Call</h2>
 
 
     <div id="leadFormButtons">
@@ -210,7 +210,7 @@
 
    
     
-   AppRegister
+  
 
     <div class="cont">
         <form>
