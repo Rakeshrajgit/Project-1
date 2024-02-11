@@ -3,6 +3,7 @@ package com.main.controller;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +15,9 @@ import com.main.repository.AppRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@RestController
+@Controller
 public class AppController {
-	
-	
-	
+
 	@Autowired
 	AppRepo ar;
 
@@ -28,22 +27,16 @@ public class AppController {
 		return "Welcome to Spring Application";
 	}
 	
-	@GetMapping("/")
-	public ModelAndView m1()
-	{
-		return new ModelAndView("Home");
-	}
-	
 	@GetMapping("/AppRegister")
 	public ModelAndView m2()
 	{
-		return new ModelAndView("AppReg");
+		return new ModelAndView("customer/AppReg");
 	}
 	
 	@PostMapping("/insertapp")
 	public ModelAndView m3(HttpServletRequest req)
 	{
-		ModelAndView mv = new ModelAndView("Home");
+		ModelAndView mv = new ModelAndView("customer/Home");
 		
 		String email=req.getParameter("gmail");
 		String appno=req.getParameter("applicationNo");

@@ -1,6 +1,7 @@
 package com.main.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,28 +13,36 @@ import com.main.repository.AdminRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@RestController
+@Controller
+@RequestMapping("/admin")
 public class AdminController {
-	
-	
+
+
 	@Autowired
 	AdminRepo am;
-	
-	
+
+
 	@GetMapping("/adminreg")
 	public ModelAndView m1()
 	{
-		return new ModelAndView("AdminRegister");
+		return new ModelAndView("admin/AdminRegister");
 	}
-	
-	
+
+
 	@GetMapping("/adminlogin")
 	public ModelAndView m2()
 	{
-		return new ModelAndView("AdminLogin");
+		return new ModelAndView("admin/AdminLogin");
 	}
-	
-	
+
+
+	@GetMapping("/login")
+	public ModelAndView login()
+	{
+		return new ModelAndView("admin/AdminLogin");
+	}
+
+
 	@PostMapping("AdminReg")
 	public ModelAndView aReg(HttpServletRequest req)
 	{
@@ -43,19 +52,19 @@ public class AdminController {
 		
 		AdminModel a=new AdminModel(name,email,password);
 		am.save(a);
-		return new ModelAndView("AdminLogin");
+		return new ModelAndView("admin/AdminLogin");
 	}
 	
 	@GetMapping("Lead")
 	public ModelAndView lead()
 	{
-		return new ModelAndView("LeadAdd");
+		return new ModelAndView("customer/LeadAdd");
 	}
 	
 	@RequestMapping("LeadInfo")
 	public ModelAndView leadinfo()
 	{
-		return new ModelAndView("LeadInfo");
+		return new ModelAndView("customer/LeadInfo");
 	}
 	
 	
@@ -63,7 +72,7 @@ public class AdminController {
 	@GetMapping("PhoneCall")
 	public ModelAndView phone()
 	{
-		return new ModelAndView("LeadPhoneCall");
+		return new ModelAndView("customer/LeadPhoneCall");
 	}
 	
 	
@@ -78,11 +87,11 @@ public class AdminController {
 		if(am.findByEmailAndPassword(em, pw)!=null)
 		{
 			
-			mv= new ModelAndView("dashboard");
+			mv= new ModelAndView("home/dashboard");
 		}
 		else
 		{
-			mv = new ModelAndView("AdminLogin");
+			mv = new ModelAndView("admin/AdminLogin");
 		}
 		
 		return mv;

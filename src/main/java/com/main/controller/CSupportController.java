@@ -7,9 +7,11 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,7 +20,8 @@ import com.main.repository.CSRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@RestController
+@Controller
+@RequestMapping("/agent")
 public class CSupportController {
 	
 	@Autowired
@@ -27,7 +30,7 @@ public class CSupportController {
 	@GetMapping("csupportReg")
 	public ModelAndView m1()
 	{
-		return new ModelAndView("CSReg");
+		return new ModelAndView("agent/CSReg");
 	}
 	
 	
@@ -46,7 +49,7 @@ public class CSupportController {
 		String email=req.getParameter("email");
 		String password=req.getParameter("password");
 		
-		ModelAndView mv = new ModelAndView("dashboard");
+		ModelAndView mv = new ModelAndView("home/dashboard");
 		
 		CSupport cs = new CSupport(cid,name,email,password);
 		cr.save(cs);
@@ -60,7 +63,7 @@ public class CSupportController {
 	@GetMapping("CusSupport")
 	public ModelAndView m4()
 	{
-		return new ModelAndView("CSLogin");
+		return new ModelAndView("agent/CSLogin");
 	}
 	
 	
@@ -74,11 +77,11 @@ public class CSupportController {
 		if(cr.findByEmailAndPassword(em, pw)!=null)
 		{
 			
-			mv= new ModelAndView("HomePage");
+			mv= new ModelAndView("home/HomePage");
 		}
 		else
 		{
-			mv = new ModelAndView("CSLogin");
+			mv = new ModelAndView("agent/CSLogin");
 		}
 		
 		return mv;

@@ -1,8 +1,10 @@
 package com.main.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -11,7 +13,8 @@ import com.main.repository.CustomerRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@RestController
+@Controller
+@RequestMapping("/customer")
 public class CustomerController {
 	
 	@Autowired
@@ -26,7 +29,7 @@ public class CustomerController {
 	@GetMapping("/register")
 	public ModelAndView m1()
 	{
-		return new ModelAndView("CustomerReg");
+		return new ModelAndView("customer/CustomerReg");
 	}
 	
 	
