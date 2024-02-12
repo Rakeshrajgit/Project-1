@@ -16,7 +16,6 @@ public class CustomLogoutHandler implements LogoutHandler {
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		 HttpSession ses=request.getSession();
 		 try {
-       	  String LogId = ((Long) ses.getAttribute("LoginId")).toString();
 //			 logout stamping to be done
        	}
        	catch (Exception e) {
