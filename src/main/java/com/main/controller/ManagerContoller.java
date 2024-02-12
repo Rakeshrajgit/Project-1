@@ -2,6 +2,8 @@ package com.main.controller;
 
 import java.util.Random;
 
+import com.main.model.CrmUser;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,24 +64,13 @@ public class ManagerContoller {
 	}
 	
 	
-	@GetMapping("/managerLogin")
-	public ModelAndView Login(HttpServletRequest req)
+	@GetMapping("/HomePage")
+	public String Login(HttpServletRequest req, HttpSession ses)
 	{
-		ModelAndView mv = null;
-		String em = req.getParameter("email");
-		String pw = req.getParameter("password");
-		
-		if(mr.findByEmailAndPassword(em, pw)!=null)
-		{
-			
-			mv= new ModelAndView("home/HomePage");
-		}
-		else
-		{
-			mv = new ModelAndView("manager/managerlogin");
-		}
-		
-		return mv;
+		CrmUser user = (CrmUser) ses.getAttribute("UserData");
+		System.out.printf(user.getUserEmail() +"----"+user.getPassword());
+
+		return "static/HomePage";
 		  
 	}
 	

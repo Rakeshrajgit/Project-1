@@ -21,12 +21,6 @@ public class AppController {
 	@Autowired
 	AppRepo ar;
 
-	@GetMapping("/welcome")
-	public String welcome()
-	{
-		return "Welcome to Spring Application";
-	}
-	
 	@GetMapping("/AppRegister")
 	public ModelAndView m2()
 	{
