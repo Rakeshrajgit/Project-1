@@ -54,9 +54,6 @@ public class JpaConfigurationMySQL {
 		return factoryBean;
 	}
 
-	/*
-	 * Provider specific adapter.
-	 */
 	@Primary
 	@Bean
 	public JpaVendorAdapter jpaVendorAdapter() {
@@ -64,9 +61,6 @@ public class JpaConfigurationMySQL {
 		return hibernateJpaVendorAdapter;
 	}
 
-	/*
-	 * Here you can specify any provider specific properties.
-	 */
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");

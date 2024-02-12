@@ -50,10 +50,14 @@ public class SecurityConfiguration {
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/view/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/login")).permitAll()
-                                .requestMatchers(AntPathRequestMatcher.antMatcher("/manager/managerLogin")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/manager/Manager")).permitAll().requestMatchers(AntPathRequestMatcher.antMatcher("/manager/managerLogin")).permitAll()
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .formLogin(form -> form.loginPage("/login")
+                        .defaultSuccessUrl("/welcome")
+                        .failureUrl("/login?error=1")
+                        .permitAll().usernameParameter("username")
+                        .passwordParameter("password")
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -64,7 +68,6 @@ public class SecurityConfiguration {
                 ).exceptionHandling(exception -> exception
                         .accessDeniedPage("/accessdenied")
                 )
-                .csrf(Customizer.withDefaults())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .invalidSessionUrl("/login?session=1")
@@ -82,9 +85,6 @@ public class SecurityConfiguration {
 //                .passwordEncoder(passwordencoder());
     }
 
-    public PasswordEncoder passwordencoder() {
-        return new BCryptPasswordEncoder();
-    }
     @Bean
     public LogoutHandler logoutSuccessHandler() {
         return new CustomLogoutHandler();

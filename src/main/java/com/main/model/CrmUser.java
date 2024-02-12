@@ -1,12 +1,9 @@
 package com.main.model;
 
-import com.main.configs.security.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "crm_user")
@@ -30,7 +27,7 @@ public class CrmUser {
     @Temporal(TemporalType.TIMESTAMP)
     private String updatedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "roleId")
-    private Role role;
+    private String role;
+
+
 }

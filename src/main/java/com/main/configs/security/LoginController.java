@@ -60,7 +60,6 @@ public class LoginController
 	    	 model.addAttribute("success", success);
 	    }
  	    return "static/Home";
-//		 return "manager/managerlogin";
 	 }
 
 

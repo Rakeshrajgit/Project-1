@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserDetailsService {
         CrmUser login = loginRepository.findByUserEmail(username);
         if (login != null && login.getIsActive() == 1) {
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-            grantedAuthorities.add(new SimpleGrantedAuthority(login.getRole().getRoleName()));
+            grantedAuthorities.add(new SimpleGrantedAuthority(login.getRole()));
             return new org.springframework.security.core.userdetails.User(login.getUserEmail(), login.getPassword(), grantedAuthorities);
         } else {
             throw new UsernameNotFoundException("User not found");
