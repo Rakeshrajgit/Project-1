@@ -275,7 +275,7 @@ margin-left=10px;
 			<td><%="called"%></td>
 			<td><%="NA"%></td>
 			<td><%="NA"%></td>  
-			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="CustomerDetailsView.htm" >Info</button></td>
+			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 		</tr>
 	<%}%>
 	

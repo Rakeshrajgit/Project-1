@@ -2,22 +2,17 @@ package com.main.controller;
 
 import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
+import com.main.model.Customer;
 import com.main.service.CustomerService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.main.model.Customer;
-import com.main.repository.CustomerRepo;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
@@ -67,12 +62,34 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("RedirectCustomerDetailsView.htm")
+    public String RedirectCustomerDetailsView(HttpServletRequest req, HttpSession ses){
+        try{
+            CrmUser user = (CrmUser) ses.getAttribute("UserData");
+            Long appNo= Long.parseLong(req.getParameter("appNo"));
+            customerService.punchLeadViewerInfo(user.getUserId(),appNo);
+            ses.setAttribute("appNo",appNo);
+
+            return "redirect:/customer/CustomerDetailsView.htm";
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return "static/error";
+        }
+    }
+
     @GetMapping("CustomerDetailsView.htm")
     public String CustomerDetailsView(HttpServletRequest req, HttpSession ses){
         try{
             String userType = (String) ses.getAttribute("UserType");
-            String appNo= req.getParameter("appNo");
-            Customer customer = customerService.getCustomerByAppNo(Integer.parseInt(appNo));
+            CrmUser user = (CrmUser) ses.getAttribute("UserData");
+            Long appNo=null;
+            String appNoString = req.getParameter("appNo");
+            if(appNoString==null){
+                appNo = (Long) ses.getAttribute("appNo");
+            }else{
+                appNo = Long.parseLong(appNoString);
+            }
+            Customer customer = customerService.getCustomerByAppNo(appNo);
             if(customer!=null) {
                 req.setAttribute("CustomerDetails", customer);
                 if (userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())) {

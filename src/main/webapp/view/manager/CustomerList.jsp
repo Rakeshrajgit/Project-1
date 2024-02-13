@@ -262,9 +262,6 @@ margin-left=10px;
         <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
     <tr>
 
-
-
-
 	<% 
 	int i=1;
 	for(Customer customer : customerList)
@@ -280,7 +277,7 @@ margin-left=10px;
 			<td><%="NA"%></td>
 			<td><%="OWNER"%></td>
 			<td><%="NA"%></td>  
-			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="CustomerDetailsView.htm" >Info</button></td>
+			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 		</tr>
 	<%}%>
 	<select>

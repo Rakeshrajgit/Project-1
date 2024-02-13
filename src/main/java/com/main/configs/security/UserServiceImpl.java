@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = false)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("User email is : "+username);
         CrmUser login = loginRepository.findByUserEmail(username);
         if (login != null && login.getIsActive() == 1) {
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

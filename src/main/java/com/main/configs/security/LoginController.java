@@ -80,17 +80,14 @@ public class LoginController {
         try {
             boolean isContractEmp = false;
             Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
             CrmUser login = Repository.findByUserEmail(req.getUserPrincipal().getName());
             login.setPassword("");
             ses.setAttribute("UserData", login);
             ses.setAttribute("UserType", login.getRole());
-
         } catch (Exception e) {
             logger.error(new Date() + " Login Issue Occured When Login By " + req.getUserPrincipal().getName(), e);
             e.printStackTrace();
         }
-
         return "redirect:/customer/CustomerList.htm";
     }
 
