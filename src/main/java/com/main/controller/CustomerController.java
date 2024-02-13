@@ -1,5 +1,11 @@
 package com.main.controller;
 
+import com.main.configs.enums.UserTypes;
+import com.main.model.CrmUser;
+import com.main.service.CustomerService;
+import jakarta.servlet.http.HttpSession;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,47 +19,74 @@ import com.main.repository.CustomerRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+@Slf4j
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
-	
-	@Autowired
-	CustomerRepo cr;
 
-	@GetMapping("/WC")
-	public String welcome()
-	{
-		return "Welcome to Customer";
-	}
-	
-	@GetMapping("/register")
-	public ModelAndView m1()
-	{
-		return new ModelAndView("customer/CustomerReg");
-	}
-	
-	
-	
-	
-	@PostMapping("/insertCustomer")
-	public ModelAndView m2(HttpServletRequest req)
-	{
-		ModelAndView mv = new ModelAndView("Success");
-		
-		
-		String fname = req.getParameter("fname");
-		String email = req.getParameter("email");
-		String phone = req.getParameter("phone");
-		
-		Customer c = new Customer(email,fname,phone);
-		
-		cr.save(c);
-		
-		return mv;
-		
-	}
-	
-	
-	
-	
+    @Autowired
+    private CustomerService customerService;
+
+    @GetMapping("/WC")
+    public String welcome() {
+        return "Welcome to Customer";
+    }
+
+    @GetMapping("/register")
+    public ModelAndView m1() {
+        return new ModelAndView("customer/CustomerReg");
+    }
+
+    @PostMapping("/insertCustomer")
+    public ModelAndView m2(HttpServletRequest req) {
+        ModelAndView mv = new ModelAndView("Success");
+
+
+        String fname = req.getParameter("fname");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+
+        Customer c = new Customer(email, fname, phone);
+//        cr.save(c);
+        return mv;
+    }
+
+    @GetMapping("CustomerList.htm")
+    public String getCustomers(HttpServletRequest req, HttpSession ses)throws Exception{
+        try{
+            String userType = (String) ses.getAttribute("UserType");
+            req.setAttribute("CustomerList",customerService.getAllCustomer());
+            if(userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){
+                return "agent/CustomerList";
+            }else if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){
+                return "manager/CustomerList";
+            }
+            return "static/HomePage";
+        }catch (Exception e){
+            return "static/error";
+        }
+    }
+
+    @GetMapping("CustomerDetailsView.htm")
+    public String CustomerDetailsView(HttpServletRequest req, HttpSession ses){
+        try{
+            String userType = (String) ses.getAttribute("UserType");
+            String appNo= req.getParameter("appNo");
+            Customer customer = customerService.getCustomerByAppNo(Integer.parseInt(appNo));
+            if(customer!=null) {
+                req.setAttribute("CustomerDetails", customer);
+                if (userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())) {
+                    return "agent/CustomerDetailsView";
+                } else if (userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
+                    return "manager/CustomerDetailsView";
+                }
+            }else{
+                throw new Exception("Failed to fetch Customer Info");
+            }
+            return "static/HomePage";
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return "static/error";
+        }
+    }
 }

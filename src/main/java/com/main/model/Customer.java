@@ -4,17 +4,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Customer {
 
-	
 	@Id
-	@GeneratedValue(strategy =GenerationType.SEQUENCE )
-	int appNo;
-	String email;
-	String fullName;
-	String phoneNo;
+	@GeneratedValue(strategy =GenerationType.SEQUENCE)
+	private Long id;
+	private Integer appNo;
+	private String email;
+	private String fullName;
+	private String phoneNo;
 	
 	
 	public Customer()
@@ -39,48 +43,6 @@ public class Customer {
 		this.fullName = fullName;
 		this.phoneNo = phoneNo;
 	}
-
-	public int getAppNo() {
-		return appNo;
-	}
-
-
-	public void setAppNo(int appNo) {
-		this.appNo = appNo;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getFullName() {
-		return fullName;
-	}
-
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-
-	public String getPhoneNo() {
-		return phoneNo;
-	}
-
-
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
-	}
-
-
-
 
 	@Override
 	public String toString() {

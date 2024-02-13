@@ -44,13 +44,12 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(AntPathRequestMatcher.antMatcher("/")).hasAnyRole("USER", "ADMIN")
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/")).hasAnyRole("USER", "ADMIN","MANAGER","AGENT")
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/LoginPage/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/webresources/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/view/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/login")).permitAll()
-                                .requestMatchers(AntPathRequestMatcher.antMatcher("/manager/Manager")).permitAll().requestMatchers(AntPathRequestMatcher.antMatcher("/manager/managerLogin")).permitAll()
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .formLogin(form -> form.loginPage("/login")

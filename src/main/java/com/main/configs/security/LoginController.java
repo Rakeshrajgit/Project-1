@@ -1,11 +1,11 @@
 package com.main.configs.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
 import com.main.model.CrmUser;
+import com.main.repository.CrmUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -58,7 +58,7 @@ public class LoginController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        return "static/Home";
+        return "static/login";
     }
 
 
@@ -84,13 +84,14 @@ public class LoginController {
             CrmUser login = Repository.findByUserEmail(req.getUserPrincipal().getName());
             login.setPassword("");
             ses.setAttribute("UserData", login);
+            ses.setAttribute("UserType", login.getRole());
 
         } catch (Exception e) {
             logger.error(new Date() + " Login Issue Occured When Login By " + req.getUserPrincipal().getName(), e);
             e.printStackTrace();
         }
 
-        return "redirect:/manager/HomePage";
+        return "redirect:/customer/CustomerList.htm";
     }
 
 }

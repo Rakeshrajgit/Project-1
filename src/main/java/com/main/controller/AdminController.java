@@ -66,9 +66,7 @@ public class AdminController {
 	{
 		return new ModelAndView("customer/LeadInfo");
 	}
-	
-	
-	
+
 	@GetMapping("PhoneCall")
 	public ModelAndView phone()
 	{
