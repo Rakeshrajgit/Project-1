@@ -2,6 +2,7 @@ package com.main.configs.security;
 
 import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
+import com.main.model.LoginStamping;
 import com.main.repository.CrmUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.net.InetAddress;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -23,11 +26,9 @@ import java.util.Map;
 public class LoginController {
 
     private static final Logger logger = LogManager.getLogger(LoginController.class);
-    @Autowired
-    CrmUserRepository Repository;
 
     @Autowired
-    CrmService service;
+    private CrmService crmService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, @RequestParam(value = "error", required = false) String error,
@@ -76,11 +77,33 @@ public class LoginController {
     public String welcome(Model model, HttpServletRequest req, HttpSession ses) throws Exception {
         logger.info(new Date() + " Login By " + req.getUserPrincipal().getName());
         try {
-            CrmUser login = Repository.findByUserEmail(req.getUserPrincipal().getName());
+            CrmUser login = crmService.findUserByEmail(req.getUserPrincipal().getName());
             login.setPassword("");
             ses.setAttribute("UserData", login);
             ses.setAttribute("UserType", login.getRole());
             ses.setAttribute("userId",login.getUserId());
+
+            String IpAddress="Not Available";
+            try{
+                IpAddress = req.getRemoteAddr();
+                if("0:0:0:0:0:0:0:1".equalsIgnoreCase(IpAddress))
+                {
+                    InetAddress ip = InetAddress.getLocalHost();
+                    IpAddress= ip.getHostAddress();
+                }
+            }
+            catch(Exception e)
+            {
+                IpAddress="Not Available";
+                e.printStackTrace();
+            }
+            LoginStamping stamping = LoginStamping.builder()
+                    .userId(login.getUserId())
+                    .loginDateTime(LocalDateTime.now())
+                    .IpAddress(IpAddress)
+                    .build();
+            crmService.LoginStampingInsert(stamping);
+
             if(login.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
                 return "redirect:/Dashboard.htm";
             }

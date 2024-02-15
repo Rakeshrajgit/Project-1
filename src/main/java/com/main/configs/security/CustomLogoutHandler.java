@@ -9,19 +9,18 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 public class CustomLogoutHandler implements LogoutHandler {
 
-	@Autowired
-	CrmService service;
+    @Autowired
+    private CrmService crmService;
 
-	@Override
-	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-		 HttpSession ses=request.getSession();
-		 try {
-//			 logout stamping to be done
-       	}
-       	catch (Exception e) {
-				e.printStackTrace();
-			}	
-	}
-	
-	
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        HttpSession ses = request.getSession();
+        try {
+            crmService.logoutStampingUpdate((String)ses.getAttribute("userId"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
