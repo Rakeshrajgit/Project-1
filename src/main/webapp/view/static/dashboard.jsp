@@ -427,7 +427,6 @@ function fetchDataBasedOnDate(selectedDate) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
      
 
-
   <!-- Template Main JS File -->
   <script src="../webresources/assets/vendor/js/main.js"></script>
 

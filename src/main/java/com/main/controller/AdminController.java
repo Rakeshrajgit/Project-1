@@ -1,25 +1,13 @@
 package com.main.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.main.model.AdminModel;
-import com.main.repository.AdminRepo;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class AdminController {
-
-
-	@Autowired
-	AdminRepo am;
-
 
 	@GetMapping("/adminreg")
 	public ModelAndView m1()
@@ -34,26 +22,6 @@ public class AdminController {
 		return new ModelAndView("admin/AdminLogin");
 	}
 
-
-//	@GetMapping("/login")
-//	public ModelAndView login()
-//	{
-//		return new ModelAndView("admin/AdminLogin");
-//	}
-
-
-	@PostMapping("AdminReg")
-	public ModelAndView aReg(HttpServletRequest req)
-	{
-		String name=req.getParameter("name");
-		String email=req.getParameter("email");
-		String password=req.getParameter("pwd");
-		
-		AdminModel a=new AdminModel(name,email,password);
-		am.save(a);
-		return new ModelAndView("admin/AdminLogin");
-	}
-	
 	@GetMapping("Lead")
 	public ModelAndView lead()
 	{

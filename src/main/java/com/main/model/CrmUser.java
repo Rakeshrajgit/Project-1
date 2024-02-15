@@ -1,14 +1,22 @@
 package com.main.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "crm_user")
 @Data
-public class CrmUser {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CrmUser extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,15 +26,5 @@ public class CrmUser {
     private String userEmail;
     private String password;
     private Integer isActive;
-    private String createdBy;
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private String createdDate;
-    private String updatedBy;
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private String updatedDate;
     private String role;
-
-
 }

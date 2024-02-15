@@ -27,7 +27,7 @@ public class LeadBulkUploadController {
             if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
                 return ResponseEntity.badRequest().body("Only Excel files (XLSX or XLS) are allowed.");
             }
-            System.out.println("File is Valid ..............");
+//            System.out.println("File is Valid ..............");
             printExcelData(file);
             return ResponseEntity.ok().body("File content ingestion successful.");
         } catch (Exception e) {
@@ -50,9 +50,9 @@ public class LeadBulkUploadController {
                 Iterator<Cell> cellsInRow = currentRow.iterator();
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
-                    System.out.print(df.formatCellValue(currentCell)+" -- ");
+//                    System.out.print(df.formatCellValue(currentCell)+" -- ");
                 }
-                System.out.println(" ");
+//                System.out.println(" ");
             }
             workbook.close();
         }catch (Exception e){

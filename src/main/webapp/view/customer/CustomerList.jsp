@@ -1,4 +1,4 @@
-<%@page import="org.apache.xmlbeans.UserType"%>
+<%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="java.util.List"%>
@@ -219,13 +219,15 @@ margin-left=10px;
         </div>
 
         <div class="flex-item">Owner
-            <select id="Dropdown" name="userId">
-            	<option value="" disabled="disabled" selected="selected">Select..</option>
+            <select id="Dropdown" name="userId" onchange="this.form.submit()">
+            	<option value="" selected="selected" disabled>Select..</option>
+            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+            		<option value="UnAssigned" style="color: red">UnAssigned</option>
+            	<%} %>
                 <%for(CrmUser agent : agents ){ %>
                 <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
                 <%} %>
              </select>
-
         </div>
 
         <div class="flex-item">Date Range
@@ -282,8 +284,8 @@ margin-left=10px;
 			<td><%=customer.getPhoneNo()%></td>
 			<td><%="called"%></td>
 			<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-        	<th>Lead Score</th>
-        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+        	<td>100</td>
+        	<td>owner <i class='fa fa-user' style="color:skyblue"></i> </td>
         	<%} %>
 			<td><%="NA"%></td>  
 			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>

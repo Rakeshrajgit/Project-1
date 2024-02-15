@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Controller
 public class CustomerController {
@@ -38,8 +41,6 @@ public class CustomerController {
     @PostMapping("/insertCustomer")
     public ModelAndView m2(HttpServletRequest req) {
         ModelAndView mv = new ModelAndView("Success");
-
-
         String fname = req.getParameter("fname");
         String email = req.getParameter("email");
         String phone = req.getParameter("phone");
@@ -53,12 +54,32 @@ public class CustomerController {
     public String getCustomers(HttpServletRequest req, HttpSession ses) throws Exception {
         try {
             String userType = (String) ses.getAttribute("UserType");
+            String userId = (String) ses.getAttribute("userId");
+            List<Customer> customerList = new ArrayList<>();
+            List<CrmUser> agents = new ArrayList<>();
+            System.out.println(ses.getClass().getName());
+            if(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())
+                    || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
+                userId = req.getParameter("userId");
+                if(userId==null) {
+                    customerList = customerService.getAllCustomer();
+                }else if(userId.equalsIgnoreCase("UnAssigned")){
+                    customerList = customerService.getCustomersIfAgentIdIsNull();
+                }else {
+                    customerList = customerService.getCustomersByAgentId(userId);
+                }
+                agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
+            }else{
+                agents.add(crmUserService.getUsersByUserId(userId));
+                customerList= customerService.getAllCustomer();
+            }
 
+            req.setAttribute("Agents", agents );
+            req.setAttribute("CustomerList", customerList);
             req.setAttribute("userType", userType);
-            req.setAttribute("Agents", crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString()));
-            req.setAttribute("CustomerList", customerService.getAllCustomer());
             return "customer/CustomerList";
         } catch (Exception e) {
+            e.printStackTrace();
             return "static/error";
         }
     }

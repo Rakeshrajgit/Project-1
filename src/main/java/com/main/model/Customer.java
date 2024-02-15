@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "Customer")
@@ -17,6 +18,11 @@ public class Customer {
 	private String email;
 	private String fullName;
 	private String phoneNo;
+	private String agentId;
+	private int isActive=1;
+	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	private String createdDate;
 
 	public Customer(){}
 	public Customer(String email, String fullName, String phoneNo) {

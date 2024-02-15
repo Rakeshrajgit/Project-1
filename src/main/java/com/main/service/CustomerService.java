@@ -28,6 +28,14 @@ public class CustomerService {
         return customerRepo.findByAppNo(AppNo);
     }
 
+    public List<Customer> getCustomersByAgentId(String agentId){
+        return customerRepo.findByAgentId(agentId);
+    }
+    public List<Customer> getCustomersIfAgentIdIsNull(){
+        return customerRepo.findByAgentIdIsNull();
+    }
+
+
     public void punchLeadViewerInfo(String userId,Long appNo){
 
         LeadViewPunching punch = new LeadViewPunching();

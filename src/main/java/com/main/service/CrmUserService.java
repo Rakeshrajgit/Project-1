@@ -14,7 +14,10 @@ public class CrmUserService {
     private CrmUserRepository crmUserRepository;
 
     public List<CrmUser> getUsersByRole(String role){
-        System.out.println( crmUserRepository.findByRole(role).size());
         return crmUserRepository.findByRole(role);
     }
+    public CrmUser getUsersByUserId(String userId){
+        return crmUserRepository.findByUserId(userId);
+    }
+
 }

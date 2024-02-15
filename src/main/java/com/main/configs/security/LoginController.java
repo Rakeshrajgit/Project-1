@@ -1,9 +1,5 @@
 package com.main.configs.security;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-
 import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
 import com.main.repository.CrmUserRepository;
@@ -13,13 +9,14 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Date;
+import java.util.Map;
 
 
 @Controller
@@ -79,12 +76,11 @@ public class LoginController {
     public String welcome(Model model, HttpServletRequest req, HttpSession ses) throws Exception {
         logger.info(new Date() + " Login By " + req.getUserPrincipal().getName());
         try {
-            boolean isContractEmp = false;
-            Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
             CrmUser login = Repository.findByUserEmail(req.getUserPrincipal().getName());
             login.setPassword("");
             ses.setAttribute("UserData", login);
             ses.setAttribute("UserType", login.getRole());
+            ses.setAttribute("userId",login.getUserId());
             if(login.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
                 return "redirect:/Dashboard.htm";
             }
@@ -94,7 +90,6 @@ public class LoginController {
             e.printStackTrace();
             return "static/error";
         }
-
     }
 
 }
