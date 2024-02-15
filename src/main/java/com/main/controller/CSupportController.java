@@ -21,7 +21,6 @@ import com.main.repository.CSRepo;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/agent")
 public class CSupportController {
 	
 	@Autowired
@@ -30,7 +29,7 @@ public class CSupportController {
 	@GetMapping("csupportReg")
 	public ModelAndView m1()
 	{
-		return new ModelAndView("agent/CSReg");
+		return new ModelAndView("CSReg");
 	}
 	
 	
@@ -63,7 +62,7 @@ public class CSupportController {
 	@GetMapping("CusSupport")
 	public ModelAndView m4()
 	{
-		return new ModelAndView("agent/CSLogin");
+		return new ModelAndView("CSLogin");
 	}
 	
 	

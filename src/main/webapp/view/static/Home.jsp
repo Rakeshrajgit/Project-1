@@ -35,9 +35,9 @@
           
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <li><a class="dropdown-item" href="#">Super Admin</a></li>
-              <li><a class="dropdown-item" href="admin/adminlogin">Admin</a></li>
-              <li><a class="dropdown-item" href="manager/Manager">Manager</a></li>
-              <li><a class="dropdown-item" href="agent/CusSupport">C S Team</a></li>
+              <li><a class="dropdown-item" href="adminlogin">Admin</a></li>
+              <li><a class="dropdown-item" href="Manager">Manager</a></li>
+              <li><a class="dropdown-item" href="CusSupport">C S Team</a></li>
             </ul>
           </div>
 

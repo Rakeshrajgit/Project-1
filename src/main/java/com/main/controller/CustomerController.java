@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Controller
-@RequestMapping("/customer")
 public class CustomerController {
 
     @Autowired
@@ -71,7 +70,7 @@ public class CustomerController {
             Long appNo = Long.parseLong(req.getParameter("appNo"));
             customerService.punchLeadViewerInfo(user.getUserId(), appNo);
             ses.setAttribute("appNo", appNo);
-            return "redirect:/customer/CustomerDetailsView.htm";
+            return "redirect:/CustomerDetailsView.htm";
         } catch (Exception e) {
             log.error(e.getMessage());
             return "static/error";
@@ -93,15 +92,10 @@ public class CustomerController {
             Customer customer = customerService.getCustomerByAppNo(appNo);
             if (customer != null) {
                 req.setAttribute("CustomerDetails", customer);
-                if (userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())) {
-                    return "agent/CustomerDetailsView";
-                } else if (userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
-                    return "manager/CustomerDetailsView";
-                }
+                return "customer/CustomerDetailsView";
             } else {
                 throw new Exception("Failed to fetch Customer Info");
             }
-            return "static/HomePage";
         } catch (Exception e) {
             log.error(e.getMessage());
             return "static/error";

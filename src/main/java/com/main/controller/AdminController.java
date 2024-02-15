@@ -14,7 +14,6 @@ import com.main.repository.AdminRepo;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
 
@@ -36,11 +35,11 @@ public class AdminController {
 	}
 
 
-	@GetMapping("/login")
-	public ModelAndView login()
-	{
-		return new ModelAndView("admin/AdminLogin");
-	}
+//	@GetMapping("/login")
+//	public ModelAndView login()
+//	{
+//		return new ModelAndView("admin/AdminLogin");
+//	}
 
 
 	@PostMapping("AdminReg")

@@ -19,16 +19,15 @@ import com.main.repository.ManagerRepo;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/manager")
 public class ManagerContoller {
 	
 	@Autowired
 	ManagerRepo mr;
 	
-	@GetMapping("managerReg")
-	public ModelAndView m0()
+	@GetMapping("managerReg.htm")
+	public String m0()
 	{
-		return new ModelAndView("manager/ManagerReg");
+		return "manager/ManagerReg";
 	}
 	
 
