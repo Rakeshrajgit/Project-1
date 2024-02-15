@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/view/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/login")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/BulkUploadLeads.htm")).permitAll()
                                 .anyRequest().authenticated()
                 ).authenticationProvider(authenticationProvider)
                 .formLogin(form -> form.loginPage("/login")

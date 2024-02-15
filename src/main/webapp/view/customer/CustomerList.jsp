@@ -1,3 +1,5 @@
+<%@page import="org.apache.xmlbeans.UserType"%>
+<%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="java.util.List"%>
 <%@page import="com.main.model.Customer"%>
@@ -137,8 +139,10 @@ margin-left=10px;
 <body>
 <%
  List<Customer> customerList = (List<Customer>)request.getAttribute("CustomerList");
-%>
+ List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
+ String userType = (String)request.getAttribute("userType");
 
+%>
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
@@ -215,10 +219,11 @@ margin-left=10px;
         </div>
 
         <div class="flex-item">Owner
-            <select id="Dropdown">
-                <option value="activity1">All Selected</option>
-                <option value="activity2">Activity 2</option>
-                <option value="activity3">Activity 3</option>
+            <select id="Dropdown" name="userId">
+            	<option value="" disabled="disabled" selected="selected">Select..</option>
+                <%for(CrmUser agent : agents ){ %>
+                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
+                <%} %>
              </select>
 
         </div>
@@ -255,9 +260,11 @@ margin-left=10px;
         <th>Name</th>
         <th>Email</th>
         <th>Phone No</th>
-        <th>Lead Score</th>
         <th>Lead Stage</th>
-        <th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+        <%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+        	<th>Lead Score</th>
+        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+        <%} %>
         <th>Modify On <span style="color:skyblue;">&#8595;</span></th>
         <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
     <tr>
@@ -274,17 +281,14 @@ margin-left=10px;
 			<td><%=customer.getEmail()%></td>
 			<td><%=customer.getPhoneNo()%></td>
 			<td><%="called"%></td>
-			<td><%="NA"%></td>
-			<td><%="OWNER"%></td>
+			<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+        	<th>Lead Score</th>
+        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+        	<%} %>
 			<td><%="NA"%></td>  
 			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 		</tr>
 	<%}%>
-	<select>
-	<%for(UserTypes type : UserTypes.values()){ %>
-		<option value="<%= type.toString()%>"><%=type.getName() %></option>
-	<%}%>
-	</select>
 	
 </table>
 

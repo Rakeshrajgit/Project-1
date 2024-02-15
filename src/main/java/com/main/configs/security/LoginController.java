@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
 import com.main.repository.CrmUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -84,11 +85,16 @@ public class LoginController {
             login.setPassword("");
             ses.setAttribute("UserData", login);
             ses.setAttribute("UserType", login.getRole());
+            if(login.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
+                return "redirect:/admin/Dashboard.htm";
+            }
+            return "redirect:/customer/CustomerList.htm";
         } catch (Exception e) {
             logger.error(new Date() + " Login Issue Occured When Login By " + req.getUserPrincipal().getName(), e);
             e.printStackTrace();
+            return "static/error";
         }
-        return "redirect:/customer/CustomerList.htm";
+
     }
 
 }

@@ -26,7 +26,6 @@ public class CrmUser {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private String updatedDate;
-
     private String role;
 
 

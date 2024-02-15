@@ -75,25 +75,10 @@ public class AdminController {
 	
 	
 	
-	@GetMapping(value ="/ADLogin")
-	public ModelAndView Login(HttpServletRequest req)
+	@GetMapping(value ="Dashboard.htm")
+	public String Login(HttpServletRequest req)
 	{
-		ModelAndView mv = null;
-		String em = req.getParameter("email");
-		String pw = req.getParameter("password");
-		
-		if(am.findByEmailAndPassword(em, pw)!=null)
-		{
-			
-			mv= new ModelAndView("home/dashboard");
-		}
-		else
-		{
-			mv = new ModelAndView("admin/AdminLogin");
-		}
-		
-		return mv;
-		
+		return "static/dashboard";
 	}
 
 }
