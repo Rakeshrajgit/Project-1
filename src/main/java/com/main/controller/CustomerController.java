@@ -57,7 +57,6 @@ public class CustomerController {
             String userId = (String) ses.getAttribute("userId");
             List<Customer> customerList = new ArrayList<>();
             List<CrmUser> agents = new ArrayList<>();
-            System.out.println(ses.getClass().getName());
             if(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())
                     || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
                 userId = req.getParameter("userId");
@@ -71,9 +70,8 @@ public class CustomerController {
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
             }else{
                 agents.add(crmUserService.getUsersByUserId(userId));
-                customerList= customerService.getAllCustomer();
+                customerList= customerService.getCustomersByAgentId(userId);
             }
-
             req.setAttribute("Agents", agents );
             req.setAttribute("CustomerList", customerList);
             req.setAttribute("userType", userType);
