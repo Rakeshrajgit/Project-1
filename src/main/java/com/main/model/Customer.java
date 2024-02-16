@@ -9,7 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 @Entity
 @Table(name = "Customer")
 @Data
-public class Customer {
+public class Customer extends BaseEntity{
 
 	@Id
 	@GeneratedValue(strategy =GenerationType.SEQUENCE)
@@ -20,9 +20,7 @@ public class Customer {
 	private String phoneNo;
 	private String agentId;
 	private int isActive=1;
-	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	private String createdDate;
+
 
 	public Customer(){}
 	public Customer(String email, String fullName, String phoneNo) {

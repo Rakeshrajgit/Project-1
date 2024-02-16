@@ -264,8 +264,9 @@ margin-left=10px;
         <th>Email</th>
         <th>Phone No</th>
         <th>Lead Stage</th>
+        <th>Lead Score</th>
+        
         <%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-        	<th>Lead Score</th>
         	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
         <%} %>
         <th>Modify On <span style="color:skyblue;">&#8595;</span></th>
@@ -295,7 +296,7 @@ margin-left=10px;
 	                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getAgentId())){%> selected<% }%>><%=agent.getUserName() %></option>
 	                	
 	                <%} %>
-             </select>
+             	</select>
         	</td>
         	<%} %>
 			<td><%="NA"%></td>  
