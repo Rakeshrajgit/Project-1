@@ -12,7 +12,22 @@
 <html>
 <head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+<!-- Vendor CSS Files -->
+  <link href="../webresources/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+ 
+ 
+ 
+ 
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
 <style type="text/css">
 
@@ -144,7 +159,7 @@ margin-left=10px;
  String userType = (String)request.getAttribute("userType");
 
 %>
-
+  <!--  
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -155,7 +170,7 @@ margin-left=10px;
 
         <li class="nav-item">
           <a class="nav-link" href="#">DashBoard</a>
-        </li> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        </li> &nbsp; &nbsp; &nbsp; 
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -166,7 +181,7 @@ margin-left=10px;
             <li><a class="dropdown-item" href="PhoneCall">Lead PhoneCall</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        </li> &nbsp &nbsp &nbsp 
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -177,7 +192,7 @@ margin-left=10px;
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        </li> &nbsp &nbsp &nbsp
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -188,9 +203,7 @@ margin-left=10px;
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-
-
+        </li> &nbsp &nbsp &nbsp
       </ul>
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -199,7 +212,7 @@ margin-left=10px;
     </div>
   </div>
 </nav>
-     </div>
+    
 <form action="CustomerList.htm" method="get">
     <div class="LeadStage">
         <div class="flex-item" >Lead Stage
@@ -222,12 +235,7 @@ margin-left=10px;
         <div class="flex-item">Owner
             <select id="Dropdown" name="userId" onchange="this.form.submit()">
             	<option value="" selected="selected" disabled>Select..</option>
-            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-            		<option value="UnAssigned" style="color: red">UnAssigned</option>
-            	<%} %>
-                <%for(CrmUser agent : agents ){ %>
-                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
-                <%} %>
+            
              </select>
         </div>
 
@@ -254,15 +262,197 @@ margin-left=10px;
         <div class="flex-child item4"></div>
         <div class="flex-child item5"></div>
         <div class="flex-child item6"></div>
+    </div>-->
+    
+    
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        
+          <div class="container-fluid">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                  <a class="nav-link " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    DASHBOARD
+                  </a>
+                </li>
+  
+  
+  
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Lead
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="Lead">AddLead</a></li>
+            <li><a class="dropdown-item" href="PhoneCall">Lead PhoneCall</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> 
+  
+  
+  
+  
+               
+  
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
+                  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    LEADS
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="Lead">Add Lead</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="PhoneCall">Lead PhoneCall</a></li>
+                  
+               
+                  </ul>
+                </li>
+  
+  
+   <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Contact
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> 
+
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reports
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> 
+
+               <div class="search-bar">
+                <form class="search-form d-flex align-items-center" method="POST" action="#">
+                  <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                  <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                </form>
+              </div>
+              </ul>
+          <div class="nav-item dropdown">
+            <a class="nav-link nav-icon"  href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-bell"></i>
+              
+            </a>
+          </div>
+
+         <div class="icon">
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-question-circle"></i></a>
+          <!-- <div class="label">question-circle</div> -->
+         </div>
+        |
+          <div class="icon" >
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-person-circle"></i>
+          </a>
+   
+
+          
+       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">  
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-gear"></i>
+                <span>Account Settings</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="logout.htm">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->    
+           </div>
+          </div> 
+        </nav>
+
+ 
+<form action="CustomerList.htm" method="get">
+    <div class="LeadStage">
+        <div class="flex-item" >Lead Stage
+            <select id="Dropdown">
+                <option value="activity1">All Selected</option>
+                <option value="activity2">Activity 2</option>
+                <option value="activity3">Activity 3</option>
+             </select>
+        </div>
+
+        <div class="flex-item"> Lead Source
+            <select id="Dropdown">
+                <option value="activity1">All Selected</option>
+                <option value="activity2">Activity 2</option>
+                <option value="activity3">Activity 3</option>
+             </select>
+
+        </div>
+
+        <div class="flex-item">Owner
+            <select id="Dropdown" name="userId">
+            	<option value="" disabled="disabled" selected="selected">Select..</option>
+                <%for(CrmUser agent : agents ){ %>
+                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
+                <%} %>
+             </select>
+
+        </div>
+
+        <div class="flex-item">Date Range
+            <select id="Dropdown">
+                <option value="activity1">Created On</option>
+                <option value="activity2">Activity 2</option>
+                <option value="activity3">Activity 3</option>
+             </select>
+
+             <select id="Dropdown">
+                <option value="activity1">All Time</option>
+                <option value="activity2">Activity 2</option>
+                <option value="activity3">Activity 3</option>
+             </select>
+
+        </div>
     </div>
+
+    <div class="ThirdDiv">
+        <div class="flex-child item1"></div>
+        <div class="flex-child item2"></div>
+        <div class="flex-child item3"></div>
+        <div class="flex-child item4"></div>
+        <div class="flex-child item5"></div>
+        <div class="flex-child item6"></div>
+    </div>
+    
+    
 <table class="table table-striped">
 
   <tr>
   		<td>SN</td>
-  		<th>App. No</th>
-        <th>Name</th>
+  		<th>App. No</th>   
         <th>Email</th>
-        <th>Phone No</th>
         <th>Lead Stage</th>
         <th>Lead Score</th>
         
@@ -336,6 +526,22 @@ function updateAgentForCustomer($appNo,$agentId){
 }
 
 </script>
-
+<!-- Vendor JS Files -->
+  <script src="../webresources/assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="../webresources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../webresources/assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="../webresources/assets/vendor/echarts/echarts.min.js"></script>
+  <script src="../webresources/assets/vendor/quill/quill.min.js"></script>
+  <script src="../webresources/assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="../webresources/assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="../webresources/assets/vendor/php-email-form/validate.js"></script>
+  
+  
+    <!-- Template Main JS File -->
+  <script src="../webresources/assets/vendor/js/main.js"></script>
 </body>
+
+
+
+
 </html>
