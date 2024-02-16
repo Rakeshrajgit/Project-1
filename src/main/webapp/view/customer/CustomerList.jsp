@@ -6,6 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="java.sql.*" %>
+  <jsp:include page="../static/dependancy.jsp"></jsp:include>
 
 <!DOCTYPE html>
 <html>
@@ -283,9 +284,19 @@ margin-left=10px;
 			<td><%=customer.getEmail()%></td>
 			<td><%=customer.getPhoneNo()%></td>
 			<td><%="called"%></td>
-			<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
         	<td>100</td>
-        	<td>owner <i class='fa fa-user' style="color:skyblue"></i> </td>
+        	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+        	<td>
+        		<select id="customer-<%=customer.getAppNo() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getAppNo()%>',this.value);">
+	            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+	            		<option value="" <%if(customer.getAgentId()==null){%> <%} %>style="color: red">UnAssigned</option>
+	            	<%} %>
+	                <%for(CrmUser agent : agents ){ %>
+	                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getAgentId())){%> selected<% }%>><%=agent.getUserName() %></option>
+	                	
+	                <%} %>
+             </select>
+        	</td>
         	<%} %>
 			<td><%="NA"%></td>  
 			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
@@ -296,6 +307,34 @@ margin-left=10px;
 
 </form>
 
+<script type="text/javascript">
+
+function updateAgentForCustomer($appNo,$agentId){
+	
+	if(confirm('Are you Sure to update the owner for this customer?')){
+		
+		$.ajax({
+
+			type : "POST",
+			url : "UpdateAgentForCustomer.htm",
+			data : {
+					
+				appNo : $appNo ,
+				agentId : $agentId ,
+				
+			},
+			datatype : 'json',
+			success : function(result) {
+				alert(result);
+			}
+		});
+		
+	}
+	
+	
+}
+
+</script>
 
 </body>
 </html>

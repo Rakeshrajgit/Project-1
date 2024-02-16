@@ -78,8 +78,6 @@ public class LoginController {
         logger.info(new Date() + " Login By " + req.getUserPrincipal().getName());
         try {
             CrmUser login = crmService.findUserByEmail(req.getUserPrincipal().getName());
-            login.setPassword("");
-            ses.setAttribute("UserData", login);
             ses.setAttribute("UserType", login.getRole());
             ses.setAttribute("userId",login.getUserId());
 

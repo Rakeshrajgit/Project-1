@@ -46,4 +46,11 @@ public class CustomerService {
         leadViewPunchingRepo.save(punch);
 
     }
+
+    public Long updateAgentForCustomer(String appNo, String agentId){
+        Customer customer = customerRepo.findByAppNo(Long.parseLong(appNo));
+        customer.setAgentId(agentId.equalsIgnoreCase("")?null:agentId);
+        customerRepo.save(customer);
+        return customer.getId();
+    }
 }

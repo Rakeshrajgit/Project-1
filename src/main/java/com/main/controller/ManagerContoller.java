@@ -26,7 +26,6 @@ public class ManagerContoller {
 	@GetMapping("/HomePage")
 	public String Login(HttpServletRequest req, HttpSession ses)
 	{
-		CrmUser user = (CrmUser) ses.getAttribute("UserData");
 		return "static/HomePage";
 	}
 	

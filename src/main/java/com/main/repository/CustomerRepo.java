@@ -11,4 +11,5 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
     List<Customer> findByAgentId(String agentId);
     List<Customer> findByAgentIdIsNull();
 
+
 }
