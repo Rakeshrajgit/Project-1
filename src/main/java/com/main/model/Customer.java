@@ -12,7 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 public class Customer extends BaseEntity{
 
 	@Id
-	@GeneratedValue(strategy =GenerationType.SEQUENCE)
+	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	private Long id;
 	private Long appNo;
 	private String email;

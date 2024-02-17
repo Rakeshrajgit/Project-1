@@ -17,7 +17,7 @@
 
 
 <!-- ----------  daterangepicker  ---------- -->
-
+<%-- 
 
 <spring:url value="../../webresources/addons/daterangepicker/moment.min.js" var="momentjs" />  
 <script src="${momentjs}"></script> 
@@ -50,14 +50,14 @@
 
 
 <!-- ----------  Data tables  ---------- -->
-<%-- <spring:url value="../../webresources/addons/DataTable/dataTables.bootstrap4.min.css" var="DataTableCss" />
-<link href="${DataTableCss}" rel="stylesheet" /> --%>
+<spring:url value="../../webresources/addons/DataTable/dataTables.bootstrap4.min.css" var="DataTableCss" />
+<link href="${DataTableCss}" rel="stylesheet" />
 
 <spring:url value="../../webresources/addons/DataTable/jquery.dataTables.min.js" var="DataTableJjs" />    
 <script src="${DataTableJjs}"></script>
 
-<%-- <spring:url value="../../webresources/addons/DataTable/dataTables.bootstrap4.min.js" var="DataTablejs" /> 
-<script src="${DataTablejs}"></script> --%>
+<spring:url value="../../webresources/addons/DataTable/dataTables.bootstrap4.min.js" var="DataTablejs" /> 
+<script src="${DataTablejs}"></script>
 
 
 <!-- ----------  fontawesome  ---------- -->
@@ -105,7 +105,7 @@
   <script src="${HighMorejs}"></script>   
   
   <spring:url value="../../webresources/js/chart/solid-gauge.js" var="SolidGaugejs" />  
-  <script src="${SolidGaugejs}"></script>   
+  <script src="${SolidGaugejs}"></script>    --%>
 
 <!-- ------------------------------------------------------------------------ -->
 

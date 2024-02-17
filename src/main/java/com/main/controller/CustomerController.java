@@ -133,4 +133,15 @@ public class CustomerController {
             return "Agent assignment unsuccessful !";
         }
     }
+
+    @GetMapping("AddUser.htm")
+    public String Adduser(HttpServletRequest req, HttpSession ses) throws Exception {
+        try {
+            String userType = (String) ses.getAttribute("UserType");
+            req.setAttribute("userType", userType);
+            return "admin/UserReg";
+        } catch (Exception e) {
+            return "static/error";
+        }
+    }
 }

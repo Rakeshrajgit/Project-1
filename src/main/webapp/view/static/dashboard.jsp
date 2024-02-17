@@ -87,18 +87,21 @@
                 </li>
 
 
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   REGISTER
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="managerReg.htm">Management Team</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="csupportReg">C S Team</a></li>
-                    <!-- <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-                  </ul>
-                </li>
+               <li class="nav-item dropdown">
+                              <!--     <a class="nav-link dropdown-toggle" href="AddUser.htm" role="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                  REGISTER
+                                 </a>
+                                  -->
+
+                                 <a class="nav-link dropdown-toggle" href="AddUser.htm"  id="navbarDropdown">REGISTER</a>
+                               <!--  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+               							<li><a class="dropdown-item" href="managerReg.htm">Management
+               									Team</a></li>
+               							<li><hr class="dropdown-divider"></li>
+               							<li><a class="dropdown-item" href="csupportReg">C S Team</a></li>
+
+               						</ul> -->
+                               </li>
   
               </ul>
                 <!-- <div class="search-bar">

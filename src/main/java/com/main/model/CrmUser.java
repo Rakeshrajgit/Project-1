@@ -1,10 +1,7 @@
 package com.main.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CrmUser extends BaseEntity{
 
     @Id
@@ -25,6 +23,6 @@ public class CrmUser extends BaseEntity{
     private String userName;
     private String userEmail;
     private String password;
-    private Integer isActive;
+    private Integer isActive=1;
     private String role;
 }
