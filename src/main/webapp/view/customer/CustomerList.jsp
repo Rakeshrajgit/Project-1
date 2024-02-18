@@ -1,3 +1,4 @@
+<%@page import="com.main.model.CustomerStatus"%>
 <%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
@@ -6,17 +7,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="java.sql.*" %>
-  <jsp:include page="../static/dependancy.jsp"></jsp:include>
+<jsp:include page="../static/header.jsp"></jsp:include>
 
 <!DOCTYPE html>
 <html>
 <head>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
 <style type="text/css">
 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&family=Noto+Sans:wght@500&family=Patua+One&family=Poppins:wght@300;400&display=swap');
 
 .topDiv{
     height: 10px;
@@ -131,180 +130,168 @@ margin-left=10px;
 }
 
 </style>
-    <title>lead Stage</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 </head>
 <body>
 <%
- List<Customer> customerList = (List<Customer>)request.getAttribute("CustomerList");
- List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
- String userType = (String)request.getAttribute("userType");
+ 	List<Customer> customerList = (List<Customer>)request.getAttribute("CustomerList");
+	List<CustomerStatus> customerStatusList  = (List<CustomerStatus>)request.getAttribute("customerStatusList");
+
+ 	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
+ 	String userType = (String)request.getAttribute("userType");
+ 	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString());
 
 %>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-        <li class="nav-item">
-          <a class="nav-link" href="#">DashBoard</a>
-        </li> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Lead
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="Lead">AddLead</a></li>
-            <li><a class="dropdown-item" href="PhoneCall">Lead PhoneCall</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Contact
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Reports
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-
-
-      </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>
-     </div>
-<form action="CustomerList.htm" method="get">
-    <div class="LeadStage">
-        <div class="flex-item" >Lead Stage
-            <select id="Dropdown">
-                <option value="activity1">All Selected</option>
-                <option value="activity2">Activity 2</option>
-                <option value="activity3">Activity 3</option>
-             </select>
-        </div>
-
-        <div class="flex-item"> Lead Source
-            <select id="Dropdown">
-                <option value="activity1">All Selected</option>
-                <option value="activity2">Activity 2</option>
-                <option value="activity3">Activity 3</option>
-             </select>
-
-        </div>
-
-        <div class="flex-item">Owner
-            <select id="Dropdown" name="userId" onchange="this.form.submit()">
-            	<option value="" selected="selected" disabled>Select..</option>
-            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-            		<option value="UnAssigned" style="color: red">UnAssigned</option>
-            	<%} %>
-                <%for(CrmUser agent : agents ){ %>
-                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
-                <%} %>
-             </select>
-        </div>
-
-        <div class="flex-item">Date Range
-            <select id="Dropdown">
-                <option value="activity1">Created On</option>
-                <option value="activity2">Activity 2</option>
-                <option value="activity3">Activity 3</option>
-             </select>
-
-             <select id="Dropdown">
-                <option value="activity1">All Time</option>
-                <option value="activity2">Activity 2</option>
-                <option value="activity3">Activity 3</option>
-             </select>
-
-        </div>
-    </div>
-
-    <div class="ThirdDiv">
-        <div class="flex-child item1"></div>
-        <div class="flex-child item2"></div>
-        <div class="flex-child item3"></div>
-        <div class="flex-child item4"></div>
-        <div class="flex-child item5"></div>
-        <div class="flex-child item6"></div>
-    </div>
-<table class="table table-striped">
-
-  <tr>
-  		<td>SN</td>
-  		<th>App. No</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone No</th>
-        <th>Lead Stage</th>
-        <%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
-        <%} %>
-        <th>Modify On <span style="color:skyblue;">&#8595;</span></th>
-        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
-    <tr>
-
-	<% 
-	int i=1;
-	for(Customer customer : customerList)
-	{
-		%>
-		<tr>
-		 	<td><%=i++ %></td>
-		 	<td><%=customer.getCustomerId()%></td>
-			<td><%=customer.getFullName()%></td>
-			<td><%=customer.getEmail()%></td>
-			<td><%=customer.getPhoneNo()%></td>
-			<td><%="called"%></td>
-        	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-        	<td>
-        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getCustomerId()%>',this.value);">
-	            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-	            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
-	            	<%} %>
-	                <%for(CrmUser agent : agents ){ %>
-	                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
-	                	
-	                <%} %>
-             	</select>
-        	</td>
-        	<%} %>
-			<td><%="NA"%></td>  
-			<td><button type="submit" name="appNo" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
-		</tr>
-	<%}%>
+ 
+	<div class="card-header page-top">
+		<div class="row">
+			<div class="col-md-3">
+				<h5>Leads List</h5>
+			</div>
+				<div class="col-md-9 ">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
+						<li class="breadcrumb-item active " aria-current="page">Leads List</li>
+					</ol>
+				</div>
+			</div>
+	</div>	
+	<div class="page card dashboard-card">
 	
-</table>
+	<div class="card-body" >
+	
+	
+	<div align="center">
+		<%String ses=(String)request.getParameter("result"); 
+		String ses1=(String)request.getParameter("resultfail");
+		if(ses1!=null){ %>
+			<div class="alert alert-danger" role="alert">
+				<%=ses1 %>
+			</div>
+			
+		<%}if(ses!=null){ %>
+			
+			<div class="alert alert-success" role="alert">
+				<%=ses %>
+			</div>
+		<%} %>
+	</div>
 
-</form>
+		<form action="CustomerList.htm" method="get">
+		    <div class="LeadStage">
+		        <div class="flex-item" >Lead Stage
+		            <select id="Dropdown">
+		                <option value="activity1">All Selected</option>
+		                <option value="activity2">Activity 2</option>
+		                <option value="activity3">Activity 3</option>
+		             </select>
+		        </div>
+		
+		        <div class="flex-item"> Lead Source
+		            <select id="Dropdown">
+		                <option value="activity1">All Selected</option>
+		                <option value="activity2">Activity 2</option>
+		                <option value="activity3">Activity 3</option>
+		             </select>
+		
+		        </div>
+		
+		        <div class="flex-item">Owner
+		            <select id="Dropdown" name="userId" onchange="this.form.submit()">
+		            	<option value="" selected="selected" disabled>Select..</option>
+		            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+		            		<option value="UnAssigned" style="color: red">UnAssigned</option>
+		            	<%} %>
+		                <%for(CrmUser agent : agents ){ %>
+		                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
+		                <%} %>
+		             </select>
+		        </div>
+		
+		        <div class="flex-item">Date Range
+		            <select id="Dropdown">
+		                <option value="activity1">Created On</option>
+		                <option value="activity2">Activity 2</option>
+		                <option value="activity3">Activity 3</option>
+		             </select>
+		
+		             <select id="Dropdown">
+		                <option value="activity1">All Time</option>
+		                <option value="activity2">Activity 2</option>
+		                <option value="activity3">Activity 3</option>
+		             </select>
+		
+		        </div>
+		    </div>
+		
+		    <div class="ThirdDiv">
+		        <div class="flex-child item1"></div>
+		        <div class="flex-child item2"></div>
+		        <div class="flex-child item3"></div>
+		        <div class="flex-child item4"></div>
+		        <div class="flex-child item5"></div>
+		        <div class="flex-child item6"></div>
+		    </div>
+		<table class="table table-striped">
+		
+		  <tr>
+		  		<td>SN</td>
+		  		<th>App. No</th>
+		        <th>Name</th>
+		        <th>Email</th>
+		        <th>Phone No</th>
+		        <th>Lead Stage</th>
+		        <%if(adm_man){ %>
+		        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+		        <%} %>
+		        <th>Modify On <span style="color:skyblue;">&#8595;</span></th>
+		        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
+		    <tr>
+		
+			<% 
+			int i=1;
+			for(Customer customer : customerList)
+			{
+				%>
+				<tr>
+				 	<td><%=i++ %></td>
+				 	<td><%=customer.getCustomerId()%></td>
+					<td><%=customer.getFullName()%></td>
+					<td><%=customer.getEmail()%></td>
+					<td><%=customer.getPhoneNo()%></td>
+					<td>
+						<% CustomerStatus cStatus = customerStatusList.stream()
+						  .filter(status -> customer.getCustomerStatusCode().equals(status.getCustomerStatusCode()))
+						  .findAny()
+						  .orElse(null); 
+						  %>
+						  <%= cStatus!=null ? cStatus.getCustomerStatus(): "-" %>
+					</td>
+					
+		        	<%if(adm_man){ %>
+		        	<td>
+		        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getCustomerId()%>',this.value);">
+			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+			            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
+			            	<%} %>
+			                <%for(CrmUser agent : agents ){ %>
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
+			                	
+			                <%} %>
+		             	</select>
+		        	</td>
+		        	<%} %>
+					<td><%= customer.getCloseCibilScore()!=null ? customer.getCloseCibilScore(): "-" %></td>  
+					<td><button type="submit" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
+				</tr>
+			<%}%>
+			
+		</table>
+		
+		</form>
+	</div>
 
+</div>
 <script type="text/javascript">
 
 function updateAgentForCustomer($appNo,$agentId){

@@ -1,10 +1,12 @@
 package com.main.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "customer_status")
-public class CustomerStage {
+public class CustomerStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

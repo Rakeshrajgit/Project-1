@@ -45,8 +45,6 @@ public class CustomerController {
         String fname = req.getParameter("fname");
         String email = req.getParameter("email");
         String phone = req.getParameter("phone");
-
-
         return mv;
     }
 
@@ -72,6 +70,7 @@ public class CustomerController {
                 agents.add(crmUserService.getUsersByUserId(userId));
                 customerList = customerService.getCustomersByCustomerId(userId);
             }
+            req.setAttribute("customerStatusList",customerService.getAllCustomerStatus());
             req.setAttribute("Agents", agents);
             req.setAttribute("CustomerList", customerList);
             req.setAttribute("userType", userType);
@@ -86,7 +85,7 @@ public class CustomerController {
     public String RedirectCustomerDetailsView(HttpServletRequest req, HttpSession ses) {
         try {
             String userId = (String) ses.getAttribute("userId");
-            String customerId = req.getParameter("appNo");
+            String customerId = req.getParameter("customerId");
             customerService.punchLeadViewerInfo(userId, customerId);
             ses.setAttribute("customerId", customerId);
             return "redirect:/CustomerDetailsView.htm";
@@ -100,11 +99,11 @@ public class CustomerController {
     public String CustomerDetailsView(HttpServletRequest req, HttpSession ses) {
         try {
             String userType = (String) ses.getAttribute("UserType");
-            String customerId = req.getParameter("appNo");;
+            String customerId = req.getParameter("customerId");;
             if (customerId == null) {
-                customerId = (String) ses.getAttribute("appNo");
+                customerId = (String) ses.getAttribute("customerId");
             }
-            Customer customer = customerService.getCustomerByAppNo(customerId);
+            Customer customer = customerService.getCustomerByCustomerId(customerId);
             if (customer != null) {
                 req.setAttribute("CustomerDetails", customer);
                 return "customer/CustomerDetailsView";
@@ -130,14 +129,4 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("AddUser.htm")
-    public String Adduser(HttpServletRequest req, HttpSession ses) throws Exception {
-        try {
-            String userType = (String) ses.getAttribute("UserType");
-            req.setAttribute("userType", userType);
-            return "admin/UserReg";
-        } catch (Exception e) {
-            return "static/error";
-        }
-    }
 }

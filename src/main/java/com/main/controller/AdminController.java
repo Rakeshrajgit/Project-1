@@ -3,6 +3,7 @@ package com.main.controller;
 import com.main.service.CrmUserService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,6 +89,15 @@ public class AdminController {
 		return crmUserService.checkUserEmailExists(newUserEmail);
 	}
 
-	
+	@GetMapping("AddUser.htm")
+	public String Adduser(HttpServletRequest req, HttpSession ses) throws Exception {
+		try {
+			String userType = (String) ses.getAttribute("UserType");
+			req.setAttribute("userType", userType);
+			return "admin/UserReg";
+		} catch (Exception e) {
+			return "static/error";
+		}
+	}
 
 }

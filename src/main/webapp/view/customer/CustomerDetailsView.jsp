@@ -1,21 +1,21 @@
 <%@page import="com.main.model.Customer"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <jsp:include page="../static/header.jsp"></jsp:include>
+    
 <html>
     <head>
-        <title>title</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        
+ 
         <style type="text/css">
         
         #firstDiv{
-    position:absolute;
-    left:66vh;
-    background-color: lightcyan;
-    height:100vh;
-    width: 150vh;
-
-}
+	    position:absolute;
+	    left:66vh;
+	    background-color: lightcyan;
+	    height:100vh;
+	    width: 150vh;
+	
+	}
 
 #secDiv{
     position:absolute;
@@ -278,16 +278,50 @@ table {
 }
         
         
-        </style>
-    </head>
+</style>
+</head>
     
 
     <body>
+     
+	<div class="card-header page-top">
+		<div class="row">
+			<div class="col-md-3">
+				<h5>Leads List</h5>
+			</div>
+				<div class="col-md-9 ">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
+						<li class="breadcrumb-item "><a href="CustomerList.htm"> Leads List </a></li>
+						<li class="breadcrumb-item active " aria-current="page">Lead</li>
+					</ol>
+				</div>
+			</div>
+	</div>	
+	<div class="page card dashboard-card">
+	
+	<div class="card-body" >
+	
+	
+	<div align="center">
+		<%String ses=(String)request.getParameter("result"); 
+		String ses1=(String)request.getParameter("resultfail");
+		if(ses1!=null){ %>
+			<div class="alert alert-danger" role="alert">
+				<%=ses1 %>
+			</div>
+			
+		<%}if(ses!=null){ %>
+			
+			<div class="alert alert-success" role="alert">
+				<%=ses %>
+			</div>
+		<%} %>
+	</div>
+    
     <% Customer customer = (Customer) request.getAttribute("CustomerDetails"); %>        
     <div id ="firstDiv"> 
          
-
-
             <div id="firstNav">
                 <ul id = "FirstContentLink">
                     <li> <a href="" class="firstnav-button">
@@ -441,6 +475,9 @@ table {
             </div>
 
         </div>
+   
+   </div>
+   </div>
     </body>
 
 

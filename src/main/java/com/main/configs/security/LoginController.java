@@ -1,15 +1,17 @@
 package com.main.configs.security;
 
-import com.main.configs.enums.UserTypes;
+import com.main.dto.AccessControlDto;
 import com.main.model.CrmUser;
 import com.main.model.LoginStamping;
-import com.main.repository.CrmUserRepository;
+import com.main.service.AccessControlService;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-
 
 @Controller
 public class LoginController {
@@ -29,6 +31,9 @@ public class LoginController {
 
     @Autowired
     private CrmService crmService;
+
+    @Autowired
+    private AccessControlService accessControlService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, @RequestParam(value = "error", required = false) String error,
@@ -80,7 +85,10 @@ public class LoginController {
             CrmUser login = crmService.findUserByEmail(req.getUserPrincipal().getName());
             ses.setAttribute("UserType", login.getRole());
             ses.setAttribute("userId",login.getUserId());
-
+            ses.setAttribute("user",login);
+            List<AccessControlDto> accessControlDto = accessControlService.getAccessControlDto(login.getRole());
+            ses.setAttribute("UrlList", accessControlDto );
+            ses.setAttribute("ModulesList", accessControlService.getModulesForUserType(accessControlDto));
             String IpAddress="Not Available";
             try{
                 IpAddress = req.getRemoteAddr();
@@ -102,15 +110,32 @@ public class LoginController {
                     .build();
             crmService.LoginStampingInsert(stamping);
 
-            if(login.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
-                return "redirect:/Dashboard.htm";
-            }
-            return "redirect:/CustomerList.htm";
+//            if(login.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
+//                return "redirect:/Dashboard.htm";
+//            }
+            return "redirect:/Dashboard.htm";
         } catch (Exception e) {
             logger.error(new Date() + " Login Issue Occured When Login By " + req.getUserPrincipal().getName(), e);
             e.printStackTrace();
             return "static/error";
         }
     }
+
+//    @RequestMapping("/error")
+//    public String handleError(HttpServletRequest req) {
+//        Object status = req.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+//        if (status != null) {
+//            Integer statusCode = Integer.valueOf(status.toString());
+//
+//            if (statusCode == HttpStatus.NOT_FOUND.value()) {
+//                req.setAttribute("ErrorMsg", "Error 404");
+//            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+//                req.setAttribute("ErrorMsg", "Error 500");
+//            } else {
+//                req.setAttribute("ErrorMsg", "Error 500");
+//            }
+//        }
+//        return "static/Error";
+//    }
 
 }

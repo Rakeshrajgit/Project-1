@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface CustomerRepo extends JpaRepository<Customer, Integer> {
-    Customer findByCustomerId(String appNo);
+    Customer findByCustomerId(String customerId);
     List<Customer> findByUserId(String userId);
     List<Customer> findByCustomerIdIsNull();
 

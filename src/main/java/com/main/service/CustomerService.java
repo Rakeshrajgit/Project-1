@@ -1,8 +1,10 @@
 package com.main.service;
 
 import com.main.model.Customer;
+import com.main.model.CustomerStatus;
 import com.main.model.LeadViewPunching;
 import com.main.repository.CustomerRepo;
+import com.main.repository.CustomerStatusRepo;
 import com.main.repository.LeadViewPunchingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,17 @@ public class CustomerService {
     private CustomerRepo customerRepo;
 
     @Autowired
+    private CustomerStatusRepo customerStatusRepo;
+
+    @Autowired
     private LeadViewPunchingRepo leadViewPunchingRepo;
 
     public List<Customer> getAllCustomer(){
         return customerRepo.findAll();
     }
 
-    public Customer getCustomerByAppNo(String AppNo){
-        return customerRepo.findByCustomerId(AppNo);
+    public Customer getCustomerByCustomerId(String customerId){
+        return customerRepo.findByCustomerId(customerId);
     }
 
     public List<Customer> getCustomersByCustomerId(String customerId){
@@ -51,5 +56,9 @@ public class CustomerService {
         customer.setUserId(agentId.equalsIgnoreCase("")?null:agentId);
         customerRepo.save(customer);
         return customer.getId();
+    }
+
+    public List<CustomerStatus> getAllCustomerStatus(){
+        return customerStatusRepo.findAll();
     }
 }

@@ -2,12 +2,14 @@ package com.main.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "customer")
 @Data
+@ToString
 public class Customer extends BaseEntity{
 
 	@Id
@@ -38,7 +40,7 @@ public class Customer extends BaseEntity{
 	private String idProof2;
 	private Integer openCibilScore;
 	private LocalDate openDate;
-	private String closeCibilScore;
+	private Integer closeCibilScore;
 	private LocalDate closeDate;
 
 	private int isActive;
