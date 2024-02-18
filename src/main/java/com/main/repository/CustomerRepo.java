@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface CustomerRepo extends JpaRepository<Customer, Integer> {
-    Customer findByAppNo(Long appNo);
-    List<Customer> findByAgentId(String agentId);
-    List<Customer> findByAgentIdIsNull();
+    Customer findByCustomerId(String appNo);
+    List<Customer> findByUserId(String userId);
+    List<Customer> findByCustomerIdIsNull();
 
 
 }

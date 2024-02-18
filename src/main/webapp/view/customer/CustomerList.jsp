@@ -264,8 +264,6 @@ margin-left=10px;
         <th>Email</th>
         <th>Phone No</th>
         <th>Lead Stage</th>
-        <th>Lead Score</th>
-        
         <%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
         	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
         <%} %>
@@ -280,27 +278,26 @@ margin-left=10px;
 		%>
 		<tr>
 		 	<td><%=i++ %></td>
-		 	<td><%=customer.getAppNo()%></td>
+		 	<td><%=customer.getCustomerId()%></td>
 			<td><%=customer.getFullName()%></td>
 			<td><%=customer.getEmail()%></td>
 			<td><%=customer.getPhoneNo()%></td>
 			<td><%="called"%></td>
-        	<td>100</td>
         	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
         	<td>
-        		<select id="customer-<%=customer.getAppNo() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getAppNo()%>',this.value);">
+        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getCustomerId()%>',this.value);">
 	            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-	            		<option value="" <%if(customer.getAgentId()==null){%> <%} %>style="color: red">UnAssigned</option>
+	            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 	            	<%} %>
 	                <%for(CrmUser agent : agents ){ %>
-	                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getAgentId())){%> selected<% }%>><%=agent.getUserName() %></option>
+	                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
 	                	
 	                <%} %>
              	</select>
         	</td>
         	<%} %>
 			<td><%="NA"%></td>  
-			<td><button type="submit" name="appNo" value="<%=customer.getAppNo() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
+			<td><button type="submit" name="appNo" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 		</tr>
 	<%}%>
 	

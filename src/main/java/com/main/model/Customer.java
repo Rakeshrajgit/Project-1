@@ -2,30 +2,44 @@ package com.main.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "Customer")
+@Table(name = "customer")
 @Data
 public class Customer extends BaseEntity{
 
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	private Long id;
-	private Long appNo;
+	private String customerId;
 	private String email;
 	private String fullName;
 	private String phoneNo;
-	private String agentId;
-	private int isActive=1;
+	private String gender;
+	private String address;
+	private String location;
+	private String userId;
+	private LocalDate dob;
+	private String remarks;
 
+	private String customerStatusCode;
+	private LocalDate leadGeneratedDate;
+	private String reportInterested;
+	private String reportTaken;
+	private String reportDate;
+	private String fullPaymentInterested;
+	private String paidFullPayment;
+	private LocalDate fullPaymentDate;
+	private String lookingForLoan;
+	private String typeOfLoan;
+	private String idProof1;
+	private String idProof2;
+	private Integer openCibilScore;
+	private LocalDate openDate;
+	private String closeCibilScore;
+	private LocalDate closeDate;
 
-	public Customer(){}
-	public Customer(String email, String fullName, String phoneNo) {
-		this.email=email;
-		this.fullName=fullName;
-		this.phoneNo=phoneNo;
-	}
+	private int isActive;
 }

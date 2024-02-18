@@ -8,5 +8,5 @@ import java.util.List;
 public interface LeadViewPunchingRepo extends JpaRepository<LeadViewPunching,Long> {
 
     List<LeadViewPunching> findByUserId(String userId);
-    List<LeadViewPunching> findByLeadAppNo(Long leadAppNo);
+    List<LeadViewPunching> findByCustomerId(String customerId);
 }

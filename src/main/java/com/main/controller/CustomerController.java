@@ -46,8 +46,7 @@ public class CustomerController {
         String email = req.getParameter("email");
         String phone = req.getParameter("phone");
 
-        Customer c = new Customer(email, fname, phone);
-//        cr.save(c);
+
         return mv;
     }
 
@@ -64,14 +63,14 @@ public class CustomerController {
                 if (userId == null) {
                     customerList = customerService.getAllCustomer();
                 } else if (userId.equalsIgnoreCase("UnAssigned")) {
-                    customerList = customerService.getCustomersIfAgentIdIsNull();
+                    customerList = customerService.getCustomersIfCustomerIdIsNull();
                 } else {
-                    customerList = customerService.getCustomersByAgentId(userId);
+                    customerList = customerService.getCustomersByCustomerId(userId);
                 }
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
             } else {
                 agents.add(crmUserService.getUsersByUserId(userId));
-                customerList = customerService.getCustomersByAgentId(userId);
+                customerList = customerService.getCustomersByCustomerId(userId);
             }
             req.setAttribute("Agents", agents);
             req.setAttribute("CustomerList", customerList);
@@ -87,9 +86,9 @@ public class CustomerController {
     public String RedirectCustomerDetailsView(HttpServletRequest req, HttpSession ses) {
         try {
             String userId = (String) ses.getAttribute("userId");
-            Long appNo = Long.parseLong(req.getParameter("appNo"));
-            customerService.punchLeadViewerInfo(userId, appNo);
-            ses.setAttribute("appNo", appNo);
+            String customerId = req.getParameter("appNo");
+            customerService.punchLeadViewerInfo(userId, customerId);
+            ses.setAttribute("customerId", customerId);
             return "redirect:/CustomerDetailsView.htm";
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -101,14 +100,11 @@ public class CustomerController {
     public String CustomerDetailsView(HttpServletRequest req, HttpSession ses) {
         try {
             String userType = (String) ses.getAttribute("UserType");
-            Long appNo = null;
-            String appNoString = req.getParameter("appNo");
-            if (appNoString == null) {
-                appNo = (Long) ses.getAttribute("appNo");
-            } else {
-                appNo = Long.parseLong(appNoString);
+            String customerId = req.getParameter("appNo");;
+            if (customerId == null) {
+                customerId = (String) ses.getAttribute("appNo");
             }
-            Customer customer = customerService.getCustomerByAppNo(appNo);
+            Customer customer = customerService.getCustomerByAppNo(customerId);
             if (customer != null) {
                 req.setAttribute("CustomerDetails", customer);
                 return "customer/CustomerDetailsView";

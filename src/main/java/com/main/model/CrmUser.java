@@ -23,6 +23,6 @@ public class CrmUser extends BaseEntity{
     private String userName;
     private String userEmail;
     private String password;
-    private Integer isActive=1;
+    private Integer isActive;
     private String role;
 }

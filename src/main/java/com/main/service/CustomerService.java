@@ -24,32 +24,31 @@ public class CustomerService {
         return customerRepo.findAll();
     }
 
-    public Customer getCustomerByAppNo(Long AppNo){
-        return customerRepo.findByAppNo(AppNo);
+    public Customer getCustomerByAppNo(String AppNo){
+        return customerRepo.findByCustomerId(AppNo);
     }
 
-    public List<Customer> getCustomersByAgentId(String agentId){
-        return customerRepo.findByAgentId(agentId);
+    public List<Customer> getCustomersByCustomerId(String customerId){
+        return customerRepo.findByUserId(customerId);
     }
-    public List<Customer> getCustomersIfAgentIdIsNull(){
-        return customerRepo.findByAgentIdIsNull();
+    public List<Customer> getCustomersIfCustomerIdIsNull(){
+        return customerRepo.findByCustomerIdIsNull();
     }
 
 
-    public void punchLeadViewerInfo(String userId,Long appNo){
+    public void punchLeadViewerInfo(String userId,String customerId){
 
         LeadViewPunching punch = new LeadViewPunching();
-        punch.setLeadAppNo(appNo);
+        punch.setCustomerId(customerId);
         punch.setUserId(userId);
         punch.setViewedDate(LocalDate.now());
         punch.setViewedTime(LocalTime.now());
         leadViewPunchingRepo.save(punch);
-
     }
 
     public Long updateAgentForCustomer(String appNo, String agentId){
-        Customer customer = customerRepo.findByAppNo(Long.parseLong(appNo));
-        customer.setAgentId(agentId.equalsIgnoreCase("")?null:agentId);
+        Customer customer = customerRepo.findByCustomerId(appNo);
+        customer.setUserId(agentId.equalsIgnoreCase("")?null:agentId);
         customerRepo.save(customer);
         return customer.getId();
     }

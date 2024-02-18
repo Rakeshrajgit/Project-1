@@ -1,9 +1,6 @@
 package com.main.model;
 
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,10 +15,11 @@ public abstract class BaseEntity {
     @CreatedBy
     protected String createdBy;
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(columnDefinition = "TIMESTAMP(0)")
     protected String createdDate;
     @LastModifiedBy
     protected String updatedBy;
+    @Column(columnDefinition = "TIMESTAMP(0)")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     protected String updatedDate;

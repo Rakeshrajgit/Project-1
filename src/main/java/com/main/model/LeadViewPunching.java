@@ -22,7 +22,7 @@ public class LeadViewPunching {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String userId;
-    private Long leadAppNo;
+    private String customerId;
     @Column(columnDefinition = "DATE")
     private LocalDate viewedDate;
     @Column(columnDefinition = "TIME")

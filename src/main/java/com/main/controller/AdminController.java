@@ -75,6 +75,7 @@ public class AdminController {
 				.userEmail(userEmail)
 				.password(password)
 				.role(role)
+				.isActive(1)
 				.build();
 		crmUserService.saveCrmUser(crmUser);
 		return "redirect:/Dashboard.htm";
