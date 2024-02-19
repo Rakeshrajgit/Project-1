@@ -23,7 +23,6 @@ public class CustomerStateTransactions {
     @CreatedBy
     private String actionBy;
     @CreationTimestamp
-    @Column(columnDefinition = "TIMESTAMP(0)")
     private LocalDateTime transactTimeStamp;
 
 }

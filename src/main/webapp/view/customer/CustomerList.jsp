@@ -1,4 +1,4 @@
-<%@page import="com.main.model.CustomerStatus"%>
+<%@page import="com.main.model.CustomerStates"%>
 <%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="java.sql.*" %>
-<jsp:include page="../static/header.jsp"></jsp:include>
+  <jsp:include page="../static/header.jsp"></jsp:include>
 
 <!DOCTYPE html>
 <html>
@@ -134,7 +134,7 @@ margin-left=10px;
 <body>
 <%
  	List<Customer> customerList = (List<Customer>)request.getAttribute("CustomerList");
-	List<CustomerStatus> customerStatusList  = (List<CustomerStatus>)request.getAttribute("customerStatusList");
+	List<CustomerStates> customerStatusList  = (List<CustomerStates>)request.getAttribute("customerStatusList");
 
  	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
  	String userType = (String)request.getAttribute("userType");
@@ -260,7 +260,7 @@ margin-left=10px;
 					<td><%=customer.getEmail()%></td>
 					<td><%=customer.getPhoneNo()%></td>
 					<td>
-						<% CustomerStatus cStatus = customerStatusList.stream()
+						<% CustomerStates cStatus = customerStatusList.stream()
 						  .filter(status -> customer.getCustomerStatusCode().equals(status.getCustomerStatusCode()))
 						  .findAny()
 						  .orElse(null); 

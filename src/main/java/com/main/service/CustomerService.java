@@ -1,10 +1,10 @@
 package com.main.service;
 
 import com.main.model.Customer;
-import com.main.model.CustomerStatus;
+import com.main.model.CustomerStates;
 import com.main.model.LeadViewPunching;
 import com.main.repository.CustomerRepo;
-import com.main.repository.CustomerStatusRepo;
+import com.main.repository.CustomerStatesRepo;
 import com.main.repository.LeadViewPunchingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CustomerService {
     private CustomerRepo customerRepo;
 
     @Autowired
-    private CustomerStatusRepo customerStatusRepo;
+    private CustomerStatesRepo customerStatesRepo;
 
     @Autowired
     private LeadViewPunchingRepo leadViewPunchingRepo;
@@ -58,7 +58,7 @@ public class CustomerService {
         return customer.getId();
     }
 
-    public List<CustomerStatus> getAllCustomerStatus(){
-        return customerStatusRepo.findAll();
+    public List<CustomerStates> getAllCustomerStatus(){
+        return customerStatesRepo.findAll();
     }
 }
