@@ -25,8 +25,8 @@ public class LeadForm extends BaseEntity{
     private String leadEmail;
     private Long leadPhoneNo;
     private String leadLocation;
-//    @CreationTimestamp
-//    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime registeredDate;
     private int convertedToCustomer;
     private String leadStatus;
