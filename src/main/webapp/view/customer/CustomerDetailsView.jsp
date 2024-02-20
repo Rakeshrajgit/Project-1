@@ -287,7 +287,7 @@ table {
 	<div class="card-header page-top">
 		<div class="row">
 			<div class="col-md-3">
-				<h5>Leads List</h5>
+				<h5>Lead</h5>
 			</div>
 				<div class="col-md-9 ">
 					<ol class="breadcrumb">
@@ -301,7 +301,6 @@ table {
 	<div class="page card dashboard-card">
 	
 	<div class="card-body" >
-	
 	
 	<div align="center">
 		<%String ses=(String)request.getParameter("result"); 
