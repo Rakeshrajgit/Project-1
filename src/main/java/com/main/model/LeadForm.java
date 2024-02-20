@@ -1,7 +1,12 @@
 package com.main.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -10,6 +15,11 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Table(name = "lead")
 public class LeadForm extends BaseEntity{
 
@@ -33,6 +43,12 @@ public class LeadForm extends BaseEntity{
     private String customerId;
     private int leadPoints;
     private String remarks;
-    private boolean isActive;
+    private int isActive;
+    
+  
+    
+  
 
+    
+    
 }

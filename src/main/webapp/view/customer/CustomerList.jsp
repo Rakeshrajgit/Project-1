@@ -288,9 +288,23 @@ margin-left=10px;
 				</tr>
 			<%}%>
 			
+			
 		</table>
 		
+		
+		
+		
 		</form>
+		
+		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+		
+		<form action="Lead.htm" method="get">
+              <input type="submit" value="ADD">
+        </form>
+		
+		<% } %>
+		
+		
 	</div>
 
 </div>
