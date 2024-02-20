@@ -1,26 +1,18 @@
 package com.main.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "lead")
+@Table(name = "leads")
 public class LeadForm extends BaseEntity{
 
     @Id
@@ -31,12 +23,12 @@ public class LeadForm extends BaseEntity{
     private String leadAcqCode;
     private String leadName;
     private String leadEmail;
-    private long leadPhoneNo;
+    private Long leadPhoneNo;
     private String leadLocation;
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
+//    @CreationTimestamp
+//    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime registeredDate;
-    private Boolean convertedToCustomer;
+    private int convertedToCustomer;
     private String leadStatus;
     private String bound;
     private int callsCount;
@@ -44,11 +36,4 @@ public class LeadForm extends BaseEntity{
     private int leadPoints;
     private String remarks;
     private int isActive;
-    
-  
-    
-  
-
-    
-    
 }

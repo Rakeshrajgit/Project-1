@@ -13,5 +13,5 @@ public class LeadStates {
     private Integer id;
     private String leadStatusCode;
     private String leadStatus;
-    private boolean isCallStatus;
+    private int isCallStatus;
 }

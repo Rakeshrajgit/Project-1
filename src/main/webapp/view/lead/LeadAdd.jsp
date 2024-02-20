@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%@page import="com.main.model.LeadAcqTypes"%>
+<%@page import="java.util.List"%>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +11,11 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+<%
+List<LeadAcqTypes> sourceTypes = (List<LeadAcqTypes>)request.getAttribute("LeadSourceTypes");
+
+%>
 
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -45,12 +52,9 @@
                             <div class="form-group">
                                 <label for="source">Source:</label> <br>
                                 <select class="leadSource_opt" name="source" required>
-                                    <option>Sales User Created</option>
-                                    <option>Facebook/Insta</option>
-                                    <option>Bulk Import</option>
-                                    <option>Contact Form</option>
-                                    <option>Reference</option>
-                                    <option>[Other Values]</option>
+                                    <%for(LeadAcqTypes sourcetype : sourceTypes){ %>
+                                    	<option value="<%=sourcetype.getLeadAcqCode()%>"><%=sourcetype.getLeadAcqType() %></option>
+                                    <%} %>
                                 </select>
                             </div>
 
