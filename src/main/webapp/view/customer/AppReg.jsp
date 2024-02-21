@@ -161,7 +161,7 @@ form
 
      <div id = "form">
         <div id="FormHeader">
-            <img src="../FormTitle.png" alt="Ideal Score" width="1000px" height="85px">     
+            <img src="/webresources/images/FormTitle.png" alt="Ideal Score" width="1000px" height="85px">
         </div>
 
         <div id="formBody">
@@ -288,7 +288,7 @@ form
 
             <div class="form-group" id="sign">
                 For IDEAL SCORE Consultancy <br />
-                <img src="sign.png" alt="IdealScore" width="230px" height="60px"> <br />
+                <img src="/webresources/images/sign.png" alt="IdealScore" width="230px" height="60px"> <br />
               
 
             </div>

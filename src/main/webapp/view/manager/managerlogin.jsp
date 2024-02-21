@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<c:set var="contPath" value="${pageContext.request.contextPath}"/>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -38,13 +39,13 @@
                     class="img-fluid" alt="Sample image">
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                  <form action="managerLogin">
+                  <form action="/login" method="post">
                 
           
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                     <label class="form-label" for="form3Example3">Email address</label>
-                      <input type="email" name="email" id="form3Example3" class="form-control form-control-lg"
+                      <input type="email" name="username" id="form3Example3" class="form-control form-control-lg"
                         placeholder="Enter a valid email address" />
                       
                     </div>

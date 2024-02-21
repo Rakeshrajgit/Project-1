@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+  <jsp:include page="header.jsp"></jsp:include>
 
   <title>Dashboard</title>
   <meta content="" name="description">
@@ -18,16 +20,16 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="../webresources/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="../webresources/assets/css/style.css" rel="stylesheet">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -35,152 +37,6 @@
 <body>
 
   <!-- ======= Header ======= -->
-
-
-    <header id="header" class="header fixed-top d-flex align-items-center">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container-fluid">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown">
-                  <a class="nav-link " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    DASHBOARD
-                  </a>
-                </li>
-  
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
-                  role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    CONTENT
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#"></a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
-  
-  
-  
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
-                  role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   MARKETING
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                  </ul>
-                </li>
-  
-  
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
-                  role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    LEADS
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="Lead">Add Lead</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="PhoneCall">Lead PhoneCall</a></li>
-                  
-               
-                  </ul>
-                </li>
-  
-  
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    ANALYTICS
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
-  
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    REPORTS
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
-
-
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   REGISTER
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="managerReg">Management Team</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="csupportReg">C S Team</a></li>
-                    <!-- <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-                  </ul>
-                </li>
-  
-              </ul>
-                <!-- <div class="search-bar">
-                  <form class="search-form d-flex align-items-center" method="POST" action="#">
-                    <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                  </form> 
-                </div> -->
-               <!-- <div>
-                  <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                  <i class="bi bi-search"></i>
-                  </a>
-               </div> -->
-             
-               <div class="search-bar">
-                <form class="search-form d-flex align-items-center" method="POST" action="#">
-                  <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                  <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                </form>
-              </div>
-
-             
-          
-        
-          <div class="nav-item dropdown">
-            <a class="nav-link nav-icon"  href="#" data-bs-toggle="dropdown">
-              <i class="bi bi-bell"></i>
-              
-            </a>
-          </div>
-
-         <div class="icon">
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-question-circle"></i></a>
-          <!-- <div class="label">question-circle</div> -->
-         </div>
-        |
-          <div class="icon" >
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-person-circle"></i>
-          </a>
-           <!-- <div class="label">person-circle</div> -->
-           </div>
-
-          </div>
-
-      </div>
-    
-        </nav>
-        
-    
-  
-  </header>
-
 
   <main id="main" class="main" >
     <section class="section" >
@@ -411,14 +267,14 @@ function fetchDataBasedOnDate(selectedDate) {
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.min.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="../webresources/assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="../webresources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../webresources/assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="../webresources/assets/vendor/echarts/echarts.min.js"></script>
+  <script src="../webresources/assets/vendor/quill/quill.min.js"></script>
+  <script src="../webresources/assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="../webresources/assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="../webresources/assets/vendor/php-email-form/validate.js"></script>
 
 
   <!--Bottstrap Script-->
@@ -429,7 +285,7 @@ function fetchDataBasedOnDate(selectedDate) {
 
 
   <!-- Template Main JS File -->
-  <script src="assets/vendor/js/main.js"></script>
+  <script src="../webresources/assets/vendor/js/main.js"></script>
 
 </body>
 
