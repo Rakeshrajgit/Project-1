@@ -92,9 +92,12 @@ public class LeadController{
 	
 
 	@PostMapping(value="addlead.htm")
-	public String AddLead(HttpServletRequest req)
+	public String AddLead(HttpServletRequest req , HttpSession ses)
 	{
-		 String leadId = leadService.generateLeadId();
+		
+		String userId = (String) ses.getAttribute("userId");
+		
+		 String leadId = LeadIdGenerator.generateLeadId();
 		 String name= req.getParameter("name");
 		 String email= req.getParameter("email");
 		 Long phone = Long.parseLong(req.getParameter("phno"));
@@ -103,6 +106,7 @@ public class LeadController{
 		 
 		
 		LeadForm lf = LeadForm.builder()
+				.userId(userId)
 				.leadId(leadId)
 				.leadName(name)
 				.leadEmail(email)
