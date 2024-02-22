@@ -7,6 +7,7 @@ import com.main.service.CrmUserService;
 import com.main.service.LeadIdGenerator;
 import com.main.service.LeadService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,7 @@ public class LeadController{
 			req.setAttribute("Agents", agents);
 			req.setAttribute("LeadList", leadList);
 			req.setAttribute("userType", userType);
+			
 			return "lead/LeadsList";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,15 +94,19 @@ public class LeadController{
 	
 
 	@PostMapping(value="addlead.htm")
-	public String AddLead(HttpServletRequest req)
+	public String AddLead(HttpServletRequest req, HttpSession ses)
 	{
-		 String leadId = leadService.generateLeadId();
+		List<CrmUser> agents = new ArrayList<>();
+		String userId = (String) ses.getAttribute("userId");
+		
+
+		 String leadId = LeadIdGenerator.generateLeadId();
 		 String name= req.getParameter("name");
 		 String email= req.getParameter("email");
 		 Long phone = Long.parseLong(req.getParameter("phno"));
 		 String location = req.getParameter("location");
 		 String source = req.getParameter("source");
-		 
+		
 		
 		LeadForm lf = LeadForm.builder()
 				.leadId(leadId)
@@ -109,7 +115,9 @@ public class LeadController{
 				.leadPhoneNo(phone)
 				.leadLocation(location)
 				.leadAcqCode(source)
+				.userId(userId)
 				.isActive(1)
+				
 				.build();
 
 		leadService.saveLead(lf);
