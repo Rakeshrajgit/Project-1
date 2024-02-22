@@ -57,19 +57,28 @@ public class CustomerController {
             List<CrmUser> agents = new ArrayList<>();
             if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())
                     || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
+            	
                 userId = req.getParameter("userId");
-                if (userId == null) {
+                
+                if (userId == null) 
+                {
                     customerList = customerService.getAllCustomer();
-                } else if (userId.equalsIgnoreCase("UnAssigned")) {
+                }
+                else if (userId.equalsIgnoreCase("UnAssigned")) {
                     customerList = customerService.getCustomersIfCustomerIdIsNull();
-                } else {
+                }
+                else
+                {
                     customerList = customerService.getCustomersByCustomerId(userId);
                 }
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
-            } else {
+            }
+            else
+            {
                 agents.add(crmUserService.getUsersByUserId(userId));
                 customerList = customerService.getCustomersByCustomerId(userId);
             }
+            
             req.setAttribute("customerStatusList",customerService.getAllCustomerStatus());
             req.setAttribute("Agents", agents);
             req.setAttribute("CustomerList", customerList);

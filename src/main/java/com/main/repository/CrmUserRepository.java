@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CrmUserRepository extends JpaRepository<CrmUser,Long> {
+	
+	
     CrmUser findByUserEmail(String userEmail);
     CrmUser findByUserId(String userId);
     List<CrmUser> findByRole(String role);
