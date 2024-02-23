@@ -14,4 +14,5 @@ public class LeadStates {
     private String leadStatusCode;
     private String leadStatus;
     private int isCallStatus;
+    private int explicit;
 }

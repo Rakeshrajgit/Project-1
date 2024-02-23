@@ -148,7 +148,7 @@ margin-left=10px;
 	<div class="card-header page-top">
 		<div class="row">
 			<div class="col-md-3">
-				<h5>Leads List</h5>
+				<h5>Customers List</h5>
 			</div>
 				<div class="col-md-9 ">
 					<ol class="breadcrumb">
@@ -162,23 +162,15 @@ margin-left=10px;
 	
 	<div class="card-body" >
 	
-	
-	<div align="center">
-		<%String ses=(String)request.getParameter("result"); 
-		String ses1=(String)request.getParameter("resultfail");
-		if(ses1!=null){ %>
-			<div class="alert alert-danger" role="alert">
-				<%=ses1 %>
-			</div>
-			
-		<%}if(ses!=null){ %>
-			
-			<div class="alert alert-success" role="alert">
-				<%=ses %>
-			</div>
-		<%} %>
-	</div>
+	<%@ include file="../static/successFailureMsg.jsp" %>
 
+		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+		
+		<form action="CustomerAdd.htm" method="get" style="float: right;">
+              <input type="submit" class="btn btn-sm add-btn" value="add">
+        </form>
+		
+		<% } %>
 		<form action="CustomerList.htm" method="get">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Lead Stage
@@ -244,10 +236,12 @@ margin-left=10px;
 		        <th>Phone No</th>
 		        <th>Lead Stage</th>
 		        <%if(adm_man){ %>
-		        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+		        	<th>Owner  </th>
 		        <%} %>
-		        <th>Modify On <span style="color:skyblue;">&#8595;</span></th>
-		        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
+		        <th>Modify On </th>
+		        <th>Actions  </th>
+		        <th>Update Info </th>
+		        <th>Status </th>
 		    <tr>
 		
 			<% 
@@ -285,6 +279,10 @@ margin-left=10px;
 		        	<%} %>
 					<td><%= customer.getCloseCibilScore()!=null ? customer.getCloseCibilScore(): "-" %></td>  
 					<td><button type="submit" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
+					<td><button class="btn btn-sm update-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerEdit.htm" >Update</button></td>
+					<td><button class="btn btn-sm submit-btn" type="button" 
+					onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td>
+					
 				</tr>
 			<%}%>
 			
@@ -295,19 +293,116 @@ margin-left=10px;
 		
 		
 		</form>
-		
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
-		
-		<form action="Lead.htm" method="get">
-              <input type="submit" value="ADD">
-        </form>
-		
-		<% } %>
-		
+				
 		
 	</div>
 
 </div>
+<div class="modal fade customer-status-modal"  id="customer-status-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="min-width: 40% !important;min-height: 40% !important; ">
+		<div class="modal-content" >
+			<div class="modal-header" style="background: #F5C6A5; ">
+		        <div class="row" >
+		        	<div class="col-md-12">
+				    <h4>Customer Status Update</h4>
+				    </div>
+			    </div>
+			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			    	<i class="fa-solid fa-xmark" aria-hidden="true" ></i>
+			    </button>
+		    </div>
+			<div class="modal-body" style="min-height: 20rem;">
+				<form action="UpdateCustomerStatus.htm" method="post">
+					<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-6"> 
+				   			<span class="mandatory">Customer Name : </span> <span id="modal_customer_name"></span>
+			   			</div>
+			   			<div class="col-md-6"> 
+				   			<span class="mandatory">Customer Id : </span> <span id="modal_customer_Id"></span>
+			   			</div>
+					</div>
+					
+			   		<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-12"> 
+				   			<label>Status<span class="mandatory">*</span></label>
+				   			<select name="customer_new_status" class="form-control selectpicker" id="modal_customer_new_status" data-size="auto" data-live-search="true" data-container="body" >
+				   				<%for(CustomerStates state : customerStatusList){ %>
+				  					<option value="<%=state.getCustomerStatusCode() %>" data-supporting-value="<%=state.getExplicitPaymentType()%>"><%=state.getCustomerStatus() %></option>
+			 					<%} %>
+			   				</select>
+			   			</div>
+					</div>
+					
+					<div class="row" style=" padding: 5px; display:none;" id="modal_explicit_payment_row">
+			   			<div class="col-md-12"> 
+				   			<label>Full Payment Amount<span class="mandatory">*</span></label>
+				   			<input type="number" class="form-control" name="full_payment_amount" id="modal_full_payment_amount" value="0" min="0">
+			   			</div>
+					</div>
+					
+					<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-12"> 
+				   			<span>Remarks<span class="mandatory">*</span></span>
+				   			<textarea class="form-control" name="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
+			   			</div>
+					</div>
+					<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-12" align="center"> 
+				   			<button type="submit" class="brn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="">Submit </button>
+			   			</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+									
+
+</body>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	  // Event listener for select change
+	  $('#modal_customer_new_status').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+	    // Get selected options
+	    var selectedOptions = $(this).find('option:selected');
+
+		if(selectedOptions.data('supporting-value')===1){
+            $("#modal_full_payment_amount").attr('required', 'required');
+            $("#modal_explicit_payment_row").css("display", "block");
+         } else {
+ 			$("#modal_full_payment_amount").removeAttr('required')
+            $("#modal_explicit_payment_row").css("display", "none");
+         }
+	  });
+	});
+
+
+</script>
+
+
+<script type="text/javascript">
+
+function openStatusModal($customer_name, $customer_id, $status_code){
+	
+	
+	$('#modal_customer_name').html($customer_name);
+	$('#modal_customer_Id').html($customer_id);
+	$('#modal_customer_new_status').val($status_code).selectpicker('refresh');
+	$('#modal_btn_customer_id').val($customer_id);
+	
+	$('#customer-status-modal').modal('toggle');
+	
+}
+
+</script>
+
+
+
 <script type="text/javascript">
 
 function updateAgentForCustomer($appNo,$agentId){
@@ -336,6 +431,4 @@ function updateAgentForCustomer($appNo,$agentId){
 }
 
 </script>
-
-</body>
 </html>

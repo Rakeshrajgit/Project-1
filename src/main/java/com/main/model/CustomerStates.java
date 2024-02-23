@@ -13,6 +13,7 @@ public class CustomerStates {
     private Integer id;
     private String customerStatusCode;
     private String customerStatus;
-    private String isPaymentType;
+    private int isPaymentType;
     private Integer paymentAmount;
+    private int explicitPaymentType;
 }

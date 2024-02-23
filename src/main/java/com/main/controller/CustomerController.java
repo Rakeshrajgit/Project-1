@@ -1,10 +1,13 @@
 package com.main.controller;
 
+import com.main.CrmException;
 import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
 import com.main.model.Customer;
+import com.main.model.CustomerStateTransactions;
 import com.main.service.CrmUserService;
 import com.main.service.CustomerService;
+import com.main.utils.MyDateTimeUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,12 +68,12 @@ public class CustomerController {
                 } else if (userId.equalsIgnoreCase("UnAssigned")) {
                     customerList = customerService.getCustomersIfCustomerIdIsNull();
                 } else {
-                    customerList = customerService.getCustomersByCustomerId(userId);
+                    customerList = customerService.getCustomersByUserId(userId);
                 }
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
             } else {
                 agents.add(crmUserService.getUsersByUserId(userId));
-                customerList = customerService.getCustomersByCustomerId(userId);
+                customerList = customerService.getCustomersByUserId(userId);
             }
             req.setAttribute("customerStatusList",customerService.getAllCustomerStatus());
             req.setAttribute("Agents", agents);
@@ -127,6 +132,111 @@ public class CustomerController {
             log.error(e.getMessage());
             return "Agent assignment unsuccessful !";
         }
+    }
+
+    @RequestMapping({"CustomerAdd.htm","CustomerEdit.htm"})
+    public String customerAdd(HttpServletRequest req, HttpSession ses) {
+        try {
+
+            String customerId = req.getParameter("customer_id");
+            Customer customer  = customerService.getCustomerByCustomerId(customerId);
+
+            req.setAttribute("customer",customer);
+            return "customer/CustomerAdd";
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "static/Error";
+        }
+    }
+
+    @PostMapping({"CustomerAddSubmit.htm","CustomerEditSubmit.htm"})
+    public String customerAddEditSubmit(HttpServletRequest req, HttpSession ses, RedirectAttributes redir) {
+        try {
+
+            String customer_name = req.getParameter("customer_name");
+            String customer_email = req.getParameter("customer_email");
+            String customer_phone = req.getParameter("customer_phone");
+            String customer_gender = req.getParameter("customer_gender");
+            String customer_dob = req.getParameter("customer_dob");
+            String customer_address = req.getParameter("customer_address");
+            String customer_proof1 = req.getParameter("customer_proof1");
+            String customer_proof2 = req.getParameter("customer_proof2");
+            String customer_open_cibil = req.getParameter("customer_open_cibil");
+            String customer_cibil_open_date = req.getParameter("customer_cibil_open_date");
+            String customer_close_cibil = req.getParameter("customer_close_cibil");
+            String customer_cibil_close_date = req.getParameter("customer_cibil_close_date");
+            String customer_id = req.getParameter("customer_id");
+
+            String assign_self = req.getParameter("assign_self");
+            String userId = null;
+            if(assign_self!=null && assign_self.equalsIgnoreCase("yes")) {
+                userId = (String) ses.getAttribute("userId");
+            }
+
+            Customer customer = Customer.builder()
+                    .fullName(customer_name)
+                    .email(customer_email)
+                    .phoneNo(Long.parseLong(customer_phone))
+                    .gender(customer_gender)
+                    .dob(LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_dob)))
+                    .address(customer_address)
+                    .idProof1(customer_proof1)
+                    .idProof2(customer_proof2)
+                    .openCibilScore(customer_open_cibil.equalsIgnoreCase("")? null:Integer.parseInt(customer_open_cibil))
+                    .openDate((customer_cibil_open_date==null || customer_open_cibil.equalsIgnoreCase(""))?null:LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_cibil_open_date)))
+                    .closeCibilScore(customer_close_cibil.equalsIgnoreCase("")?null:Integer.parseInt(customer_close_cibil))
+                    .closeDate((customer_cibil_close_date==null || customer_close_cibil.equalsIgnoreCase(""))?null: LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_cibil_close_date)))
+                    .customerId(customer_id)
+                    .userId(userId)
+                    .isActive(1)
+                    .build();
+            customer = customerService.customerAddEdit(customer);
+
+            if (customer != null) {
+                redir.addAttribute("successMessage", "Customer action Successfully");
+            } else {
+                redir.addAttribute("failureMessage", "Customer action Unsuccessful");
+            }
+
+            return "redirect:/CustomerList.htm";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redir.addAttribute("failureMessage", "Customer action Unsuccessful");
+            return  "redirect:/CustomerList.htm";
+        }
+    }
+
+    @PostMapping("UpdateCustomerStatus.htm")
+    public String UpdateCustomerStatus(HttpServletRequest req, HttpSession ses,RedirectAttributes redir) {
+        try {
+            String userId = (String) ses.getAttribute("userId");
+            String customer_id = req.getParameter("modal_customer_id");
+            String agent_remarks = req.getParameter("modal_status_remarks");
+            String customer_status_code = req.getParameter("customer_new_status");
+            String full_payment_amount  = req.getParameter("full_payment_amount");
+
+            CustomerStateTransactions transaction = CustomerStateTransactions.builder()
+                    .actionBy(userId)
+                    .customerId(customer_id)
+                    .remarks(agent_remarks)
+                    .customerStatusCodeTo(customer_status_code)
+                    .build();
+
+            long result = customerService.updateCustomerStatusCode(transaction,full_payment_amount);
+
+            if (result !=0) {
+                redir.addAttribute("successMessage", "Customer State Updated Successfully");
+            } else {
+                redir.addAttribute("failureMessage", "Customer State Update Unsuccessful");
+            }
+        }catch (CrmException e){
+            redir.addAttribute("failureMessage", e.getMessage());
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            redir.addAttribute("failureMessage", "Customer action Unsuccessful");
+
+        }
+        return "redirect:/CustomerList.htm";
     }
 
 }

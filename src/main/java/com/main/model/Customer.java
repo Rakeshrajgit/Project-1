@@ -1,11 +1,13 @@
 package com.main.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customer")
 @Data
@@ -18,7 +20,7 @@ public class Customer extends BaseEntity{
 	private String customerId;
 	private String email;
 	private String fullName;
-	private String phoneNo;
+	private Long phoneNo;
 	private String gender;
 	private String address;
 	private String location;
@@ -36,6 +38,7 @@ public class Customer extends BaseEntity{
 	private LocalDate fullPaymentDate;
 	private String lookingForLoan;
 	private String typeOfLoan;
+	private LocalDate registerDate;
 	private String idProof1;
 	private String idProof2;
 	private Integer openCibilScore;
