@@ -6,13 +6,19 @@ import com.main.model.Customer;
 import com.main.service.CrmUserService;
 import com.main.service.LeadIdGenerator;
 import com.main.service.LeadService;
+import com.main.service.LeadServiceUpdate;
+
+import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.main.model.LeadForm;
@@ -28,12 +34,18 @@ import java.util.List;
 @Controller
 public class LeadController{
 	
+	
+	@Autowired
+	private LeadRepo leadRepo;
 
 	@Autowired
 	private CrmUserService crmUserService;
 
 	@Autowired
 	private LeadService leadService;
+	
+	@Autowired
+	private LeadServiceUpdate leadserviceupdate;
 
 	@GetMapping(value ="Lead.htm")
 	public String form(HttpServletRequest req)
@@ -134,6 +146,91 @@ public class LeadController{
 	            return "Agent assignment unsuccessful !";
 	        }
 	    }
+	 
+//	 @GetMapping("updatingLead.htm")
+//	 public String uLead(HttpServletRequest req, HttpSession ses)
+//	 {
+//		Long id = Long.parseLong(req.getParameter("leadId"));
+//		
+//		System.out.println("------------------------------------------");
+//		System.out.println(""+id);
+//
+//		 req.setAttribute("LeadSourceTypes", leadService.getLeadSource());
+//		 ses.setAttribute("Lead", id);		
+//		 return "lead/UpdateLead";
+//		 
+//	 }
+	 
+//	 @PutMapping("updateLead.htm")
+//	 public String updateLead(HttpServletRequest req, HttpSession ses)
+//	 {
+//		
+//		 
+//		 long lid = (long) ses.getAttribute("Lead");
+////		 Long lid = Long.parseLong(req.getParameter("leadId"));
+//		 
+//		 String userId = (String) ses.getAttribute("userId");
+//			
+//		 String leadId = LeadIdGenerator.generateLeadId();
+//		 String name= req.getParameter("name");
+//		 String email= req.getParameter("email");
+//		 Long phone = Long.parseLong(req.getParameter("phno"));
+//		 String location = req.getParameter("location");
+//		 String source = req.getParameter("source");
+//		 
+//		
+//		LeadForm lf = LeadForm.builder()
+//				.id(lid)
+//				.userId(userId)
+//				.leadId(leadId)
+//				.leadName(name)
+//				.leadEmail(email)
+//				.leadPhoneNo(phone)
+//				.leadLocation(location)
+//				.leadAcqCode(source)
+//				.isActive(1)
+//				.build();
+//		 
+//		leadService.saveLead(lf);
+//		 
+//		 return "redirect:/LeadList.htm";
+//	 }
 	
+	 
+	 // Delete Methods
+	 
+	 @GetMapping("deleteLead.htm")
+	 public String deleteLead(HttpServletRequest req)
+	 {
+		//   String leadId = req.getParameter("leadId");
+		 Long Id = Long.parseLong(req.getParameter("leadId"));
+		 
+		 leadRepo.deleteById(Id);
+		 
+		 return"redirect:/LeadList.htm"; 
+	 }
+	 
+	 
+	 
+	 // Update Methods
+	 
+
+	    
+	    @GetMapping("updatingLead.htm")
+	    public String showEditForm( Model model ,HttpServletRequest req) {
+	    	
+	    	Long id = Long.parseLong(req.getParameter("id"));
+	    	req.setAttribute("LeadSourceTypes", leadService.getLeadSource());
+	        LeadForm lead = leadserviceupdate.getLeadById(id);
+	        model.addAttribute("lead", lead);
+	        return "lead/editLead";
+	    }
+	    
+
+	    @PostMapping("/edit/{id}")
+	    public String updateLead(@PathVariable Long id, @ModelAttribute LeadForm updatedLead,HttpServletRequest req) {
+	    	leadserviceupdate.updateLead(id, updatedLead,req);
+	        return "redirect:/LeadList.htm"; // Redirect to lead list page after updating
+	    }
 
 }

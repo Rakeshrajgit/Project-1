@@ -253,6 +253,8 @@ margin-left=10px;
 		        
 		       
 		        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
+		        <th>Update</th>
+		        <th>Delete</th>
 		    <tr>
 		    
 		    
@@ -292,10 +294,25 @@ margin-left=10px;
 		             	</select>
 		        	</td>
 		        	<%} %>
+		        	
+		        	
 					
 		      
 					
 					<td><button type="submit" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
+					<%-- 
+					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
+					<td><a href="editing.htm?id=<%=lead.getId()%>">Update</a></td>
+					--%>
+					
+					
+					<td><button type="submit" name="id" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
+					
+					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="deleteLead.htm" >Delete</button></td>
+					
+					
+					
+		             
 				</tr>
 			<%}%>
 		

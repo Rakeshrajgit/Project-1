@@ -33,6 +33,9 @@ public class LeadService {
 	
 	 @Autowired
 	 private LeadViewPunchingRepo leadViewPunchingRepo;
+	 
+	 
+	 
 
 	public LeadForm saveLead(LeadForm leadForm){
 		return leadRepo.save(leadForm);
@@ -75,11 +78,5 @@ public class LeadService {
 	        return leadId;
 	    }
 	 
-	 
-	 
-	 
-	 
 
-	    
-	
 }
