@@ -1,5 +1,4 @@
 <%@page import="com.main.model.CustomerStates"%>
-<%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="java.util.List"%>

@@ -1,3 +1,5 @@
+<%@page import="com.main.model.LeadStates"%>
+<%@page import="com.main.model.LeadForm"%>
 <%@page import="com.main.model.CustomerStates"%>
 <%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
@@ -135,11 +137,13 @@ margin-left=10px;
 </head>
 <body>
 <%
-	List<CustomerStates> customerStatusList  = (List<CustomerStates>)request.getAttribute("customerStatusList");
 
- 	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
- 	String userType = (String)request.getAttribute("userType");
- 	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString());
+    List<LeadForm> leadList = (List<LeadForm>)request.getAttribute("LeadList");
+	List<LeadStates> leadStatusList  = (List<LeadStates>)request.getAttribute("leadStatusList");
+
+	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
+	String userType = (String)request.getAttribute("userType");
+	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString());
 
 %>
 
@@ -241,13 +245,76 @@ margin-left=10px;
 		        <th>Name</th>
 		        <th>Email</th>
 		        <th>Phone No</th>
-		        <th>Lead Stage</th>
-		        <%if(adm_man){ %>
+		        <th>Lead Status</th>
+		         <%if(adm_man){ %>
 		        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
 		        <%} %>
-		        <th>Modify On <span style="color:skyblue;">&#8595;</span></th>
+
+
+
 		        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
+		        <th>Update</th>
+		        <th>Delete</th>
 		    <tr>
+
+
+		    <%
+			int i=1;
+			for(LeadForm lead : leadList)
+			{
+				%>
+
+
+
+
+				<tr>
+				 	<td><%=i++ %></td>
+				 	<td><%=lead.getLeadId()%></td>
+					<td><%=lead.getLeadName()%></td>
+					<td><%=lead.getLeadEmail()%></td>
+					<td><%=lead.getLeadPhoneNo()%></td>
+						<td>
+						<% LeadStates lStatus = leadStatusList.stream()
+						  .filter(status -> lead.getLeadAcqCode().equals(status.getLeadStatus()))
+						  .findAny()
+						  .orElse(null);
+						  %>
+						  <%= lStatus!=null ? lStatus.getLeadStatus(): "-" %>
+					</td>
+					<%if(adm_man){ %>
+		        	<td>
+		        		<select id="lead-<%=lead.getLeadId() %>" name="userId" onchange="updateAgentForLead('<%=lead.getLeadId()%>',this.value);">
+			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+			            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
+			            	<%} %>
+			                <%for(CrmUser agent : agents ){ %>
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
+
+			                <%} %>
+		             	</select>
+		        	</td>
+		        	<%} %>
+
+
+
+
+
+					<td><button type="submit" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
+					<%--
+					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
+					<td><a href="editing.htm?id=<%=lead.getId()%>">Update</a></td>
+					--%>
+
+
+					<td><button type="submit" name="id" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
+
+					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="deleteLead.htm" >Delete</button></td>
+
+
+
+
+				</tr>
+			<%}%>
 		
 			
 			
@@ -273,14 +340,27 @@ margin-left=10px;
 </div>
 <script type="text/javascript">
 
-function updateAgentForCustomer($appNo,$agentId){
+
+function generateLeadId() {
+
+	  const randomNumber = Math.floor(Math.random() * 1000000);
+	  const timestamp = new Date().getTime();
+	  const leadId = `${timestamp}${randomNumber}`;
+
+	  return leadId;
+	}
+
+
+
+
+function updateAgentForLead(($appNo,$agentId){
 	
 	if(confirm('Are you Sure to update the owner for this customer?')){
 		
 		$.ajax({
 
 			type : "POST",
-			url : "UpdateAgentForCustomer.htm",
+			url : "UpdateAgentForLead.htm",
 			data : {
 					
 				appNo : $appNo ,

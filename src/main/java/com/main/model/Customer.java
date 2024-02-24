@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @ToString
 public class Customer extends BaseEntity{
 
+	
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	private Long id;
@@ -32,7 +33,7 @@ public class Customer extends BaseEntity{
 	private LocalDate leadGeneratedDate;
 	private String reportInterested;
 	private String reportTaken;
-	private String reportDate;
+	private LocalDate reportDate;
 	private String fullPaymentInterested;
 	private String paidFullPayment;
 	private LocalDate fullPaymentDate;
