@@ -178,20 +178,13 @@ margin-left=10px;
 	
 	<%@ include file="../static/successFailureMsg.jsp" %>
 
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
-		
-		<form action="CustomerAdd.htm" method="get" style="float: right;">
-              <input type="submit" class="btn btn-sm add-btn" value="add">
-        </form>
-		
-		<% } %>
 		<form action="CustomerList.htm" method="post">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Customer Stage
 		            <select id="customer_stage_dd" name="customer_status_code">
 		            	<option value="0" <%if(customerStatusCode.equalsIgnoreCase("0")){ %> selected<%} %>>All</option>
 		            	<%for(CustomerStates state : customerStatusList){ %>
-		            		<%if(state.getClosedStates()==0){ %>
+		            		<%if(state.getClosedStates()==1){ %>
 		            		<option value="<%=state.getCustomerStatusCode()%>" <%if(customerStatusCode.equalsIgnoreCase(state.getCustomerStatusCode())){ %> selected<%} %> ><%=state.getCustomerStatus()%></option>
 		            		<%} %>
 		            	<%} %>
@@ -245,7 +238,7 @@ margin-left=10px;
 		        <th>Registered Date </th>
 		        <th>Info  </th>
 		        <th>Update Info </th>
-		        <th>Status </th>
+		        <!-- <th>Status </th> -->
 		    <tr>
 		
 			<% 
@@ -277,7 +270,7 @@ margin-left=10px;
 					<td><%= MyDateTimeUtils.SqlToRegularDate(customer.getRegisterDate().toString()) %></td>  
 					<td><button type="submit" class="btn btn-sm misc-btn" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 					<td><button class="btn btn-sm update-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerEdit.htm" >Update</button></td>
-					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td>
+					<%-- <td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td> --%>
 					
 				</tr>
 			<%}%>

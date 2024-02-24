@@ -16,7 +16,9 @@ import java.util.concurrent.TimeUnit;
 public class MyDateTimeUtils {
     private static SimpleDateFormat regularDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private static SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    DateTimeFormatter sqlDateFormatLocalDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static DateTimeFormatter sqlDateFormatLocalDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 
     public static SimpleDateFormat getMonthNameAndYear() {
         return new SimpleDateFormat("MMM-yyyy");
@@ -396,5 +398,10 @@ public class MyDateTimeUtils {
         // Output the formatted date-time
         return formattedDateTime;
 
+    }
+    
+    
+    public static String LocalDateTimeToRegDateTime(LocalDateTime dateTime) {
+    	return formatter.format(dateTime);
     }
 }

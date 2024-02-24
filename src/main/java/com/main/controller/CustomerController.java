@@ -53,32 +53,53 @@ public class CustomerController {
         return mv;
     }
 
-    @GetMapping("CustomerList.htm")
+    @RequestMapping("CustomerList.htm")
     public String getCustomers(HttpServletRequest req, HttpSession ses) throws Exception {
         try {
             String userType = (String) ses.getAttribute("UserType");
-            String userId = (String) ses.getAttribute("userId");
             List<Customer> customerList = new ArrayList<>();
             List<CrmUser> agents = new ArrayList<>();
-            if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())
-                    || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
-                userId = req.getParameter("userId");
-                if (userId == null) {
-                    customerList = customerService.getAllCustomer();
-                } else if (userId.equalsIgnoreCase("UnAssigned")) {
-                    customerList = customerService.getCustomersIfCustomerIdIsNull();
-                } else {
-                    customerList = customerService.getCustomersByUserId(userId);
+
+            String start = req.getParameter("customer_added_from");
+            String end = req.getParameter("customer_added_to");
+            LocalDate startDate = LocalDate.now().minusMonths(1);
+            LocalDate endDate = LocalDate.now();
+            if(start!=null){
+                startDate = LocalDate.parse(MyDateTimeUtils.regularToSqlDate(start));
+                endDate = LocalDate.parse(MyDateTimeUtils.regularToSqlDate(end));
+            }
+
+            String customerStatusCode = req.getParameter("customer_status_code");
+            if(customerStatusCode==null){
+                customerStatusCode = "0";
+            }
+
+
+            String userId ="0";
+            if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
+                if (req.getParameter("userId")!=null) {
+                    userId = req.getParameter("userId");
+                }
+
+                if(userId.equalsIgnoreCase("UnAssigned")){
+                    userId = "NULL";
                 }
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
-            } else {
-                agents.add(crmUserService.getUsersByUserId(userId));
-                customerList = customerService.getCustomersByUserId(userId);
             }
+            else {
+                userId = (String) ses.getAttribute("userId");
+                agents.add(crmUserService.getUsersByUserId(userId));
+            }
+            customerList = customerService.getCustomerOpen(userId,startDate,endDate,customerStatusCode);
             req.setAttribute("customerStatusList",customerService.getAllCustomerStatus());
             req.setAttribute("Agents", agents);
             req.setAttribute("CustomerList", customerList);
             req.setAttribute("userType", userType);
+
+            req.setAttribute("fromDate", startDate.toString());
+            req.setAttribute("endDate", endDate.toString());
+            req.setAttribute("agentId", userId );
+            req.setAttribute("customerStatusCode", customerStatusCode);
             return "customer/CustomerList";
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,9 +132,12 @@ public class CustomerController {
             Customer customer = customerService.getCustomerByCustomerId(customerId);
             if (customer != null) {
                 req.setAttribute("CustomerDetails", customer);
+                req.setAttribute("CustomerTransactions",customerService.getCustomerTransactions(customer.getCustomerId()));
+                req.setAttribute("CustomerTransactionStates",customerService.getAllCustomerStatus());
+                req.setAttribute("CustomerPayments",customerService.getCustomerPayments(customer.getCustomerId()));
                 return "customer/CustomerDetailsView";
             } else {
-                throw new Exception("Failed to fetch Customer Info");
+                throw new CrmException("Failed to fetch Customer Info");
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -237,6 +261,62 @@ public class CustomerController {
 
         }
         return "redirect:/CustomerList.htm";
+    }
+
+
+    @RequestMapping("CustomerListClosed.htm")
+    public String customerListClosed(HttpServletRequest req, HttpSession ses) throws Exception {
+        try {
+            String userType = (String) ses.getAttribute("UserType");
+            List<Customer> customerList = new ArrayList<>();
+            List<CrmUser> agents = new ArrayList<>();
+
+            String start = req.getParameter("customer_added_from");
+            String end = req.getParameter("customer_added_to");
+            LocalDate startDate = LocalDate.now().minusMonths(1);
+            LocalDate endDate = LocalDate.now();
+            if(start!=null){
+                startDate = LocalDate.parse(MyDateTimeUtils.regularToSqlDate(start));
+                endDate = LocalDate.parse(MyDateTimeUtils.regularToSqlDate(end));
+            }
+
+            String customerStatusCode = req.getParameter("customer_status_code");
+            if(customerStatusCode==null){
+                customerStatusCode = "0";
+            }
+
+
+            String userId ="0";
+            if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
+                if (req.getParameter("userId")!=null) {
+                    userId = req.getParameter("userId");
+                }
+
+                if(userId.equalsIgnoreCase("UnAssigned")){
+                    userId = "NULL";
+                }
+                agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
+            }
+            else {
+                userId = (String) ses.getAttribute("userId");
+                agents.add(crmUserService.getUsersByUserId(userId));
+            }
+            System.out.println(userId+"   "+startDate+"   "+endDate+"   "+customerStatusCode);
+            customerList = customerService.getCustomerClosed(userId,startDate,endDate,customerStatusCode);
+            req.setAttribute("customerStatusList",customerService.getAllCustomerStatus());
+            req.setAttribute("Agents", agents);
+            req.setAttribute("CustomerList", customerList);
+            req.setAttribute("userType", userType);
+
+            req.setAttribute("fromDate", startDate.toString());
+            req.setAttribute("endDate", endDate.toString());
+            req.setAttribute("agentId", userId );
+            req.setAttribute("customerStatusCode", customerStatusCode);
+            return "customer/CustomerListClosed";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "static/error";
+        }
     }
 
 }

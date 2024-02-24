@@ -38,9 +38,14 @@ public class CustomerService {
         return customerRepo.findByCustomerId(customerId);
     }
 
-    public List<Customer> getCustomersByUserId(String customerId){
-        return customerRepo.findByUserId(customerId);
+    public List<Customer> getCustomerOpen(String customerId,LocalDate fromDate,LocalDate toDate,String customerStatusCode){
+        return customerRepo.findByCustomerOpen(customerId,fromDate,toDate,customerStatusCode);
     }
+
+    public List<Customer> getCustomerClosed(String customerId,LocalDate fromDate,LocalDate toDate,String customerStatusCode){
+        return customerRepo.findByCustomerClosed(customerId,fromDate,toDate,customerStatusCode);
+    }
+
     public List<Customer> getCustomersIfCustomerIdIsNull(){
         return customerRepo.findByCustomerIdIsNull();
     }
@@ -80,16 +85,17 @@ public class CustomerService {
     private Customer customerAdd(Customer customer){
         customer.setCustomerId(generateCustomerId());
         customer.setCustomerStatusCode("IIR");
+        customer.setReportInterested("yes");
         customer.setRegisterDate(LocalDate.now());
 
 
-        CustomerStateTransactions transaction = CustomerStateTransactions.builder()
-                .customerStatusCodeTo("IIR")
-                .customerStatusCodeFrom("IIR")
+//        CustomerStateTransactions transaction = CustomerStateTransactions.builder()
+//                .customerStatusCodeTo("IIR")
+//                .customerStatusCodeFrom("IIR")
 //                .actionBy(userId)
-                .customerId(customer.getCustomerId())
-                .build();
-        customerStateTransactionsRepo.save(transaction);
+//                .customerId(customer.getCustomerId())
+//                .build();
+//        customerStateTransactionsRepo.save(transaction);
 
         return customerRepo.save(customer);
     }
@@ -120,19 +126,24 @@ public class CustomerService {
     @Transactional
     public long updateCustomerStatusCode( CustomerStateTransactions transaction, String full_payment_amount) throws Exception {
         CustomerStates state_new =  customerStatesRepo.findByCustomerStatusCode(transaction.getCustomerStatusCodeTo());
+        Customer customer = customerRepo.findByCustomerId(transaction.getCustomerId());
+
         int payment_amount = 0;
+
         if(state_new.getIsPaymentType()==1 && state_new.getExplicitPaymentType()==0) {
-            List<CustomerStateTransactions> custTransactions = customerStateTransactionsRepo.findByCustomerId(transaction.getCustomerId());
+            List<CustomerStateTransactions> custTransactions = customerStateTransactionsRepo.findByCustomerIdOrderByTransactTimeStampAsc(transaction.getCustomerId());
             for (CustomerStateTransactions custTransaction : custTransactions) {
                 if (custTransaction.getCustomerStatusCodeTo().equalsIgnoreCase(state_new.getCustomerStatusCode())) {
                     throw new CrmException("Transaction Already Exists for this Customer");
                 }
             }
+            customer.setReportTaken("yes");
+            customer.setReportDate(LocalDate.now());
             payment_amount = state_new.getPaymentAmount();
         }
 
         if(state_new.getIsPaymentType()==1 && state_new.getExplicitPaymentType()==1) {
-            List<CustomerStateTransactions> custTransactions = customerStateTransactionsRepo.findByCustomerId(transaction.getCustomerId());
+            List<CustomerStateTransactions> custTransactions = customerStateTransactionsRepo.findByCustomerIdOrderByTransactTimeStampAsc(transaction.getCustomerId());
             for (CustomerStateTransactions custTransaction : custTransactions) {
                 if (custTransaction.getCustomerStatusCodeTo().equalsIgnoreCase(state_new.getCustomerStatusCode())) {
                     throw new CrmException("Transaction Already Exists for this Customer");
@@ -141,11 +152,16 @@ public class CustomerService {
             if(full_payment_amount==null || Integer.parseInt(full_payment_amount)<=0){
                 throw new CrmException("Invalid payment amount added");
             }
+            customer.setPaidFullPayment("yes");
+            customer.setFullPaymentDate(LocalDate.now());
             payment_amount = Integer.parseInt(full_payment_amount);
         }
 
-        Customer customer = customerRepo.findByCustomerId(transaction.getCustomerId());
 //        CustomerStates state_old =  customerStatesRepo.findByCustomerStatusCode(customer.getCustomerStatusCode());
+
+        if(state_new.getCustomerStatus().equalsIgnoreCase("IFP")){
+            customer.setFullPaymentInterested("yes");
+        }
         transaction.setCustomerStatusCodeFrom(customer.getCustomerStatusCode());
         customerStateTransactionsRepo.save(transaction);
 
@@ -174,5 +190,13 @@ public class CustomerService {
         String regex = "PYMT-"+LocalDate.now().getMonth().getValue()+"-"+LocalDate.now().getYear()+"-";
         long count = customerPaymentsRepo.findCountOfCustomerPaymentsLike(regex);
         return regex+(count+1);
+    }
+
+    public List<CustomerStateTransactions> getCustomerTransactions(String customerId){
+        return customerStateTransactionsRepo.findByCustomerIdOrderByTransactTimeStampAsc(customerId);
+    }
+
+    public List<CustomerPayments> getCustomerPayments(String customerId){
+        return customerPaymentsRepo.findByCustomerIdOrderByTransactionDateAsc(customerId);
     }
 }

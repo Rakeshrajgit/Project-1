@@ -16,4 +16,5 @@ public class CustomerStates {
     private int isPaymentType;
     private Integer paymentAmount;
     private int explicitPaymentType;
+    private int closedStates;
 }
