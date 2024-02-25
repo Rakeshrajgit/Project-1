@@ -1,3 +1,4 @@
+<%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="com.main.utils.MyDateTimeUtils"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.main.model.Customer"%>
@@ -16,6 +17,8 @@
 	SimpleDateFormat sdf= MyDateTimeUtils.getSqlDateFormat();
 	SimpleDateFormat sdf1=MyDateTimeUtils.getRegularDateFormat();
 	Customer customer = (Customer) request.getAttribute("customer");
+	
+    String userType = (String) session.getAttribute("UserType");
 %>
 
 
@@ -164,7 +167,7 @@
 						</div>
 					</div>
 					<%
-					if (customer == null) {
+					if (customer == null && !(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) )) {
 					%>
 					<div class="form-group">
 						<div class="row">

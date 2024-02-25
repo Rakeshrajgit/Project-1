@@ -178,7 +178,7 @@ margin-left=10px;
 	
 	<%@ include file="../static/successFailureMsg.jsp" %>
 
-		<form action="CustomerList.htm" method="post">
+		<form action="CustomerListClosed.htm" method="post">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Customer Stage
 		            <select id="customer_stage_dd" name="customer_status_code">

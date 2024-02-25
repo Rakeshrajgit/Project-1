@@ -187,7 +187,7 @@ public class CustomerService {
     }
 
     private String generateCustomerTransactionId(){
-        String regex = "PYMT-"+LocalDate.now().getMonth().getValue()+"-"+LocalDate.now().getYear()+"-";
+        String regex = "CUS-"+LocalDate.now().toString().replace("-","")+"-";
         long count = customerPaymentsRepo.findCountOfCustomerPaymentsLike(regex);
         return regex+(count+1);
     }

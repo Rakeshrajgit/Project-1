@@ -15,4 +15,5 @@ public class LeadStates {
     private String leadStatus;
     private int isCallStatus;
     private int explicit;
+    private int closedState;
 }

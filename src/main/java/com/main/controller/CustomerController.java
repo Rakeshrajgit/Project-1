@@ -148,9 +148,9 @@ public class CustomerController {
     @PostMapping("UpdateAgentForCustomer.htm")
     public @ResponseBody String updateAgentForCustomer(HttpServletRequest req, HttpSession ses) {
         try {
-            String appNo = req.getParameter("appNo");
+            String customerId = req.getParameter("appNo");
             String agentId = req.getParameter("agentId");
-            customerService.updateAgentForCustomer(appNo, agentId);
+            customerService.updateAgentForCustomer(customerId, agentId);
             return "Agent assigned successfully !";
         } catch (Exception e) {
             log.error(e.getMessage());

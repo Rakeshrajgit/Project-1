@@ -2,58 +2,114 @@ package com.main.controller;
 
 import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
-import com.main.model.Customer;
-import com.main.service.CrmUserService;
+import com.main.model.LeadForm;
 import com.main.service.LeadService;
+import com.main.utils.MyDateTimeUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.main.model.LeadForm;
-import com.main.repository.LeadRepo;
-
-import jakarta.servlet.http.HttpServletRequest;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class LeadController{
-	
-
-	@Autowired
-	private CrmUserService crmUserService;
 
 	@Autowired
 	private LeadService leadService;
 
-	@GetMapping(value ="Lead.htm")
+	@GetMapping(value ="LeadAdd.htm")
 	public String form(HttpServletRequest req)
 	{
 		req.setAttribute("LeadSourceTypes", leadService.getLeadSource());
 		return "lead/LeadAdd";
 	}
 
+	@PostMapping(value="LeadAddSubmit.htm")
+	public String AddLead(HttpServletRequest req,HttpSession ses)
+	{
+		String userId = (String) ses.getAttribute("userId");
 
-	@GetMapping("LeadList.htm")
-	public String getCustomers(HttpServletRequest req, HttpSession ses) throws Exception {
+		String name= req.getParameter("name");
+		 String email= req.getParameter("email");
+		 Long phone = Long.parseLong(req.getParameter("phno"));
+		 String location = req.getParameter("location");
+		 String source = req.getParameter("source");
+		 String bound = req.getParameter("bound");
+		 String selfAssign = req.getParameter("assign_self");
+		
+		LeadForm lead = LeadForm.builder()
+				.leadName(name)
+				.leadEmail(email)
+				.leadPhoneNo(phone)
+				.leadLocation(location)
+				.leadAcqCode(source)
+				.bound(bound)
+				.build();
+		if(selfAssign!=null && selfAssign.equalsIgnoreCase("yes")){
+			lead.setUserId(userId);
+		}
+
+		leadService.saveLead(lead);
+
+		return "redirect:/LeadList.htm";
+	}
+
+
+	@RequestMapping("LeadList.htm")
+	public String getLeads(HttpServletRequest req, HttpSession ses) throws Exception {
 		try {
 			String userType = (String) ses.getAttribute("UserType");
-			String userId = (String) ses.getAttribute("userId");
-			List<Customer> customerList = new ArrayList<>();
+			List<LeadForm> leadList = new ArrayList<>();
 			List<CrmUser> agents = new ArrayList<>();
-			if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())
-					|| userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){
-				agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
+
+			String start = req.getParameter("lead_added_from");
+			String end = req.getParameter("lead_added_to");
+			LocalDate startDate = LocalDate.now().minusMonths(1);
+			LocalDate endDate = LocalDate.now();
+			if(start!=null){
+				startDate = LocalDate.parse(MyDateTimeUtils.regularToSqlDate(start));
+				endDate = LocalDate.parse(MyDateTimeUtils.regularToSqlDate(end));
+			}
+
+			String leadStatusCode = req.getParameter("lead_status_code");
+			if(leadStatusCode==null){
+				leadStatusCode = "0";
+			}
+
+			String userId ="0";
+			if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
+				if (req.getParameter("userId")!=null) {
+					userId = req.getParameter("userId");
+				}
+
+				if(userId.equalsIgnoreCase("UnAssigned")){
+					userId = "NULL";
+				}
+				agents = leadService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
 			}
 			else {
-				agents.add(crmUserService.getUsersByUserId(userId));
+				userId = (String) ses.getAttribute("userId");
+				agents.add(leadService.getUsersByUserId(userId));
 			}
+			leadList = leadService.getLeadsOpen(userId,startDate,endDate,leadStatusCode);
+			req.setAttribute("leadStatusList",leadService.getAllLeadStatus());
 			req.setAttribute("Agents", agents);
-			req.setAttribute("CustomerList", customerList);
+			req.setAttribute("leadList", leadList);
 			req.setAttribute("userType", userType);
+
+			req.setAttribute("fromDate", startDate.toString());
+			req.setAttribute("endDate", endDate.toString());
+			req.setAttribute("agentId", userId );
+			req.setAttribute("leadStatusCode", leadStatusCode);
 			return "lead/LeadsList";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,28 +117,17 @@ public class LeadController{
 		}
 	}
 
-	@PostMapping(value="addlead.htm")
-	public String AddLead(HttpServletRequest req)
-	{
-		 String name= req.getParameter("name");
-		 String email= req.getParameter("emial");
-		 Long phone = Long.parseLong(req.getParameter("phno"));
-		 String location = req.getParameter("location");
-		 String source = req.getParameter("source");
-		 
-		
-		LeadForm lf = LeadForm.builder()
-				.leadName(name)
-				.leadEmail(email)
-				.leadPhoneNo(phone)
-				.leadLocation(location)
-				.leadAcqCode(source)
-				.isActive(1)
-				.build();
 
-		leadService.saveLead(lf);
-
-		return "redirect:/LeadList.htm";
+	@PostMapping("UpdateAgentForLead.htm")
+	public @ResponseBody String UpdateAgentForLead(HttpServletRequest req, HttpSession ses) {
+		try {
+			String leadId = req.getParameter("leadId");
+			String agentId = req.getParameter("agentId");
+			leadService.updateAgentForLead(leadId, agentId);
+			return "Agent assigned successfully !";
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return "Agent assignment unsuccessful !";
+		}
 	}
-
 }

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
+<%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="com.main.model.LeadAcqTypes"%>
 <%@page import="java.util.List"%>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Register Page</title>
+  <jsp:include page="../static/header.jsp"></jsp:include>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<head>
+
 </head>
 <body>
 
 <%
 List<LeadAcqTypes> sourceTypes = (List<LeadAcqTypes>)request.getAttribute("LeadSourceTypes");
+String userType = (String) session.getAttribute("UserType");
+
 
 %>
 
@@ -27,21 +27,21 @@ List<LeadAcqTypes> sourceTypes = (List<LeadAcqTypes>)request.getAttribute("LeadS
                     </div>
                     <div class="card-body">
 
-                        <form action="addlead.htm" method="post">
+                        <form action="LeadAddSubmit.htm" method="post">
 
                             <div class="form-group">
-                                <label for="fullname">Full Name:</label>
+                                <label for="fullname">Full Name <span class="mandatory">*</span></label>
                                 <input type="text" class="form-control" id="fullname" name="name" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="email">Email:</label>
+                                <label for="email">Email <span class="mandatory">*</span></label>
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="phoneNo">Phone Number:</label>
-                                <input type="tel" class="form-control" id="phoneNo" name="phno" required>
+                                <label for="phoneNo">Phone Number <span class="mandatory">*</span></label>
+                                <input type="tel" class="form-control" id="phoneNo" name="phno" required pattern="[0-9]{10}" placeholder="1234567890">
                             </div>
 
                             <div class="form-group">
@@ -50,14 +50,31 @@ List<LeadAcqTypes> sourceTypes = (List<LeadAcqTypes>)request.getAttribute("LeadS
                             </div>
 
                             <div class="form-group">
-                                <label for="source">Source:</label> <br>
-                                <select class="leadSource_opt" name="source" required>
+                                <label for="source">Source:<span class="mandatory">*</span></label> <br>
+                                <select  class="form-control " name="source" required>
                                     <%for(LeadAcqTypes sourcetype : sourceTypes){ %>
                                     	<option value="<%=sourcetype.getLeadAcqCode()%>"><%=sourcetype.getLeadAcqType() %></option>
                                     <%} %>
                                 </select>
                             </div>
-
+                            
+                            <div class="form-group">
+                                <label for="source">Bound:<span class="mandatory">*</span></label> <br>
+                                <select  class="form-control " name="bound" required>
+                                    <option value="InBound">In Bound</option>
+                                    <option value="OutBound">Out Bound</option>
+                                </select>
+                            </div>
+                            <%if(!(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()))){ %>
+                            
+                            <div class="form-group">
+								<div class="row">
+									<div class="col-md-12">
+										<input type="checkbox" name="assign_self" value="yes"><span style="font-weight: 600;">&nbsp;&nbsp;&nbsp; Assign to Self</span>
+									</div>
+								</div>
+							</div>
+							<%} %>
                             <button type="submit" class="btn btn-primary btn-block">ADD</button>
 
                         </form>
@@ -68,11 +85,6 @@ List<LeadAcqTypes> sourceTypes = (List<LeadAcqTypes>)request.getAttribute("LeadS
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap JS and Popper.js (Optional) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>
