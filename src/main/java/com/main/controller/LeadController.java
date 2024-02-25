@@ -10,10 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,12 +37,12 @@ public class LeadController{
 		String userId = (String) ses.getAttribute("userId");
 
 		String name= req.getParameter("name");
-		 String email= req.getParameter("email");
-		 Long phone = Long.parseLong(req.getParameter("phno"));
-		 String location = req.getParameter("location");
-		 String source = req.getParameter("source");
-		 String bound = req.getParameter("bound");
-		 String selfAssign = req.getParameter("assign_self");
+		String email= req.getParameter("email");
+		Long phone = Long.parseLong(req.getParameter("phno"));
+		String location = req.getParameter("location");
+		String source = req.getParameter("source");
+		String bound = req.getParameter("bound");
+		String selfAssign = req.getParameter("assign_self");
 		
 		LeadForm lead = LeadForm.builder()
 				.leadName(name)
@@ -91,9 +89,6 @@ public class LeadController{
 					userId = req.getParameter("userId");
 				}
 
-				if(userId.equalsIgnoreCase("UnAssigned")){
-					userId = "NULL";
-				}
 				agents = leadService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
 			}
 			else {
@@ -116,8 +111,7 @@ public class LeadController{
 			return "static/error";
 		}
 	}
-
-
+	
 	@PostMapping("UpdateAgentForLead.htm")
 	public @ResponseBody String UpdateAgentForLead(HttpServletRequest req, HttpSession ses) {
 		try {
@@ -129,5 +123,40 @@ public class LeadController{
 			log.error(e.getMessage());
 			return "Agent assignment unsuccessful !";
 		}
+	}
+	@RequestMapping("LeadEdit.htm")
+	public String LeadEdit(Model model , HttpServletRequest req) {
+
+		String leadId = req.getParameter("lead_id");
+		LeadForm lead = leadService.getLeadById(leadId);
+
+		req.setAttribute("LeadSourceTypes", leadService.getLeadSource());
+		req.setAttribute("lead", lead);
+		return "lead/LeadEdit";
+	}
+
+	@PostMapping("LeadEditSubmit.htm")
+	public String LeadEditSubmit(HttpServletRequest req) {
+		String name= req.getParameter("name");
+		String email= req.getParameter("email");
+		Long phone = Long.parseLong(req.getParameter("phno"));
+		String location = req.getParameter("location");
+		String source = req.getParameter("source");
+		String bound = req.getParameter("bound");
+		String leadId = req.getParameter("lead_id");
+
+
+		LeadForm lead = LeadForm.builder()
+				.leadId(leadId)
+				.leadName(name)
+				.leadEmail(email)
+				.leadPhoneNo(phone)
+				.leadLocation(location)
+				.leadAcqCode(source)
+				.bound(bound)
+				.build();
+
+		leadService.updateLead(lead);
+		return "redirect:/LeadList.htm"; // Redirect to lead list page after updating
 	}
 }

@@ -201,12 +201,12 @@ margin-left=10px;
 		
 		        <div class="flex-item">Owner
 		            <select id="Dropdown" name="userId">
-		            	<option value="0" selected="selected" disabled>All</option>
+		            	<option value="0" selected="selected" >All</option>
 		            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
 		            		<option value="UnAssigned" style="color: red" <%if(agentId.equalsIgnoreCase("UnAssigned")){ %> selected<%} %>>UnAssigned</option>
 		            	<%} %>
 		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %></option>
+		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
 		                <%} %>
 		             </select>
 		        </div>
@@ -222,7 +222,7 @@ margin-left=10px;
 		        </div>
 		        
 		        <div class="flex-item">
-		        	<button type="submit" class="btn btn-sm submit-btn">Submit</button>
+		        	<button type="submit" class="btn btn-sm submit-btn" >Submit</button>
 		        </div>
 		    </div>
 		
@@ -268,7 +268,7 @@ margin-left=10px;
 			            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
 			                	
 			                <%} %>
 		             	</select>
@@ -294,6 +294,7 @@ margin-left=10px;
 	</div>
 
 </div>
+
 <div class="modal fade customer-status-modal"  id="customer-status-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 
 	<div class="modal-dialog modal-lg modal-dialog-centered" style="min-width: 40% !important;min-height: 40% !important; ">
@@ -345,7 +346,7 @@ margin-left=10px;
 					</div>
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12" align="center"> 
-				   			<button type="submit" class="brn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="">Submit </button>
+				   			<button type="submit" class="brn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
 			   			</div>
 					</div>
 				</form>

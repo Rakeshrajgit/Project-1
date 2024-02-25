@@ -14,8 +14,8 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
     List<Customer> findByUserId(String userId);
     List<Customer> findByCustomerIdIsNull();
 
-    @Query("SELECT COUNT(*) FROM Customer ")
-    long findCountOfCustomer();
+    @Query("SELECT COUNT(*) FROM Customer WHERE customerId LIKE :customerId")
+    long findCountOfCustomerIdLike(@Param("customerId") String customerId);
 
     @Query(value = "CALL customer_list_open (:userId,:fromDate,:toDate,:customerStatusCode)", nativeQuery = true)
     List<Customer> findByCustomerOpen(@Param("userId") String userId, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("customerStatusCode") String customerStatusCode);

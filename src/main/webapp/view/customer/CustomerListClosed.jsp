@@ -199,7 +199,7 @@ margin-left=10px;
 		            		<option value="UnAssigned" style="color: red" <%if(agentId.equalsIgnoreCase("UnAssigned")){ %> selected<%} %>>UnAssigned</option>
 		            	<%} %>
 		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %></option>
+		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %>(<%=agent.getUserId() %>)</option>
 		                <%} %>
 		             </select>
 		        </div>
@@ -256,13 +256,12 @@ margin-left=10px;
 					
 		        	<%if(adm_man){ %>
 		        	<td>
-		        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getCustomerId()%>',this.value);">
+		        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" >
 			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
 			            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
-			                	
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
 			                <%} %>
 		             	</select>
 		        	</td>

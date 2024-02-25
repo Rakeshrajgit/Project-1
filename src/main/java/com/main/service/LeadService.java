@@ -4,6 +4,7 @@ import com.main.model.*;
 import com.main.repository.CrmUserRepository;
 import com.main.repository.LeadAcqTypesRepo;
 import com.main.repository.LeadStatesRepo;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,17 +34,15 @@ public class LeadService {
 		lead.setLeadId(generateLeadId());
 		lead.setLeadStatus("LRE");
 		lead.setConvertedToCustomer(0);
-//		lead.setRegisteredDate(LocalDateTime.now());
 		lead.setLeadPoints(10);
 		lead.setCallsCount(0);
 		lead.setIsActive(1);
 
-//		lead.getRegisteredDate(LocalDate.now());
 		return leadRepo.save(lead);
 	}
 	private String generateLeadId(){
 		String regex = "LEA-"+LocalDate.now().toString().replace("-","")+"-";
-		long count = leadRepo.findCountOfLeadIdLike(regex);
+		long count = leadRepo.findCountOfLeadIdLike(regex+"%");
 		return regex+(count+1);
 	}
 
@@ -70,10 +69,27 @@ public class LeadService {
 		return leadStatesRepo.findAll();
 	}
 
-	public Long updateAgentForLead(String appNo, String agentId){
-		LeadForm lead = leadRepo.findByLeadId(appNo);
-		lead.setUserId(agentId.equalsIgnoreCase("")?null:agentId);
+	public Long updateAgentForLead(String leadId, String agentId){
+		LeadForm lead = leadRepo.findByLeadId(leadId);
+		lead.setUserId(agentId.equalsIgnoreCase("")?null : agentId);
 		leadRepo.save(lead);
 		return lead.getId();
+	}
+
+	public LeadForm getLeadById(String leadId) {
+		return leadRepo.findByLeadId(leadId);
+	}
+
+	public long updateLead(LeadForm lead) {
+		LeadForm leadOrg = leadRepo.findByLeadId(lead.getLeadId());
+		leadOrg.setLeadName(lead.getLeadName());
+		leadOrg.setLeadEmail(lead.getLeadEmail());
+		leadOrg.setLeadPhoneNo(lead.getLeadPhoneNo());
+		leadOrg.setLeadLocation(lead.getLeadLocation());
+		leadOrg.setLeadAcqCode(lead.getLeadAcqCode());
+		leadOrg.setBound(lead.getBound());
+		leadRepo.save(leadOrg);
+
+		return leadOrg.getId();
 	}
 }

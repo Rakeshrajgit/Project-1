@@ -80,10 +80,6 @@ public class CustomerController {
                 if (req.getParameter("userId")!=null) {
                     userId = req.getParameter("userId");
                 }
-
-                if(userId.equalsIgnoreCase("UnAssigned")){
-                    userId = "NULL";
-                }
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
             }
             else {
@@ -292,9 +288,6 @@ public class CustomerController {
                     userId = req.getParameter("userId");
                 }
 
-                if(userId.equalsIgnoreCase("UnAssigned")){
-                    userId = "NULL";
-                }
                 agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
             }
             else {

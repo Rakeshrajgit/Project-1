@@ -193,7 +193,7 @@
 							} else {
 							%>
 							<button type="submit" class="btn btn-sm submit-btn"
-								formaction="CustomerAddSubmit.htm" formmethod="post" >Add</button>
+								formaction="CustomerAddSubmit.htm" formmethod="post" onclick="return confirm('Are you sure to Submit?')">Add</button>
 							<%
 							}
 							%>

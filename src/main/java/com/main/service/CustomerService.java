@@ -118,8 +118,9 @@ public class CustomerService {
     }
 
     private String generateCustomerId(){
-        long count = customerRepo.findCountOfCustomer();
-        return "CUS-"+(count+1);
+        String regex = "CUS-"+LocalDate.now().toString().replace("-","")+"-";
+        long count = customerRepo.findCountOfCustomerIdLike(regex+"%");
+        return regex+(count+1);
     }
 
 
@@ -188,7 +189,7 @@ public class CustomerService {
 
     private String generateCustomerTransactionId(){
         String regex = "CUS-"+LocalDate.now().toString().replace("-","")+"-";
-        long count = customerPaymentsRepo.findCountOfCustomerPaymentsLike(regex);
+        long count = customerPaymentsRepo.findCountOfCustomerPaymentsLike(regex+"%");
         return regex+(count+1);
     }
 
