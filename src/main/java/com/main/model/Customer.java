@@ -29,7 +29,7 @@ public class Customer extends BaseEntity{
 	private String remarks;
 
 	private String customerStatusCode;
-	private LocalDate leadGeneratedDate;
+
 	private String reportInterested;
 	private String reportTaken;
 	private LocalDate reportDate;
@@ -47,4 +47,7 @@ public class Customer extends BaseEntity{
 	private LocalDate closeDate;
 
 	private int isActive;
+
+	private LocalDate leadGeneratedDate;
+	private String CustAcqType;
 }

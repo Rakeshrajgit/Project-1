@@ -346,7 +346,7 @@ margin-left=10px;
 					</div>
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12" align="center"> 
-				   			<button type="submit" class="brn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
+				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
 			   			</div>
 					</div>
 				</form>

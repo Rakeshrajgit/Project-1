@@ -151,7 +151,8 @@ margin-left=10px;
  	String endDate = (String)request.getAttribute("endDate");
  	String agentId = (String)request.getAttribute("agentId");
  	String leadStatusCode = (String)request.getAttribute("leadStatusCode");
- 	
+ 	String leadScore = (String)request.getAttribute("leadScore");
+
  	Map<String,LeadStates> leadStatesMap = new HashMap();
  	for(LeadStates state : leadStatusList){
  		leadStatesMap.put(state.getLeadStatusCode(),state);
@@ -207,7 +208,7 @@ margin-left=10px;
 		            		<option value="UnAssigned" style="color: red" <%if(agentId.equalsIgnoreCase("UnAssigned")){ %> selected<%} %>>UnAssigned</option>
 		            	<%} %>
 		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %></option>
+		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %> ( <%=agent.getUserId() %> )</option>
 		                <%} %>
 		             </select>
 		        </div>
@@ -220,6 +221,11 @@ margin-left=10px;
 		           <input type="text" name="Lead_added_to" data-date-format="yyyy-mm-dd" 
 		           					value="<%=MyDateTimeUtils.SqlToRegularDate(endDate) %>"	
 									required="required" id="Lead_added_to" class=" input-sm" readonly="readonly">
+		        </div>
+		        
+		        <div class="flex-item" >Lead Score >=
+		            <input type="number" id="Lead_score" name="Lead_score" min="0" max="50" <%if(leadScore!=null){ %> value="<%=leadScore %>" <%} %> >
+		            	
 		        </div>
 		        
 		        <div class="flex-item">
@@ -244,10 +250,11 @@ margin-left=10px;
 		        <%if(adm_man){ %>
 		        	<th>Owner</th>
 		        <%} %>
-		        <th>Modify On</th>
+		        <th>Lead Score</th>
 		        <th>Info</th>
 		        <th>Update</th>
 		        <th>Status</th>
+		        <th>Add To Customer</th>
 		    <tr>
 		
 			<% 
@@ -270,16 +277,22 @@ margin-left=10px;
 			            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
-			                	
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
 			                <%} %>
 		             	</select>
 		        	</td>
 		        	<%} %>
-					<td><%= MyDateTimeUtils.SqlToRegularDate(lead.getRegisteredDate().toString()) %></td>  
-					<td><button type="submit" class="btn btn-sm misc-btn" name="lead_id" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectleadDetailsView.htm" >Info</button></td>
+					<td><%= lead.getLeadPoints() %></td>  
+					<td><button type="submit" class="btn btn-sm misc-btn" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectLeadDetailsView.htm" >Info</button></td>
 					<td><button class="btn btn-sm update-btn" type="submit" name="lead_id" value="<%=lead.getLeadId() %>" formmethod="post" formaction="LeadEdit.htm" >Update</button></td>
 					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=lead.getLeadName() %>','<%=lead.getLeadId() %>','<%=lead.getLeadStatus() %>')" >Status</button></td>
+					<td>
+						<%if(lead.getLeadStatus().equalsIgnoreCase("IIR") && lead.getConvertedToCustomer()==0){ %>
+							<button class="btn btn-sm submit-btn" name="lead_to_customer"  value="<%=lead.getLeadId()%>" formaction="CustomerAdd.htm" formmethod="post" onclick="retuen confirm('Are You sure to ass this Lead to Customers ?')">
+								<i class="fa fa-plus" aria-hidden="true" ></i>
+							</button>
+						<%} %>
+					</td>
 					
 				</tr>
 			<%}%>
@@ -295,14 +308,14 @@ margin-left=10px;
 
 
 
-<div class="modal fade customer-status-modal"  id="customer-status-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade lead-status-modal"  id="lead-status-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 
 	<div class="modal-dialog modal-lg modal-dialog-centered" style="min-width: 40% !important;min-height: 40% !important; ">
 		<div class="modal-content" >
 			<div class="modal-header" style="background: #F5C6A5; ">
 		        <div class="row" >
 		        	<div class="col-md-12">
-				    <h4>Customer Status Update</h4>
+				    <h4>Lead Status Update</h4>
 				    </div>
 			    </div>
 			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -310,23 +323,25 @@ margin-left=10px;
 			    </button>
 		    </div>
 			<div class="modal-body" style="min-height: 20rem;">
-				<form action="UpdateCustomerStatus.htm" method="post">
+				<form action="UpdateLeadStatus.htm" method="post">
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-6"> 
-				   			<span class="mandatory">Customer Name : </span> <span id="modal_customer_name"></span>
+				   			<span class="mandatory">Lead Name : </span> <span id="modal_lead_name"></span>
 			   			</div>
 			   			<div class="col-md-6"> 
-				   			<span class="mandatory">Customer Id : </span> <span id="modal_customer_Id"></span>
+				   			<span class="mandatory">Lead Id : </span> <span id="modal_lead_Id"></span>
 			   			</div>
 					</div>
 					
 			   		<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12"> 
 				   			<label>Status<span class="mandatory">*</span></label>
-				   			<select name="customer_new_status" class="form-control selectpicker" id="modal_customer_new_status" data-size="auto" data-live-search="true" data-container="body" >
-				   				<%for(LeadStates state : leadStatusList){ %>
+				   			<select name="lead_new_status" class="form-control selectpicker" id="modal_lead_new_status" data-size="auto" data-live-search="true" data-container="body" >
+				   				<%for(LeadStates state : leadStatusList){
+				   					if(state.getExplicit()==1){%>
 				  					<option value="<%=state.getLeadStatusCode() %>" ><%=state.getLeadStatus() %></option>
-			 					<%} %>
+			 					<%	}
+				   				}%>
 			   				</select>
 			   			</div>
 					</div>
@@ -346,7 +361,7 @@ margin-left=10px;
 					</div>
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12" align="center"> 
-				   			<button type="submit" class="brn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
+				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_lead_id" id="modal_btn_lead_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
 			   			</div>
 					</div>
 				</form>
@@ -357,6 +372,21 @@ margin-left=10px;
 									
 
 </body>
+
+<script type="text/javascript">
+function openStatusModal($lead_name, $lead_id, $status_code){
+	
+	
+	$('#modal_lead_name').html($lead_name);
+	$('#modal_lead_Id').html($lead_id);
+	$('#modal_lead_new_status').val($status_code).selectpicker('refresh');
+	$('#modal_btn_lead_id').val($lead_id);
+	
+	$('#lead-status-modal').modal('toggle');
+	
+}
+
+</script>
 
 <script type="text/javascript">
 

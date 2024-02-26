@@ -1,8 +1,8 @@
 package com.main.controller;
 
+import com.main.CrmException;
 import com.main.configs.enums.UserTypes;
-import com.main.model.CrmUser;
-import com.main.model.LeadForm;
+import com.main.model.*;
 import com.main.service.LeadService;
 import com.main.utils.MyDateTimeUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public class LeadController{
 
 			String start = req.getParameter("lead_added_from");
 			String end = req.getParameter("lead_added_to");
+
 			LocalDate startDate = LocalDate.now().minusMonths(1);
 			LocalDate endDate = LocalDate.now();
 			if(start!=null){
@@ -95,11 +97,18 @@ public class LeadController{
 				userId = (String) ses.getAttribute("userId");
 				agents.add(leadService.getUsersByUserId(userId));
 			}
-			leadList = leadService.getLeadsOpen(userId,startDate,endDate,leadStatusCode);
+
+			String leadScore = req.getParameter("Lead_score");
+			if(leadScore==null){
+				leadScore="0";
+			}
+
+			leadList = leadService.getLeadsOpen(userId,startDate,endDate,leadStatusCode,Integer.parseInt(leadScore));
 			req.setAttribute("leadStatusList",leadService.getAllLeadStatus());
 			req.setAttribute("Agents", agents);
 			req.setAttribute("leadList", leadList);
 			req.setAttribute("userType", userType);
+			req.setAttribute("leadScore", leadScore);
 
 			req.setAttribute("fromDate", startDate.toString());
 			req.setAttribute("endDate", endDate.toString());
@@ -111,7 +120,7 @@ public class LeadController{
 			return "static/error";
 		}
 	}
-	
+
 	@PostMapping("UpdateAgentForLead.htm")
 	public @ResponseBody String UpdateAgentForLead(HttpServletRequest req, HttpSession ses) {
 		try {
@@ -128,7 +137,7 @@ public class LeadController{
 	public String LeadEdit(Model model , HttpServletRequest req) {
 
 		String leadId = req.getParameter("lead_id");
-		LeadForm lead = leadService.getLeadById(leadId);
+		LeadForm lead = leadService.getLeadByLeadId(leadId);
 
 		req.setAttribute("LeadSourceTypes", leadService.getLeadSource());
 		req.setAttribute("lead", lead);
@@ -159,4 +168,75 @@ public class LeadController{
 		leadService.updateLead(lead);
 		return "redirect:/LeadList.htm"; // Redirect to lead list page after updating
 	}
+
+
+	@PostMapping("UpdateLeadStatus.htm")
+	public String UpdateLeadStatus(HttpServletRequest req, HttpSession ses, RedirectAttributes redir) {
+		try {
+			String userId = (String) ses.getAttribute("userId");
+			String lead_id = req.getParameter("modal_lead_id");
+			String agent_remarks = req.getParameter("modal_status_remarks");
+			String lead_status_code = req.getParameter("lead_new_status");
+
+			LeadsStateTransactions transaction = LeadsStateTransactions.builder()
+					.actionBy(userId)
+					.leadId(lead_id)
+					.remarks(agent_remarks)
+					.leadStatusCodeTo(lead_status_code)
+					.build();
+
+			long result = leadService.updateLeadStatusCode(transaction);
+
+			if (result !=0) {
+				redir.addAttribute("successMessage", "Lead State Updated Successfully");
+			} else {
+				redir.addAttribute("failureMessage", "Lead State Update Unsuccessful");
+			}
+		}catch (CrmException e){
+			redir.addAttribute("failureMessage", e.getMessage());
+		}catch (Exception e) {
+			log.error(e.getMessage());
+			redir.addAttribute("failureMessage", "Lead action Unsuccessful");
+
+		}
+		return "redirect:/LeadList.htm";
+	}
+
+	@GetMapping("RedirectLeadDetailsView.htm")
+	public String RedirectLeadDetailsView(HttpServletRequest req, HttpSession ses) {
+		try {
+			String userId = (String) ses.getAttribute("userId");
+			String leadId = req.getParameter("leadId");
+			leadService.punchLeadViewerInfo(userId, leadId);
+			ses.setAttribute("leadId", leadId);
+			return "redirect:/LeadDetailsView.htm";
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return "static/error";
+		}
+	}
+
+	@GetMapping("LeadDetailsView.htm")
+	public String LeadDetailsView(HttpServletRequest req, HttpSession ses) {
+		try {
+			String userType = (String) ses.getAttribute("UserType");
+			String leadId = req.getParameter("leadId");;
+			if (leadId == null) {
+				leadId = (String) ses.getAttribute("leadId");
+			}
+			LeadForm lead = leadService.getLeadByLeadId(leadId);
+			if (lead != null) {
+				req.setAttribute("LeadDetails", lead);
+				req.setAttribute("LeadTransactions",leadService.getLeadTransactions(lead.getLeadId()));
+				req.setAttribute("LeadTransactionStates",leadService.getAllLeadStatus());
+				return "lead/LeadDetailsView";
+			} else {
+				throw new CrmException("Failed to fetch Lead Info");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return "static/error";
+		}
+	}
+
 }

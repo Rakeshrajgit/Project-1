@@ -34,17 +34,17 @@
 
                             <div class="form-group">
                                 <label for="email">Email <span class="mandatory">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" required onblur="this.value=this.value.trim();">
                             </div>
 
                             <div class="form-group">
                                 <label for="phoneNo">Phone Number <span class="mandatory">*</span></label>
-                                <input type="tel" class="form-control" id="phoneNo" name="phno" required pattern="[0-9]{10}" placeholder="1234567890">
+                                <input type="tel" class="form-control" id="phoneNo" name="phno" required pattern="[0-9]{10}" placeholder="1234567890" onblur="this.value=this.value.trim();">
                             </div>
 
                             <div class="form-group">
                                 <label for="location">Location:</label>
-                                <input type="text" class="form-control" id="location" name="location">
+                                <input type="text" class="form-control" id="location" name="location" onblur="this.value=this.value.trim();">
                             </div>
 
                             <div class="form-group">

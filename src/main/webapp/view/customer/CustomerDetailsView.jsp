@@ -149,7 +149,7 @@
 					</div>
 					<hr>
 					<div class="row">
-						<div class="col-md-12"><h3 style="text-decoration: underline;">Payments</h3></div>
+						<div class="col-md-12" align="center"><h4 style="font-weight: 600;">Payments</h4></div>
 					</div>
 					<div class="table-responsive">
 					   	<table class="table table-bordered table-hover table-striped table-condensed"   style="max-width: 100% !important"> 
@@ -190,7 +190,7 @@
 						
 					<hr>
 					<div class="row">
-						<div class="col-md-12"><h3 style="text-decoration: underline;">State Transactions</h3></div>
+						<div class="col-md-12" align="center"><h4 style="font-weight: 600;">State Transactions</h4></div>
 					</div>
 					<div class="row">
 					<div class="table-responsive">

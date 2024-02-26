@@ -14,8 +14,12 @@ public interface LeadRepo extends JpaRepository<LeadForm, Long> {
     @Query("SELECT COUNT(*) FROM LeadForm WHERE leadId LIKE :leadId")
     long findCountOfLeadIdLike(@Param("leadId") String leadId);
 
-    @Query(value = "CALL lead_list_open (:userId,:fromDate,:toDate,:LeadFormStatusCode)", nativeQuery = true)
-    List<LeadForm> findByLeadFormOpen(@Param("userId") String userId, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("LeadFormStatusCode") String LeadFormStatusCode);
+    @Query(value = "CALL lead_list_open (:userId, :fromDate, :toDate, :LeadFormStatusCode, :leadScore)", nativeQuery = true)
+    List<LeadForm> findByLeadFormOpen(@Param("userId") String userId,
+                                      @Param("fromDate") LocalDate fromDate,
+                                      @Param("toDate") LocalDate toDate,
+                                      @Param("LeadFormStatusCode") String LeadFormStatusCode,
+                                      @Param("leadScore") int leadScore);
 
     @Query(value = "CALL lead_list_close (:userId,:fromDate,:toDate,:LeadFormStatusCode)", nativeQuery = true)
     List<LeadForm> findByLeadFormClosed(@Param("userId") String userId, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("LeadFormStatusCode") String LeadFormStatusCode);

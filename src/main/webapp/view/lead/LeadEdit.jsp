@@ -66,9 +66,10 @@ LeadForm lead = (LeadForm)request.getAttribute("lead");
                                     <option value="OutBound" <%if("OutBound".equalsIgnoreCase(lead.getBound())){ %> selected<%} %> >Out Bound</option>
                                 </select>
                             </div>
-                      
+                      		
+                      		<%if(lead.getConvertedToCustomer()==0){ %>
                             <button type="submit" name="lead_id" value="<%=lead.getLeadId() %>" class="btn btn-sm update-btn btn-block" onclick="return confirm('Are you sure to Submit?')">Update</button>
-
+							<%} %>
                         </form>
 
                     </div>

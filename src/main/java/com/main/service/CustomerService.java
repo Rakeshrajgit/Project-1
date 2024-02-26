@@ -28,7 +28,13 @@ public class CustomerService {
     private CustomerPaymentsRepo customerPaymentsRepo;
 
     @Autowired
-    private LeadViewPunchingRepo leadViewPunchingRepo;
+    private LeadRepo leadRepo;
+
+    @Autowired
+    private LeadsStateTransactionsRepo leadsStateTransactionsRepo;
+
+    @Autowired
+    private CustomerViewPunchingRepo customerViewPunchingRepo;
 
     public List<Customer> getAllCustomer(){
         return customerRepo.findAll();
@@ -51,14 +57,14 @@ public class CustomerService {
     }
 
 
-    public void punchLeadViewerInfo(String userId,String customerId){
+    public void punchCustomerViewerInfo(String userId,String customerId){
 
-        LeadViewPunching punch = new LeadViewPunching();
+        CustomerViewPunching punch = new CustomerViewPunching();
         punch.setCustomerId(customerId);
         punch.setUserId(userId);
         punch.setViewedDate(LocalDate.now());
         punch.setViewedTime(LocalTime.now());
-        leadViewPunchingRepo.save(punch);
+        customerViewPunchingRepo.save(punch);
     }
 
     public Long updateAgentForCustomer(String appNo, String agentId){
@@ -72,10 +78,30 @@ public class CustomerService {
         return customerStatesRepo.findAll();
     }
 
-    public Customer customerAddEdit(Customer customer){
+    public Customer customerAddEdit(Customer customer,String lead_id){
 
         if(customer.getCustomerId()==null || customer.getCustomerId().trim().isEmpty()){
-            return customerAdd(customer);
+
+
+            if(lead_id!=null){
+                LeadForm lead = leadRepo.findByLeadId(lead_id);
+                customer.setLeadGeneratedDate(lead.getRegisteredDate().toLocalDate());
+                customer.setCustAcqType(lead.getLeadAcqCode());
+                customer = customerAdd(customer);
+                lead.setConvertedToCustomer(1);
+                lead.setCustomerId(customer.getCustomerId());
+                leadRepo.save(lead);
+
+                LeadsStateTransactions leadsTransaction =  LeadsStateTransactions.builder()
+                        .actionBy(customer.getCreatedBy())
+                        .leadId(lead.getLeadId())
+                        .leadStatusCodeTo("CTC")
+                        .build();
+                leadsStateTransactionsRepo.save(leadsTransaction);
+            }else{
+                customer = customerAdd(customer);
+            }
+            return customer;
         }else {
             return customerEdit(customer);
         }
