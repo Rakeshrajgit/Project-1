@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.main.model.Application;
 
 public interface AppRepo extends JpaRepository<Application,String> {
+	
+	
 }

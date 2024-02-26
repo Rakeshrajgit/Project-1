@@ -138,12 +138,12 @@ margin-left=10px;
 <body>
 <%
 
-    List<LeadForm> leadList = (List<LeadForm>)request.getAttribute("LeadList");
-	List<LeadStates> leadStatusList  = (List<LeadStates>)request.getAttribute("leadStatusList");
+    List<CrmUser> adminList = (List<CrmUser>)request.getAttribute("AdminList");
+
    
 	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
 	String userType = (String)request.getAttribute("userType");
-	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString());
+	
 
 %>
 
@@ -151,7 +151,7 @@ margin-left=10px;
 	<div class="card-header page-top">
 		<div class="row">
 			<div class="col-md-3">
-				<h5>Leads List</h5>
+				<h5>User List</h5>
 			</div>
 				<div class="col-md-9 ">
 					<ol class="breadcrumb">
@@ -182,7 +182,7 @@ margin-left=10px;
 		<%} %>
 	</div>
 
-		<form action="LeadList.htm" method="get">
+		<form action="UserList.htm" method="get">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Lead Stage
 		            <select id="Dropdown">
@@ -241,26 +241,21 @@ margin-left=10px;
 		
 		  <tr>
 		  		<th>SN</th>
-		  		<th>App. No</th>
-		        <th>Name</th>
-		        <th>Email</th>
-		        <th>Phone No</th>
-		        <th>Lead Status</th>
-		         <%if(adm_man){ %>
-		        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
-		        <%} %>
-	
-		        
+		  		<th>Id</th>
+		  		<th>UserId</th>
+		  		<th>UserName</th>
+		        <th>UserEmail</th>
+		        <th>Password</th>
 		       
-		        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
 		        <th>Update</th>
 		        <th>Delete</th>
 		    <tr>
 		    
 		    
-		    <% 
+		  
+		          <% 
 			int i=1;
-			for(LeadForm lead : leadList)
+			for(CrmUser user : adminList)
 			{
 				%>
 				
@@ -269,56 +264,22 @@ margin-left=10px;
 				
 				<tr>
 				 	<td><%=i++ %></td>
-				 	<td><%=lead.getLeadId()%></td>
-					<td><%=lead.getLeadName()%></td>
-					<td><%=lead.getLeadEmail()%></td>
-					<td><%=lead.getLeadPhoneNo()%></td>
-						<td>
-						<% LeadStates lStatus = leadStatusList.stream()
-						  .filter(status -> lead.getLeadAcqCode().equals(status.getLeadStatus()))
-						  .findAny()
-						  .orElse(null); 
-						  %>
-						  <%= lStatus!=null ? lStatus.getLeadStatus(): "-" %>
-					</td>
-					<%if(adm_man){ %>
-		        	<td>
-		        		<select id="lead-<%=lead.getLeadId() %>" name="userId" onchange="updateAgentForLead('<%=lead.getLeadId()%>',this.value);">
-			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
-			            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
-			            	<%} %>
-			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
-			                	
-			                <%} %>
-		             	</select>
-		        	</td>
-		        	<%} %>
+				 	<td><%=user.getId()%></td>
+				 	<td><%=user.getUserId()%></td>
+					<td><%=user.getUserName()%></td>
+					<td><%=user.getUserEmail()%></td>
+					<td><%=user.getPassword()%></td>
+					<td><button type="submit" name="id" value="<%=user.getId()%>" formmethod="get" formaction="updatingUser.htm" >Update</button></td>
+					
+					<td><button type="submit" name="UserId" value="<%=user.getId()%>" formmethod="get" formaction="deleteUser.htm" >Delete</button></td>	
 		        	
 		        	
-					
-		      
-					
-					<td><button type="submit" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
-					<%-- 
-					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
-					<td><a href="editing.htm?id=<%=lead.getId()%>">Update</a></td>
-					--%>
-					
-					
-					<td><button type="submit" name="id" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
-					
-					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="deleteLead.htm" >Delete</button></td>
-					
-					
-					
-		             
-				</tr>
+		        		</tr>
 			<%}%>
-		
-			
-			
-			
+		        
+		        
+		        	
+
 		</table>
 		
 		
@@ -326,13 +287,7 @@ margin-left=10px;
 		
 		</form>
 		
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
 		
-		<form action="Lead.htm" method="get">
-              <input type="submit" value="ADD">
-        </form>
-		
-		<% } %>
 		
 		
 	</div>

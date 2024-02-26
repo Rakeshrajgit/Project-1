@@ -205,7 +205,7 @@ margin-left=10px;
 		            		<option value="UnAssigned" style="color: red">UnAssigned</option>
 		            	<%} %>
 		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
+		                <option value="<%=agent.getUserId()%>"><%=agent.getUserId() %></option>
 		                <%} %>
 		             </select>
 		        </div>
@@ -239,9 +239,7 @@ margin-left=10px;
 		  <tr>
 		  		<td>SN</td>
 		  		<th>App. No</th>
-		        <th>Name</th>
 		        <th>Email</th>
-		        <th>Phone No</th>
 		        <th>Lead Stage</th>
 		        <%if(adm_man){ %>
 		        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
@@ -258,9 +256,9 @@ margin-left=10px;
 				<tr>
 				 	<td><%=i++ %></td>
 				 	<td><%=customer.getCustomerId()%></td>
-					<td><%=customer.getFullName()%></td>
+				<%--<td><%=customer.getFullName()%></td>--%>
 					<td><%=customer.getEmail()%></td>
-					<td><%=customer.getPhoneNo()%></td>
+				<%--<td><%=customer.getPhoneNo()%></td>--%>
 					<td>
 						<% CustomerStates cStatus = customerStatusList.stream()
 						  .filter(status -> customer.getCustomerStatusCode().equals(status.getCustomerStatusCode()))
@@ -277,7 +275,7 @@ margin-left=10px;
 			            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserId() %></option>
 			                	
 			                <%} %>
 		             	</select>
