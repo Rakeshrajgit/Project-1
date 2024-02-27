@@ -142,14 +142,14 @@ margin-left=10px;
 
  	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
  	String userType = (String)request.getAttribute("userType");
- 	
+
  	String fromDate = (String)request.getAttribute("fromDate");
  	String endDate = (String)request.getAttribute("endDate");
  	String agentId = (String)request.getAttribute("agentId");
  	String customerStatusCode = (String)request.getAttribute("customerStatusCode");
 
  	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString());
- 	
+
 	Map<String,CustomerStates> cusStatesMap = new HashMap();
  	for(CustomerStates state : customerStatusList){
 		cusStatesMap.put(state.getCustomerStatusCode(),state);
@@ -178,11 +178,11 @@ margin-left=10px;
 	<%@ include file="../static/successFailureMsg.jsp" %>
 
 		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
-		
+
 		<form action="CustomerAdd.htm" method="get" style="float: right;">
               <input type="submit" class="btn btn-sm add-btn" value="add">
         </form>
-		
+
 		<% } %>
 		<form action="CustomerList.htm" method="post">
 		    <div class="LeadStage">
@@ -194,7 +194,7 @@ margin-left=10px;
 		            		<option value="<%=state.getCustomerStatusCode()%>" <%if(customerStatusCode.equalsIgnoreCase(state.getCustomerStatusCode())){ %> selected<%} %> ><%=state.getCustomerStatus()%></option>
 		            		<%} %>
 		            	<%} %>
-		                
+
 		             </select>
 		        </div>
 		
@@ -211,24 +211,24 @@ margin-left=10px;
 		        </div>
 		
 		        <div class="flex-item">Registered between
-		            <input type="text" name="customer_added_from" data-date-format="yyyy-mm-dd" 
+		            <input type="text" name="customer_added_from" data-date-format="yyyy-mm-dd"
 		            				value="<%=MyDateTimeUtils.SqlToRegularDate(fromDate) %>"
 									required="required" id="customer_added_from" class=" input-sm" readonly="readonly">
-					 - 
-		           <input type="text" name="customer_added_to" data-date-format="yyyy-mm-dd" 
-		           					value="<%=MyDateTimeUtils.SqlToRegularDate(endDate) %>"	
+					 -
+		           <input type="text" name="customer_added_to" data-date-format="yyyy-mm-dd"
+		           					value="<%=MyDateTimeUtils.SqlToRegularDate(endDate) %>"
 									required="required" id="customer_added_to" class=" input-sm" readonly="readonly">
 		        </div>
-		        
+
 		        <div class="flex-item">
 		        	<button type="submit" class="btn btn-sm submit-btn" >Submit</button>
 		        </div>
 		    </div>
-		
-		 
+
+
 		</form>
 		<form action="CustomerList.htm" method="get">
-		 
+
 		<table class="table table-striped">
 		
 		  <tr>
@@ -273,11 +273,11 @@ margin-left=10px;
 		             	</select>
 		        	</td>
 		        	<%} %>
-					<td><%= MyDateTimeUtils.SqlToRegularDate(customer.getRegisterDate().toString()) %></td>  
+					<td><%= MyDateTimeUtils.SqlToRegularDate(customer.getRegisterDate().toString()) %></td>
 					<td><button type="submit" class="btn btn-sm misc-btn" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 					<td><button class="btn btn-sm update-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerEdit.htm" >Update</button></td>
 					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td>
-					
+
 				</tr>
 			<%}%>
 			
@@ -288,7 +288,7 @@ margin-left=10px;
 		
 		
 		</form>
-				
+
 		
 	</div>
 
@@ -311,16 +311,16 @@ margin-left=10px;
 			<div class="modal-body" style="min-height: 20rem;">
 				<form action="UpdateCustomerStatus.htm" method="post">
 					<div class="row" style=" padding: 5px" >
-			   			<div class="col-md-6"> 
+			   			<div class="col-md-6">
 				   			<span class="mandatory">Customer Name : </span> <span id="modal_customer_name"></span>
 			   			</div>
-			   			<div class="col-md-6"> 
+			   			<div class="col-md-6">
 				   			<span class="mandatory">Customer Id : </span> <span id="modal_customer_Id"></span>
 			   			</div>
 					</div>
-					
+
 			   		<div class="row" style=" padding: 5px" >
-			   			<div class="col-md-12"> 
+			   			<div class="col-md-12">
 				   			<label>Status<span class="mandatory">*</span></label>
 				   			<select name="customer_new_status" class="form-control selectpicker" id="modal_customer_new_status" data-size="auto" data-live-search="true" data-container="body" >
 				   				<%for(CustomerStates state : customerStatusList){ %>
@@ -329,22 +329,22 @@ margin-left=10px;
 			   				</select>
 			   			</div>
 					</div>
-					
+
 					<div class="row" style=" padding: 5px; display:none;" id="modal_explicit_payment_row">
-			   			<div class="col-md-12"> 
+			   			<div class="col-md-12">
 				   			<label>Full Payment Amount<span class="mandatory">*</span></label>
 				   			<input type="number" class="form-control" name="full_payment_amount" id="modal_full_payment_amount" value="0" min="0">
 			   			</div>
 					</div>
-					
+
 					<div class="row" style=" padding: 5px" >
-			   			<div class="col-md-12"> 
+			   			<div class="col-md-12">
 				   			<span>Remarks<span class="mandatory">*</span></span>
 				   			<textarea class="form-control" name="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
 			   			</div>
 					</div>
 					<div class="row" style=" padding: 5px" >
-			   			<div class="col-md-12" align="center"> 
+			   			<div class="col-md-12" align="center">
 				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
 			   			</div>
 					</div>
@@ -352,8 +352,9 @@ margin-left=10px;
 			</div>
 		</div>
 	</div>
+
 </div>
-									
+
 
 </body>
 
@@ -372,7 +373,7 @@ $(document).ready(function() {
 			format : 'DD-MM-YYYY'
 		}
 	});
-	
+
 	$('#customer_added_to').daterangepicker({
 		"singleDatePicker" : true,
 		"linkedCalendars" : false,
@@ -384,7 +385,7 @@ $(document).ready(function() {
 			format : 'DD-MM-YYYY'
 		}
 	});
-	
+
 
 });
 </script>
@@ -414,15 +415,15 @@ $(document).ready(function() {
 <script type="text/javascript">
 
 function openStatusModal($customer_name, $customer_id, $status_code){
-	
-	
+
+
 	$('#modal_customer_name').html($customer_name);
 	$('#modal_customer_Id').html($customer_id);
 	$('#modal_customer_new_status').val($status_code).selectpicker('refresh');
 	$('#modal_btn_customer_id').val($customer_id);
-	
+
 	$('#customer-status-modal').modal('toggle');
-	
+
 }
 
 </script>

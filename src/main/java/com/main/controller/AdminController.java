@@ -1,25 +1,47 @@
 package com.main.controller;
 
+import com.main.service.AdminService;
+
 import com.main.service.CrmUserService;
+import com.main.service.UserServiceUpdate;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
-import com.main.repository.CrmUserRepository;
+import com.main.model.LeadForm;
+import com.main.repository.AdminRepo;
+
 
 @Controller
 public class AdminController {
 
 	@Autowired
+	private AdminRepo adminrepo;
+	@Autowired
+	private AdminService adminservive;
+	
+	@Autowired
 	private CrmUserService crmUserService;
+	
+	@Autowired
+	private UserServiceUpdate userserviceupdate;
 
 	@GetMapping("/adminreg")
 	public ModelAndView m1()
@@ -99,5 +121,88 @@ public class AdminController {
 			return "static/error";
 		}
 	}
+	
+	
+	// Admin List 
+	
+	
+	
+	 @GetMapping("UserList.htm")
+	    public String getCustomers(HttpServletRequest req, HttpSession ses) throws Exception {
+	        try {
+	            String userType = (String) ses.getAttribute("UserType");
+	            String userId = (String) ses.getAttribute("userId");
+	            List<CrmUser> adminList = new ArrayList<>();
+	            List<CrmUser> agents = new ArrayList<>();
+	            if (userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())
+	                   ) {
+	            	
+	                userId = req.getParameter("userId");
+	                
+	                if (userId == null) 
+	                {
+	                    adminList = adminservive.getAllUsers();
+	                }
+	                else if (userId.equalsIgnoreCase("UnAssigned")) {
+	                	adminList = adminservive.getUsersIfUserIdIsNull();
+	                }
+	                else
+	                {
+	                	adminList = adminservive.getUsersByUserId(userId);
+	                }
+	                agents = crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString());
+	            }
+	            else
+	            {
+	                agents.add(crmUserService.getUsersByUserId(userId));
+	                adminList = adminservive.getUsersByUserId(userId);
+	            }
+	            
+	           
+	            req.setAttribute("Agents", agents);
+	            req.setAttribute("AdminList", adminList);
+	            req.setAttribute("userType", userType);
+	            return "admin/UserList";
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return "static/error";
+	        }
+	    }
+	 
+	 // Delete Method
+	 
+	 
+	 @GetMapping("deleteUser.htm")
+	 public String deleteLead(HttpServletRequest req)
+	 {
+		//   String leadId = req.getParameter("leadId");
+		 Long Id = Long.parseLong(req.getParameter("UserId"));
+		 
+		 adminrepo.deleteById(Id);
+		 
+		 return"redirect:/UserList.htm"; 
+	 }
+	 
+	 
+	 //Updating User Methods
+	 
+	 
+	 
+	  @GetMapping("updatingUser.htm")
+	    public String showEditForm( Model model ,HttpServletRequest req) {
+	    	
+	    	Long id = Long.parseLong(req.getParameter("id"));
+	    	
+	        CrmUser user = userserviceupdate.getUserById(id);
+	        model.addAttribute("user", user);
+	        return "admin/UpdateUser";
+	    }
+	  
+	  @PostMapping("/editing/{id}")
+	    public String updateUser(@PathVariable Long id, @ModelAttribute CrmUser updatedUser,HttpServletRequest req) {
+		  userserviceupdate.updateUser(id, updatedUser,req);
+	        return "redirect:/UserList.htm"; // Redirect to lead list page after updating
+	    }
+
 
 }

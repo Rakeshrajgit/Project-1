@@ -26,6 +26,7 @@ public class CrmUserService {
         user.setUserId(userId);
         return crmUserRepository.save(user);
     }
+
     private String generateUserId(String role){
         String userIdPrefix="";
         if(role.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
