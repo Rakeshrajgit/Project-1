@@ -3,6 +3,7 @@ package com.main.service;
 import com.main.configs.enums.UserTypes;
 import com.main.model.CrmUser;
 import com.main.repository.CrmUserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,22 +23,22 @@ public class CrmUserService {
     }
 
     public CrmUser saveCrmUser(CrmUser user){
-        String userId = generateUserId(user.getRole());
-        user.setUserId(userId);
+
+        user.setUserId(generateUserId(user.getRole()));
         return crmUserRepository.save(user);
     }
 
     private String generateUserId(String role){
         String userIdPrefix="";
         if(role.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
-            userIdPrefix = "ADM";
+            userIdPrefix = "ADM-";
         } else if (role.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())) {
-            userIdPrefix = "MAN";
+            userIdPrefix = "MAN-";
         } else if (role.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())) {
-            userIdPrefix = "AGE";
+            userIdPrefix = "AGE-";
         }
         long userNo= crmUserRepository.findCountByUserIdLike(userIdPrefix+"%");
-        String userId=userIdPrefix+"-"+(userNo+1);
+        String userId=userIdPrefix+(userNo+1);
         return userId;
     }
 
@@ -47,5 +48,28 @@ public class CrmUserService {
     public boolean checkUserEmailExists(String userEmail){
         CrmUser user = getUserByEmail(userEmail);
         return user==null;
+    }
+
+
+    public List<CrmUser> getAllUsers(){
+        return crmUserRepository.findByIsActive(1);
+    }
+
+    public long deleteUser(String userId) {
+
+        CrmUser  crmUser= crmUserRepository.findByUserId(userId);
+        crmUser.setIsActive(0);
+        crmUserRepository.save(crmUser);
+
+        return crmUser.getId();
+    }
+
+    public long updateUser(CrmUser crmUser) {
+        CrmUser userOrg =  crmUserRepository.findByUserId(crmUser.getUserId());
+        userOrg.setUserEmail(crmUser.getUserEmail());
+        userOrg.setUserName(crmUser.getUserName());
+        userOrg.setPassword(crmUser.getPassword());
+        crmUserRepository.save(userOrg);
+        return userOrg.getId();
     }
 }

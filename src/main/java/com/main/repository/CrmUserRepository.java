@@ -17,4 +17,6 @@ public interface CrmUserRepository extends JpaRepository<CrmUser,Long> {
     @Query("SELECT COUNT(*) FROM CrmUser WHERE userId LIKE :userId")
     long findCountByUserIdLike(@Param("userId") String userId);
 
+    List<CrmUser> findByIsActive(int isActive);
+
 }

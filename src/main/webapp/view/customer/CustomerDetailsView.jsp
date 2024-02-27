@@ -170,7 +170,7 @@
 									for(CustomerPayments payment : custPayments){ %>
 								<tr>
 									<td style="text-align: center;"><%=i++ %></td>
-									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTime(payment.getTransactionDate()) %></td>
+									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTimeAMPM(payment.getTransactionDate()) %></td>
 									<td><%=payment.getUserId() %></td>
 									<td><%=cusStatesMap.get(payment.getCustomerStatusCode()).getCustomerStatus() %></td>
 									<td><%=payment.getPaymentAmount() %></td>
@@ -212,7 +212,7 @@
 									for(CustomerStateTransactions transaction : custTransactions){ %>
 								<tr>
 									<td style="text-align: center;"><%=i++ %></td>
-									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTime(transaction.getTransactTimeStamp()) %></td>
+									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTimeAMPM(transaction.getTransactTimeStamp()) %></td>
 									<td><%=transaction.getActionBy() %></td>
 									<td><%=cusStatesMap.get(transaction.getCustomerStatusCodeFrom()).getCustomerStatus() %></td>
 									<td><%=cusStatesMap.get(transaction.getCustomerStatusCodeTo()).getCustomerStatus() %></td>

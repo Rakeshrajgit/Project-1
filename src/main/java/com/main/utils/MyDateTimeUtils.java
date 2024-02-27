@@ -19,6 +19,8 @@ public class MyDateTimeUtils {
     private static DateTimeFormatter sqlDateFormatLocalDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    private static DateTimeFormatter regDateFormatterAMPM = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm a");
+
 
     public static SimpleDateFormat getMonthNameAndYear() {
         return new SimpleDateFormat("MMM-yyyy");
@@ -403,5 +405,9 @@ public class MyDateTimeUtils {
     
     public static String LocalDateTimeToRegDateTime(LocalDateTime dateTime) {
     	return formatter.format(dateTime);
+    }
+
+    public static String LocalDateTimeToRegDateTimeAMPM(LocalDateTime dateTime) {
+        return regDateFormatterAMPM.format(dateTime);
     }
 }

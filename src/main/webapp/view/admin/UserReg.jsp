@@ -18,6 +18,7 @@
 				<div class="col-md-9 ">
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
+						<li class="breadcrumb-item "><a href="UserList.htm">Users List</a></li>
 						<li class="breadcrumb-item active " aria-current="page">Add User</li>
 					</ol>
 				</div>
@@ -27,23 +28,7 @@
 	
 	<div class="card-body" >
 	
-	
-	<div align="center">
-		<%String ses=(String)request.getParameter("result"); 
-		String ses1=(String)request.getParameter("resultfail");
-		if(ses1!=null){ %>
-			<div class="alert alert-danger" role="alert">
-				<%=ses1 %>
-			</div>
-			
-		<%}if(ses!=null){ %>
-			
-			<div class="alert alert-success" role="alert">
-				<%=ses %>
-			</div>
-		<%} %>
-	</div>
-  
+
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-6">
@@ -55,7 +40,7 @@
               <form action="UserReg.htm" method="post">
                 <div class="form-group">
                   <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username" name="username" required />
+                  <input type="text" class="form-control" id="username" name="username" required onblur="this.value=this.value.trim()" />
                 </div>
                 <div class="form-group">
                   <label for="Email">Email</label>
@@ -66,7 +51,7 @@
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" name="password" required/>
+                  <input type="password" class="form-control" id="password" name="password" required />
                 </div>
                 <div class="form-group">
                   <label for="role">Role</label>

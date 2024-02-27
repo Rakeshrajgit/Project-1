@@ -143,7 +143,7 @@
 									for(LeadsStateTransactions transaction : custTransactions){ %>
 								<tr>
 									<td style="text-align: center;"><%=i++ %></td>
-									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTime(transaction.getTransactTimeStamp()) %></td>
+									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTimeAMPM(transaction.getTransactTimeStamp()) %></td>
 									<td><%=transaction.getActionBy() %></td>
 									<td>
 										<%if(transaction.getLeadStatusCodeFrom()!=null){ %>

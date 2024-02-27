@@ -137,17 +137,10 @@ margin-left=10px;
 </head>
 <body>
 <%
-
     List<CrmUser> adminList = (List<CrmUser>)request.getAttribute("AdminList");
-
-   
-	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
 	String userType = (String)request.getAttribute("userType");
-	
-
 %>
 
- 
 	<div class="card-header page-top">
 		<div class="row">
 			<div class="col-md-3">
@@ -156,7 +149,7 @@ margin-left=10px;
 				<div class="col-md-9 ">
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
-						<li class="breadcrumb-item active " aria-current="page">Leads List</li>
+						<li class="breadcrumb-item active " aria-current="page">Users List</li>
 					</ol>
 				</div>
 			</div>
@@ -166,77 +159,22 @@ margin-left=10px;
 	<div class="card-body" >
 	
 	
-	<div align="center">
-		<%String ses=(String)request.getParameter("result"); 
-		String ses1=(String)request.getParameter("resultfail");
-		if(ses1!=null){ %>
-			<div class="alert alert-danger" role="alert">
-				<%=ses1 %>
-			</div>
-			
-		<%}if(ses!=null){ %>
-			
-			<div class="alert alert-success" role="alert">
-				<%=ses %>
-			</div>
-		<%} %>
-	</div>
+		<%@ include file="../static/successFailureMsg.jsp" %>
+		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+		
+		<form action="AddUser.htm" method="get" style="float: right;">
+              <input type="submit" class="btn btn-sm add-btn" value="Add">
+        </form>
+		
+		<% } %>
 
 		<form action="UserList.htm" method="get">
 		    <div class="LeadStage">
-		        <div class="flex-item" >Lead Stage
-		            <select id="Dropdown">
-		                <option value="activity1">All Selected</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		        </div>
-		
-		        <div class="flex-item"> Lead Source
-		            <select id="Dropdown">
-		                <option value="activity1">All Selected</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		
-		        </div>
-		
-		        <div class="flex-item">Owner
-		            <select id="Dropdown" name="userId" onchange="this.form.submit()">
-		            	<option value="" selected="selected" disabled>Select..</option>
-		            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-		            		<option value="UnAssigned" style="color: red">UnAssigned</option>
-		            	<%} %>
-		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
-		                <%} %>
-		             </select>
-		        </div>
-		
-		        <div class="flex-item">Date Range
-		            <select id="Dropdown">
-		                <option value="activity1">Created On</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		
-		             <select id="Dropdown">
-		                <option value="activity1">All Time</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		
-		        </div>
+		        
+	
 		    </div>
-		
-		    <div class="ThirdDiv">
-		        <div class="flex-child item1"></div>
-		        <div class="flex-child item2"></div>
-		        <div class="flex-child item3"></div>
-		        <div class="flex-child item4"></div>
-		        <div class="flex-child item5"></div>
-		        <div class="flex-child item6"></div>
-		    </div>
+		</form>
+	<form action="UserList.htm" method="get">
 		<table class="table table-striped">
 		
 		  <tr>
@@ -245,22 +183,15 @@ margin-left=10px;
 		  		<th>UserId</th>
 		  		<th>UserName</th>
 		        <th>UserEmail</th>
-		        <th>Password</th>
-		       
 		        <th>Update</th>
 		        <th>Delete</th>
 		    <tr>
 		    
-		    
-		  
-		          <% 
-			int i=1;
-			for(CrmUser user : adminList)
-			{
-				%>
-				
-
-
+		      <% 
+				int i=1;
+				for(CrmUser user : adminList)
+				{
+			%>
 				
 				<tr>
 				 	<td><%=i++ %></td>
@@ -268,13 +199,12 @@ margin-left=10px;
 				 	<td><%=user.getUserId()%></td>
 					<td><%=user.getUserName()%></td>
 					<td><%=user.getUserEmail()%></td>
-					<td><%=user.getPassword()%></td>
-					<td><button type="submit" name="id" value="<%=user.getId()%>" formmethod="get" formaction="updatingUser.htm" >Update</button></td>
+					<td><button type="submit" class="btn btn-sm update-btn" name="userId" value="<%=user.getUserId()%>" formmethod="get" formaction="updatingUser.htm" >Update</button></td>
 					
-					<td><button type="submit" name="UserId" value="<%=user.getId()%>" formmethod="get" formaction="deleteUser.htm" >Delete</button></td>	
+					<td><button type="submit" class="btn btn-sm delete-btn" name="userId" value="<%=user.getUserId()%>" formmethod="get" formaction="deleteUser.htm" onclick="return confirm('Are you sure to Delete?')">Delete</button></td>	
 		        	
 		        	
-		        		</tr>
+		        </tr>
 			<%}%>
 		        
 		        
@@ -282,58 +212,11 @@ margin-left=10px;
 
 		</table>
 		
-		
-		
-		
 		</form>
-		
-		
-		
 		
 	</div>
 
 </div>
-<script type="text/javascript">
-
-
-function generateLeadId() {
-	  
-	  const randomNumber = Math.floor(Math.random() * 1000000);
-	  const timestamp = new Date().getTime();
-	  const leadId = `${timestamp}${randomNumber}`;
-
-	  return leadId;
-	}
-
-
-
-
-function updateAgentForLead(($appNo,$agentId){
-	
-	if(confirm('Are you Sure to update the owner for this customer?')){
-		
-		$.ajax({
-
-			type : "POST",
-			url : "UpdateAgentForLead.htm",
-			data : {
-					
-				appNo : $appNo ,
-				agentId : $agentId ,
-				
-			},
-			datatype : 'json',
-			success : function(result) {
-				alert(result);
-			}
-		});
-		
-	}
-	
-	
-}
-
-</script>
 
 </body>
 </html>

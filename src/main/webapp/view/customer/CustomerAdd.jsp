@@ -51,7 +51,7 @@
 		<div class="card-body">
 
 			<div class="card-body">
-				<form method="post" autocomplete="off" onsubmit="return validateForm()">
+				<form method="post" autocomplete="off" >
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 					<div class="form-group">
