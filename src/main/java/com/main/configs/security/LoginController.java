@@ -40,7 +40,7 @@ public class LoginController {
                         @RequestParam(value = "logout", required = false) String logout,
                         @RequestParam(value = "session", required = false) String session,
                         HttpServletRequest req, HttpSession ses, HttpServletResponse response) {
-        logger.info(new Date() + " Inside login ");
+
 
         if (error != null && error.equalsIgnoreCase("1")) {
             model.addAttribute("error", "Your username or password is invalid.");

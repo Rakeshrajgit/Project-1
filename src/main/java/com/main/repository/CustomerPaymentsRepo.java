@@ -5,8 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CustomerPaymentsRepo extends JpaRepository<CustomerPayments,Long> {
 
     @Query("SELECT COUNT(*) FROM CustomerPayments WHERE transactionId LIKE :transactionId")
     long findCountOfCustomerPaymentsLike(@Param("transactionId") String transactionId);
+
+    List<CustomerPayments> findByCustomerIdOrderByTransactionDateAsc(String customerId);
+
 }

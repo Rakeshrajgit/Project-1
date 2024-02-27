@@ -1,483 +1,234 @@
+<%@page import="com.main.model.CustomerPayments"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.main.utils.MyDateTimeUtils"%>
+<%@page import="com.main.model.CustomerStates"%>
+<%@page import="com.main.model.CustomerStateTransactions"%>
+<%@page import="java.util.List"%>
 <%@page import="com.main.model.Customer"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <jsp:include page="../static/header.jsp"></jsp:include>
-    
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="java.sql.*"%>
+<jsp:include page="../static/header.jsp"></jsp:include>
+
+<!DOCTYPE html>
 <html>
-    <head>
- 
-        <style type="text/css">
-        
-        #firstDiv{
-	    position:absolute;
-	    left:66vh;
-	    background-color: lightcyan;
-	    height:100vh;
-	    width: 150vh;
-	
-	}
-
-#secDiv{
-    position:absolute;
-    left:0vh;
-    background-color:lightblue;
-    height:100vh;
-    width: 68vh;
-    margin-top:0px;
-
-
+<head>
+<style type="text/css">
+.label{
+	font-size: 18px;
+	font-weight: bold;
+}
+.value{
+	font-size: 20px;
 }
 
-.LeadDetails
-{
-    margin:10px;
- 
-    background-color: #0A2647;
-    height: 230px;
-    width: 450px;
-}
-
-.lead-action-btn{
-  background-color: blue;
-}
-.InsideleadDetails{
-  
-
-    background-color: #19376D;
-    height: 80px;
-    width: 450px;
-}
-
-.bottomLeadDetails{
-    position: relative;
-    top:70px;
-
-    margin:10px;
-    background-color: lightcyan;
-    height: 80px;
-    width: 450px;
-}
-
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    background-color: lightcyan;
-  }
-  
-  td, th
-   {
-    border: 1px solid #B6BBC4;
-    text-align: left;
-    padding: 14px;
-    font-size: 12px;
-    color:black;
-
-  
-  }
-  
-  tr:nth-child(even) {
-    background-color: 89CFF3;
-   
-  }
-
-  #Score{
-
-    display:flex;
-  
-    justify-content: space-around ;
-    color:white;
-    font-size:15px;
-    list-style-type: none;
- 
-  }
-
-  #Score > li{
-   
-    font-family: Arial, sans-serif;
-    margin:14px;
-    padding:0px;
-    
-
-  }
-  #Score > li > center{
-    font-size:20px;
-  }
-
-
-#firstNav{
-    
-    width:100%;
-    height: 35px;
-    
-}
-
-#FirstContentLink{
-  display: flex;
-  gap:12px;
-  list-style: none;
-
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 10px;
-}
-
-
-.firstnav-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 17px;
-  font-size: 14px;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  text-decoration: none;
-  border: 1px solid #333;
-  border-radius: 5px;
-  color: #333;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-  cursor: pointer;
-}
-
-.firstnav-button:hover {
-  background-color: lightblue;
-  color: black;
-}
-
-.firstnav-button i {
-  margin-right: 5px;
-}
-
-
-
-
-#contentLink{
-  position:absolute;
-  bottom:532px;
-  width:960px;
-  display: flex;
-  gap:12px;
-  list-style: none;
-
-  align-items: center;
-  justify-content: flex-start;
-
-  background-color: lightblue;
-  border-bottom: 1px solid black;;
-}
-
-#details_btn, #Leaddetails_btn , #task_btn ,#notes_btn ,#Doc_btn {
-  height: 20px;
-  width: 140px;
-  margin:10px;
-
-  
- 
-  border:none;
-  font-weight: 500;
-  font-size: 15px;
-  color: #424949;
-  background-color: lightblue;
-
-}
-
-
-
-#SecoundNavButtons > #contentLink > li:hover{
-  border-top: 3px solid #3498DB;
- 
-}
-
-
-
-
-
-#Details{
-  position:absolute;
-  left:37px;
-  top: 75px;
-  height:600px;
-  width:1000px;
-  border:0.5px solid black;
-}
-
-
-#contentLink2 {
-  position: absolute;
-  bottom:480px;
-
-  width:960px;
-  display: flex;
-  gap:12px;
-  list-style: none;
-
-  align-items: center;
-  justify-content: flex-start;
-
-  
- 
-}
-
-#activity_type_btn , #time_btn{
-  height: 20px;
-  width: 140px;
-  margin:10px;
-
-  
- 
-  border:none;
-  font-weight: 500;
-  font-size: 15px;
-  color: #424949;
-  background-color: lightblue;
-}
-
-#ThirdNavButtons > #contentLink2 > li >button {
-  background-color:lightcyan;
-}
-
-#activityDropdown , #activityDropdown2 {
-  padding:5px;
-  width: 180px;
-
-}
- 
-#contentLink2{
-  border-bottom: 1px solid grey;
-}
-
-.content{
-  position:absolute;
-  bottom: 180px;
-  left:10px;
-  height: 300px;
-  width: 980px;
-  
-}
-
-.display > li {
-  color:white;
-  list-style-type: none;
-  font-family:Arial, Helvetica, sans-serif;
-  padding-bottom: 10px;
-}
-
-.display{
-  padding:20px;
-}
-
-
-@keyframes blink {
-  50% {
-      opacity: 0;
-  }
-}
-
-.blinking-text {
-  animation: blink 1s infinite;
-}
-        
-        
 </style>
 </head>
-    
+<body>
 
-    <body>
-     
+	<%
+		Customer customer = (Customer) request.getAttribute("CustomerDetails");
+		List<CustomerStateTransactions> custTransactions = (List<CustomerStateTransactions>) request.getAttribute("CustomerTransactions");
+		List<CustomerStates> custStates = (List<CustomerStates>) request.getAttribute("CustomerTransactionStates");
+		List<CustomerPayments> custPayments = (List<CustomerPayments>) request.getAttribute("CustomerPayments");
+		
+		
+		Map<String,CustomerStates> cusStatesMap = new HashMap();
+		
+		for(CustomerStates state : custStates){
+			cusStatesMap.put(state.getCustomerStatusCode(),state);
+		}
+		
+	%>
+
+
 	<div class="card-header page-top">
 		<div class="row">
 			<div class="col-md-3">
-				<h5>Lead</h5>
+				<h5>Customer Details - <%=customer.getCustomerId() %></h5>
 			</div>
-				<div class="col-md-9 ">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
-						<li class="breadcrumb-item "><a href="CustomerList.htm"> Leads List </a></li>
-						<li class="breadcrumb-item active " aria-current="page">Lead</li>
-					</ol>
-				</div>
+			<div class="col-md-9 ">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i
+							class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
+					<li class="breadcrumb-item "><a href="CustomerList.htm">Customers List</a></li>
+					<li class="breadcrumb-item active " aria-current="page">Customer </li>
+				</ol>
 			</div>
-	</div>	
-	<div class="page card dashboard-card">
-	
-	<div class="card-body" >
-	
-	<div align="center">
-		<%String ses=(String)request.getParameter("result"); 
-		String ses1=(String)request.getParameter("resultfail");
-		if(ses1!=null){ %>
-			<div class="alert alert-danger" role="alert">
-				<%=ses1 %>
-			</div>
-			
-		<%}if(ses!=null){ %>
-			
-			<div class="alert alert-success" role="alert">
-				<%=ses %>
-			</div>
-		<%} %>
+		</div>
 	</div>
-    
-    <% Customer customer = (Customer) request.getAttribute("CustomerDetails"); %>        
-    <div id ="firstDiv"> 
-         
-            <div id="firstNav">
-                <ul id = "FirstContentLink">
-                    <li> <a href="" class="firstnav-button">
-                        <i class="fa fa-rocket"></i>
-                        Activity
-                    </a>  </li>
-                    <li> <a href="" class="firstnav-button">
-                        <i class="fa fa-sticky-note"></i>
-                        Note
-                    </a> </li>
-                    <li> <a href="mailto:your.email@example.com" class="firstnav-button">
-                        <i class="fa fa-envelope"></i>
-                       Send Email
-                    </a> </li>
-                    <li> <a href="PhoneCall" class="firstnav-button">
-                        <i class="fa fa-phone"></i>
-                        Phone call Form
-                    </a> </li>      
-                </ul>
-            </div>
+	<div class="page card dashboard-card">
 
+		<div class="card-body">
+			<div align="center">
+				<% String ses = (String) request.getParameter("result");
+					String ses1 = (String) request.getParameter("resultfail");
+					if (ses1 != null) {
+				%>
+				<div class="alert alert-danger" role="alert">
+					<%=ses1%>
+				</div>
 
+				<% } if (ses != null) { %>
 
-            
+				<div class="alert alert-success" role="alert">
+					<%=ses%>
+				</div>
+				<% } %>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-3">
+								<label class="label">Full Name :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getFullName() %></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label">Phone :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getPhoneNo() %></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label">Email :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getEmail() %></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label">DOB :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=MyDateTimeUtils.SqlToRegularDate(customer.getDob().toString()) %></span>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<label class="label">Gender :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getGender() %></span>
+							</div>
+							<div class="col-md-6">
+								<label class="label">Address :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getAddress()%></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label" style="color: red">Status :</label>
+								<span class="value" style="color: red">&nbsp;&nbsp;&nbsp;<%=cusStatesMap.get(customer.getCustomerStatusCode()).getCustomerStatus() %></span>
+							</div>
+							
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-3">
+								<label class="label">Id Proof 1 :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getIdProof1() %></span>
+							</div>
+							<div class="col-md-5">
+								<label class="label">Id Proof 2 :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getIdProof2() %></span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<label class="label">Opening Cibil :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getOpenCibilScore() %></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label">Opening Date :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getOpenDate()!=null?MyDateTimeUtils.SqlToRegularDate(customer.getOpenDate().toString()):"-" %></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label">Closing Cibil :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getCloseCibilScore() %></span>
+							</div>
+							<div class="col-md-3">
+								<label class="label">Closing Date :</label>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getCloseDate()!=null?MyDateTimeUtils.SqlToRegularDate(customer.getCloseDate().toString()):"-" %></span>
+							</div>
+						</div>
+						
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-md-12" align="center"><h4 style="font-weight: 600;">Payments</h4></div>
+					</div>
+					<div class="table-responsive">
+					   	<table class="table table-bordered table-hover table-striped table-condensed"   style="max-width: 100% !important"> 
+							<thead>
+								<tr>
+									<th style="text-align: center;padding-top:5px; padding-bottom: 5px;width: 5%;">
+										SN
+									</th>
+									<th style="width: 15%;">Date</th>
+									<th style="width: 10%;">Agent Id</th>
+									<th style="width: 20%;">Paid For</th>
+									<th style="width: 20%;">Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%int i=1;
+								int total_amount=0;
+									for(CustomerPayments payment : custPayments){ %>
+								<tr>
+									<td style="text-align: center;"><%=i++ %></td>
+									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTime(payment.getTransactionDate()) %></td>
+									<td><%=payment.getUserId() %></td>
+									<td><%=cusStatesMap.get(payment.getCustomerStatusCode()).getCustomerStatus() %></td>
+									<td><%=payment.getPaymentAmount() %></td>
+								</tr>
+									<%total_amount +=payment.getPaymentAmount();
+									} %>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<th>Total Amount</th>
+									<th><%=total_amount %></th>
+								</tr>
+							</tbody>
+						</table>		
+						</div>
+						
+					<hr>
+					<div class="row">
+						<div class="col-md-12" align="center"><h4 style="font-weight: 600;">State Transactions</h4></div>
+					</div>
+					<div class="row">
+					<div class="table-responsive">
+					   	<table class="table table-bordered table-hover table-striped table-condensed" style="max-width: 100% !important"> 
+							<thead>
+								<tr>
+									<th style="text-align: center;padding-top:5px; padding-bottom: 5px;width: 5%;">
+										SN
+									</th>
+									<th style="width: 15%;">Date</th>
+									<th style="width: 10%;">Agent Id</th>
+									<th style="width: 20%;">Status From</th>
+									<th style="width: 20%;">Status To</th>
+									<th style="width: 30%;">Remarks</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% i=1;
+									for(CustomerStateTransactions transaction : custTransactions){ %>
+								<tr>
+									<td style="text-align: center;"><%=i++ %></td>
+									<td><%=MyDateTimeUtils.LocalDateTimeToRegDateTime(transaction.getTransactTimeStamp()) %></td>
+									<td><%=transaction.getActionBy() %></td>
+									<td><%=cusStatesMap.get(transaction.getCustomerStatusCodeFrom()).getCustomerStatus() %></td>
+									<td><%=cusStatesMap.get(transaction.getCustomerStatusCodeTo()).getCustomerStatus() %></td>
+									<td><%=transaction.getRemarks() %></td>
+								</tr>
+								<%} %>
+							</tbody>
+						</table>				
+					</div>
+					</div>
+			</div>
+			
 
-            <div id="Details">
-            <div id="SecoundNavButtons">
-                <ul id = "contentLink">
-                    <li> <button id="details_btn" onclick="basicDetails()"> Activity History</button> </li>
-                    <li> <button id="Leaddetails_btn" onclick="LeadDetails()"> Lead Details</button> </li>
-                    <li> <button id="task_btn" onclick="tasks()"> Tasks</button></li>
-                    <li> <button id="notes_btn" onclick="notes()"> Notes</button></li>
-                    <li> <button id="Doc_btn" onclick="Documents()"> Documents</button></li>
-                </ul>
-            </div>
+		</div>
+	</div>
 
-            <div id="ThirdNavButtons">
-                <ul id = "contentLink2">
-                <li> <button id="activity_type_btn" onclick="ActivityType()"> Activity Type</button> </li>
-              
-                <li>  
-                    <select id="activityDropdown">
-                        <option value="activity1">All Selected</option>
-                        <option value="activity2">Activity 2</option>
-                        <option value="activity3">Activity 3</option>
-                       
-                    </select></li>
-                <li> <button id="time_btn" onclick="Time()"> Time</button> </li>
-
-                <li>  
-                    <select id="activityDropdown2">
-                        <option value="activity1">12:00 AM to 6:00 AM</option>
-                        <option value="activity2">6:00 AM to 9:00 AM</option>
-                        <option value="activity3">9:00 AM to 12:00 PM</option>
-                        <option value="activity2">12:00 PM to 3:00 PM</option>
-                        <option value="activity3">3:00 AM to 6:00 PM</option>
-                        <option value="activity2">6:00 PM to 12 PM</option>
-                    </select></li>
-               </ul>
-            </div>
-
-
-
-            <div class="content">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Month</th>
-                            <th>Time</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>January</td>
-                            <td>12:00 PM</td>
-                            <td>Dynamic Form Submission: Form submitted by Nikhil</td>
-                        </tr>
-                        <tr>
-                            <td>January</td>
-                            <td>3:30 PM</td>
-                            <td>Phone Call: Rang out 3:33 PM</td>
-                        </tr>
-
-                        <tr>
-                            <td>January</td>
-                            <td>4:30 PM</td>
-                            <td>Lead Owner Changed from Nikhil to Rakesh By Admin</td>
-                        </tr>
-                       
-                    </tbody>
-                </table>
-            </div>
-
-
-            </div>
-
-
-
-
-
-
-
-
-
-        
-        </div>
-
-        <div id= "secDiv"> 
-
-
-
-          
-            <div class="LeadDetails">
-
-                    <div class="display">
-                        <li class="blinking-text"><i> Lead Called</i></li><br>
-                        <li>  <i class="fas fa-user white-icon"></i><%=customer.getFullName() %> </li>
-                        <li><%= customer.getPhoneNo() %></li>
-                        <li> <i class="fas fa-envelope white-icon"></i><%=customer.getEmail() %> </li>
-                        <li></li>
-                    </div>
-                <div class="InsideleadDetails">
-                    <div id = "Score">
-                        <li> <center> 0 </center>  <br/> Lead Score </li>
-                        <li> <center> 0 </center>  <br/> DisEngaged </li>
-                        <li> <center>-- </center> <br/>  Lead Quality</li>
-                    </div>
-                
-                </div>
-            </div>
-            <div class="bottomLeadDetails">
-                <table>
-                    <tr>
-                      <th>Lead Properties</th>
-                      <th></th>
-                    </tr>
-                    <tr>
-                      <td>Owner</td>
-                      <td>_</td>
-                    </tr>
-                    <tr>
-                      <td>Lead Source</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                        <td>Lead Age</td>
-                        <td>37 Days</td>
-                    </tr>
-                </table>
-            </div>
-
-        </div>
-   
-   </div>
-   </div>
-    </body>
-
-
+	</div>
+</body>
 </html>

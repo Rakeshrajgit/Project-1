@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CustomerStateTransactionsRepo extends JpaRepository<CustomerStateTransactions,Long> {
 
-    List<CustomerStateTransactions> findByCustomerId(String customerId);
+    List<CustomerStateTransactions> findByCustomerIdOrderByTransactTimeStampAsc(String customerId);
 
 }

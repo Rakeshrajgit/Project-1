@@ -2,6 +2,7 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.main.model.CustomerStates"%>
+<%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="java.util.List"%>
@@ -177,20 +178,13 @@ margin-left=10px;
 	
 	<%@ include file="../static/successFailureMsg.jsp" %>
 
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
-		
-		<form action="CustomerAdd.htm" method="get" style="float: right;">
-              <input type="submit" class="btn btn-sm add-btn" value="add">
-        </form>
-		
-		<% } %>
-		<form action="CustomerList.htm" method="post">
+		<form action="CustomerListClosed.htm" method="post">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Customer Stage
 		            <select id="customer_stage_dd" name="customer_status_code">
 		            	<option value="0" <%if(customerStatusCode.equalsIgnoreCase("0")){ %> selected<%} %>>All</option>
 		            	<%for(CustomerStates state : customerStatusList){ %>
-		            		<%if(state.getClosedStates()==0){ %>
+		            		<%if(state.getClosedStates()==1){ %>
 		            		<option value="<%=state.getCustomerStatusCode()%>" <%if(customerStatusCode.equalsIgnoreCase(state.getCustomerStatusCode())){ %> selected<%} %> ><%=state.getCustomerStatus()%></option>
 		            		<%} %>
 		            	<%} %>
@@ -200,12 +194,12 @@ margin-left=10px;
 		
 		        <div class="flex-item">Owner
 		            <select id="Dropdown" name="userId">
-		            	<option value="0" selected="selected" >All</option>
+		            	<option value="0" selected="selected" disabled>All</option>
 		            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
 		            		<option value="UnAssigned" style="color: red" <%if(agentId.equalsIgnoreCase("UnAssigned")){ %> selected<%} %>>UnAssigned</option>
 		            	<%} %>
 		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
+		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %>(<%=agent.getUserId() %>)</option>
 		                <%} %>
 		             </select>
 		        </div>
@@ -221,7 +215,7 @@ margin-left=10px;
 		        </div>
 		        
 		        <div class="flex-item">
-		        	<button type="submit" class="btn btn-sm submit-btn" >Submit</button>
+		        	<button type="submit" class="btn btn-sm submit-btn">Submit</button>
 		        </div>
 		    </div>
 		
@@ -244,7 +238,7 @@ margin-left=10px;
 		        <th>Registered Date </th>
 		        <th>Info  </th>
 		        <th>Update Info </th>
-		        <th>Status </th>
+		        <!-- <th>Status </th> -->
 		    <tr>
 		
 			<% 
@@ -262,13 +256,12 @@ margin-left=10px;
 					
 		        	<%if(adm_man){ %>
 		        	<td>
-		        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getCustomerId()%>',this.value);">
+		        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" >
 			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
 			            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
 			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(customer.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
-			                	
 			                <%} %>
 		             	</select>
 		        	</td>
@@ -276,7 +269,7 @@ margin-left=10px;
 					<td><%= MyDateTimeUtils.SqlToRegularDate(customer.getRegisterDate().toString()) %></td>  
 					<td><button type="submit" class="btn btn-sm misc-btn" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 					<td><button class="btn btn-sm update-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerEdit.htm" >Update</button></td>
-					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td>
+					<%-- <td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td> --%>
 					
 				</tr>
 			<%}%>
@@ -293,7 +286,6 @@ margin-left=10px;
 	</div>
 
 </div>
-
 <div class="modal fade customer-status-modal"  id="customer-status-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 
 	<div class="modal-dialog modal-lg modal-dialog-centered" style="min-width: 40% !important;min-height: 40% !important; ">
@@ -345,7 +337,7 @@ margin-left=10px;
 					</div>
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12" align="center"> 
-				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
+				   			<button type="submit" class="brn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="">Submit </button>
 			   			</div>
 					</div>
 				</form>

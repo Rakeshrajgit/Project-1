@@ -1,11 +1,13 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.main.model.LeadStates"%>
-<%@page import="com.main.model.LeadForm"%>
-<%@page import="com.main.model.CustomerStates"%>
+<%@page import="com.main.utils.MyDateTimeUtils"%>
+<%@page import="com.main.model.LeadStates"%>
 <%@page import="org.hibernate.usertype.UserType"%>
 <%@page import="com.main.model.CrmUser"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="java.util.List"%>
-<%@page import="com.main.model.Customer"%>
+<%@page import="com.main.model.LeadForm"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="java.sql.*" %>
@@ -137,14 +139,25 @@ margin-left=10px;
 </head>
 <body>
 <%
+	List<LeadForm> leadList = (List<LeadForm>)request.getAttribute("leadList");
 
-    List<LeadForm> leadList = (List<LeadForm>)request.getAttribute("LeadList");
 	List<LeadStates> leadStatusList  = (List<LeadStates>)request.getAttribute("leadStatusList");
 
-	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
-	String userType = (String)request.getAttribute("userType");
-	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString());
+ 	List<CrmUser> agents = (List<CrmUser>)request.getAttribute("Agents");
+ 	String userType = (String)request.getAttribute("userType");
+ 	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString());
 
+	String fromDate = (String)request.getAttribute("fromDate");
+ 	String endDate = (String)request.getAttribute("endDate");
+ 	String agentId = (String)request.getAttribute("agentId");
+ 	String leadStatusCode = (String)request.getAttribute("leadStatusCode");
+ 	String leadScore = (String)request.getAttribute("leadScore");
+
+ 	Map<String,LeadStates> leadStatesMap = new HashMap();
+ 	for(LeadStates state : leadStatusList){
+ 		leadStatesMap.put(state.getLeadStatusCode(),state);
+	}
+ 	
 %>
 
  
@@ -165,78 +178,66 @@ margin-left=10px;
 	
 	<div class="card-body" >
 	
+		<%@ include file="../static/successFailureMsg.jsp" %>
 	
-	<div align="center">
-		<%String ses=(String)request.getParameter("result"); 
-		String ses1=(String)request.getParameter("resultfail");
-		if(ses1!=null){ %>
-			<div class="alert alert-danger" role="alert">
-				<%=ses1 %>
-			</div>
-			
-		<%}if(ses!=null){ %>
-			
-			<div class="alert alert-success" role="alert">
-				<%=ses %>
-			</div>
-		<%} %>
-	</div>
-
-		<form action="CustomerList.htm" method="get">
+		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+		
+		<form action="LeadAdd.htm" method="get" style="float: right;">
+              <input type="submit" class="btn btn-sm add-btn" value="Add">
+        </form>
+		
+		<% } %>
+		<form action="LeadList.htm" method="post">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Lead Stage
-		            <select id="Dropdown">
-		                <option value="activity1">All Selected</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
+		            <select id="Lead_stage_dd" name="Lead_status_code">
+		            	<option value="0" <%if(leadStatusCode.equalsIgnoreCase("0")){ %> selected<%} %>>All</option>
+		            	<%for(LeadStates state : leadStatusList){ %>
+		            		<%if(state.getClosedState()==0){ %>
+		            		<option value="<%=state.getLeadStatusCode()%>" <%if(leadStatusCode.equalsIgnoreCase(state.getLeadStatusCode())){ %> selected<%} %> ><%=state.getLeadStatus()%></option>
+		            		<%} %>
+		            	<%} %>
+		                
 		             </select>
-		        </div>
-		
-		        <div class="flex-item"> Lead Source
-		            <select id="Dropdown">
-		                <option value="activity1">All Selected</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		
 		        </div>
 		
 		        <div class="flex-item">Owner
-		            <select id="Dropdown" name="userId" onchange="this.form.submit()">
-		            	<option value="" selected="selected" disabled>Select..</option>
-		            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
-		            		<option value="UnAssigned" style="color: red">UnAssigned</option>
+		            <select id="Dropdown" name="userId">
+		            	<option value="0" selected="selected" >All</option>
+		            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
+		            		<option value="UnAssigned" style="color: red" <%if(agentId.equalsIgnoreCase("UnAssigned")){ %> selected<%} %>>UnAssigned</option>
 		            	<%} %>
 		                <%for(CrmUser agent : agents ){ %>
-		                <option value="<%=agent.getUserId()%>"><%=agent.getUserName() %></option>
+		                <option value="<%=agent.getUserId()%>" <%if(agentId.equalsIgnoreCase(agent.getUserId())){ %> selected<%} %>><%=agent.getUserName() %> ( <%=agent.getUserId() %> )</option>
 		                <%} %>
 		             </select>
 		        </div>
 		
-		        <div class="flex-item">Date Range
-		            <select id="Dropdown">
-		                <option value="activity1">Created On</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		
-		             <select id="Dropdown">
-		                <option value="activity1">All Time</option>
-		                <option value="activity2">Activity 2</option>
-		                <option value="activity3">Activity 3</option>
-		             </select>
-		
+		        <div class="flex-item">Registered between
+		            <input type="text" name="Lead_added_from" data-date-format="yyyy-mm-dd" 
+		            				value="<%=MyDateTimeUtils.SqlToRegularDate(fromDate) %>"
+									required="required" id="Lead_added_from" class=" input-sm" readonly="readonly">
+					 - 
+		           <input type="text" name="Lead_added_to" data-date-format="yyyy-mm-dd" 
+		           					value="<%=MyDateTimeUtils.SqlToRegularDate(endDate) %>"	
+									required="required" id="Lead_added_to" class=" input-sm" readonly="readonly">
+		        </div>
+		        
+		        <div class="flex-item" >Lead Score >=
+		            <input type="number" id="Lead_score" name="Lead_score" min="0" max="50" <%if(leadScore!=null){ %> value="<%=leadScore %>" <%} %> >
+		            	
+		        </div>
+		        
+		        <div class="flex-item">
+		        	<button type="submit" class="btn btn-sm submit-btn">Submit</button>
 		        </div>
 		    </div>
 		
-		    <div class="ThirdDiv">
-		        <div class="flex-child item1"></div>
-		        <div class="flex-child item2"></div>
-		        <div class="flex-child item3"></div>
-		        <div class="flex-child item4"></div>
-		        <div class="flex-child item5"></div>
-		        <div class="flex-child item6"></div>
-		    </div>
+		 
+		</form>
+		
+		<form action="LeadsList.htm" method="get">
+	
 		<table class="table table-striped">
 		
 		  <tr>
@@ -245,117 +246,153 @@ margin-left=10px;
 		        <th>Name</th>
 		        <th>Email</th>
 		        <th>Phone No</th>
-		        <th>Lead Status</th>
-		         <%if(adm_man){ %>
-		        	<th>Owner <i class='fa fa-user' style="color:skyblue"></i> </th>
+		        <th>Lead Stage</th>
+		        <%if(adm_man){ %>
+		        	<th>Owner</th>
 		        <%} %>
-
-
-
-		        <th>Actions <i class='fa fa-lock' style="color:skyblue"></i> </th>
+		        <th>Lead Score</th>
+		        <th>Info</th>
 		        <th>Update</th>
-		        <th>Delete</th>
+		        <th>Status</th>
+		        <th>Add To Customer</th>
 		    <tr>
-
-
-		    <%
+		
+			<% 
 			int i=1;
 			for(LeadForm lead : leadList)
 			{
 				%>
-
-
-
-
 				<tr>
 				 	<td><%=i++ %></td>
 				 	<td><%=lead.getLeadId()%></td>
 					<td><%=lead.getLeadName()%></td>
 					<td><%=lead.getLeadEmail()%></td>
 					<td><%=lead.getLeadPhoneNo()%></td>
-						<td>
-						<% LeadStates lStatus = leadStatusList.stream()
-						  .filter(status -> lead.getLeadAcqCode().equals(status.getLeadStatus()))
-						  .findAny()
-						  .orElse(null);
-						  %>
-						  <%= lStatus!=null ? lStatus.getLeadStatus(): "-" %>
-					</td>
-					<%if(adm_man){ %>
+					<td><%=leadStatesMap.get(lead.getLeadStatus()).getLeadStatus()%> </td>
+					
+		        	<%if(adm_man){ %>
 		        	<td>
 		        		<select id="lead-<%=lead.getLeadId() %>" name="userId" onchange="updateAgentForLead('<%=lead.getLeadId()%>',this.value);">
-			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
 			            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %></option>
-
+			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
 			                <%} %>
 		             	</select>
 		        	</td>
 		        	<%} %>
-
-
-
-
-
-					<td><button type="submit" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
-					<%--
-					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
-					<td><a href="editing.htm?id=<%=lead.getId()%>">Update</a></td>
-					--%>
-
-
-					<td><button type="submit" name="id" value="<%=lead.getId()%>" formmethod="get" formaction="updatingLead.htm" >Update</button></td>
-
-					<td><button type="submit" name="leadId" value="<%=lead.getId()%>" formmethod="get" formaction="deleteLead.htm" >Delete</button></td>
-
-
-
-
+					<td><%= lead.getLeadPoints() %></td>  
+					<td><button type="submit" class="btn btn-sm misc-btn" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectLeadDetailsView.htm" >Info</button></td>
+					<td><button class="btn btn-sm update-btn" type="submit" name="lead_id" value="<%=lead.getLeadId() %>" formmethod="post" formaction="LeadEdit.htm" >Update</button></td>
+					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=lead.getLeadName() %>','<%=lead.getLeadId() %>','<%=lead.getLeadStatus() %>')" >Status</button></td>
+					<td>
+						<%if(lead.getLeadStatus().equalsIgnoreCase("IIR") && lead.getConvertedToCustomer()==0){ %>
+							<button class="btn btn-sm submit-btn" name="lead_to_customer"  value="<%=lead.getLeadId()%>" formaction="CustomerAdd.htm" formmethod="post" onclick="retuen confirm('Are You sure to ass this Lead to Customers ?')">
+								<i class="fa fa-plus" aria-hidden="true" ></i>
+							</button>
+						<%} %>
+					</td>
+					
 				</tr>
 			<%}%>
-		
-			
 			
 			
 		</table>
 		
-		
-		
-		
 		</form>
-		
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
-		
-		<form action="Lead.htm" method="get">
-              <input type="submit" value="ADD">
-        </form>
-		
-		<% } %>
-		
 		
 	</div>
 
 </div>
+
+
+
+<div class="modal fade lead-status-modal"  id="lead-status-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+	<div class="modal-dialog modal-lg modal-dialog-centered" style="min-width: 40% !important;min-height: 40% !important; ">
+		<div class="modal-content" >
+			<div class="modal-header" style="background: #F5C6A5; ">
+		        <div class="row" >
+		        	<div class="col-md-12">
+				    <h4>Lead Status Update</h4>
+				    </div>
+			    </div>
+			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			    	<i class="fa-solid fa-xmark" aria-hidden="true" ></i>
+			    </button>
+		    </div>
+			<div class="modal-body" style="min-height: 20rem;">
+				<form action="UpdateLeadStatus.htm" method="post">
+					<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-6"> 
+				   			<span class="mandatory">Lead Name : </span> <span id="modal_lead_name"></span>
+			   			</div>
+			   			<div class="col-md-6"> 
+				   			<span class="mandatory">Lead Id : </span> <span id="modal_lead_Id"></span>
+			   			</div>
+					</div>
+					
+			   		<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-12"> 
+				   			<label>Status<span class="mandatory">*</span></label>
+				   			<select name="lead_new_status" class="form-control selectpicker" id="modal_lead_new_status" data-size="auto" data-live-search="true" data-container="body" >
+				   				<%for(LeadStates state : leadStatusList){
+				   					if(state.getExplicit()==1){%>
+				  					<option value="<%=state.getLeadStatusCode() %>" ><%=state.getLeadStatus() %></option>
+			 					<%	}
+				   				}%>
+			   				</select>
+			   			</div>
+					</div>
+					
+					<div class="row" style=" padding: 5px; display:none;" id="modal_explicit_payment_row">
+			   			<div class="col-md-12"> 
+				   			<label>Full Payment Amount<span class="mandatory">*</span></label>
+				   			<input type="number" class="form-control" name="full_payment_amount" id="modal_full_payment_amount" value="0" min="0">
+			   			</div>
+					</div>
+					
+					<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-12"> 
+				   			<span>Remarks<span class="mandatory">*</span></span>
+				   			<textarea class="form-control" name="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
+			   			</div>
+					</div>
+					<div class="row" style=" padding: 5px" >
+			   			<div class="col-md-12" align="center"> 
+				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_lead_id" id="modal_btn_lead_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
+			   			</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+									
+
+</body>
+
+<script type="text/javascript">
+function openStatusModal($lead_name, $lead_id, $status_code){
+	
+	
+	$('#modal_lead_name').html($lead_name);
+	$('#modal_lead_Id').html($lead_id);
+	$('#modal_lead_new_status').val($status_code).selectpicker('refresh');
+	$('#modal_btn_lead_id').val($lead_id);
+	
+	$('#lead-status-modal').modal('toggle');
+	
+}
+
+</script>
+
 <script type="text/javascript">
 
-
-function generateLeadId() {
-
-	  const randomNumber = Math.floor(Math.random() * 1000000);
-	  const timestamp = new Date().getTime();
-	  const leadId = `${timestamp}${randomNumber}`;
-
-	  return leadId;
-	}
-
-
-
-
-function updateAgentForLead(($appNo,$agentId){
+function updateAgentForLead($leadId,$agentId){
 	
-	if(confirm('Are you Sure to update the owner for this customer?')){
+	if(confirm('Are you Sure to update the owner for this Lead?')){
 		
 		$.ajax({
 
@@ -363,7 +400,7 @@ function updateAgentForLead(($appNo,$agentId){
 			url : "UpdateAgentForLead.htm",
 			data : {
 					
-				appNo : $appNo ,
+				leadId : $leadId ,
 				agentId : $agentId ,
 				
 			},
@@ -380,5 +417,4 @@ function updateAgentForLead(($appNo,$agentId){
 
 </script>
 
-</body>
 </html>

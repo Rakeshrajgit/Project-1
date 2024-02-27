@@ -1,3 +1,5 @@
+<%@page import="com.main.model.LeadForm"%>
+<%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="com.main.utils.MyDateTimeUtils"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.main.model.Customer"%>
@@ -16,6 +18,8 @@
 	SimpleDateFormat sdf= MyDateTimeUtils.getSqlDateFormat();
 	SimpleDateFormat sdf1=MyDateTimeUtils.getRegularDateFormat();
 	Customer customer = (Customer) request.getAttribute("customer");
+	LeadForm lead =(LeadForm) request.getAttribute("lead");
+    String userType = (String) session.getAttribute("UserType");
 %>
 
 
@@ -53,31 +57,37 @@
 					<div class="form-group">
 						<div class="row">
 							<div class="col-md-3">
-								<label>Full Name<span class="mandatory">*</span></label> <input
+								<label>Full Name<span class="mandatory">*</span></label> 
+								<input
 									type="text" name="customer_name"
-									value="<%if (customer != null) {%><%=customer.getFullName()%><%}%>"
+									<%if (customer != null) {%> value="<%=customer.getFullName()%>" <%}%>
+									<%if(lead!=null){ %> value="<%=lead.getLeadName().trim()%>" readonly="readonly" <%}%>
 									id="customer_name" class="form-control input-sm"
 									maxlength="255" placeholder="Customer Name" required="required" onblur="this.value = this.value.trim();">
 							</div>
 							<div class="col-md-3">
-								<label>E-Mail<span class="mandatory">*</span></label> <input
+								<label>E-Mail<span class="mandatory">*</span></label> 
+								<input
 									type="email" name="customer_email"
-									value="<%if (customer != null) {%><%=customer.getEmail()%><%}%>"
+									<%if (customer != null) {%> value="<%=customer.getEmail()%>" <%}%>
+									<%if(lead!=null){ %> value="<%=lead.getLeadEmail()%>" readonly="readonly"<%}%>
 									required="required" id="customer_email"
 									class="form-control input-sm" maxlength="255"
 									placeholder="E-Mail" onblur="this.value = this.value.trim();">
 							</div>
 							<div class="col-md-2">
-								<label>Phone No<span class="mandatory">*</span></label> <input
+								<label>Phone No<span class="mandatory">*</span></label> 
+								<input
 									type="number" name="customer_phone"
-									value="<%if (customer != null) {%><%=customer.getPhoneNo()%><%}%>"
+									<%if (customer != null) {%>value="<%=customer.getPhoneNo()%>"<%}%>
+									<%if(lead!=null){ %> value="<%=lead.getLeadPhoneNo()%>" readonly="readonly"<%}%>
 									required="required" id="customer_phone"
 									class="form-control input-sm" min="1000000000" max="9999999999"
 									placeholder="Phone No.">
 							</div>
 							<div class="col-md-2">
-								<label>Gender<span class="mandatory">*</span></label> <select
-									class="form-control select2 " name="customer_gender"
+								<label>Gender<span class="mandatory">*</span></label> 
+								<select class="form-control select2 " name="customer_gender"
 									required="required" >
 									<option disabled="disabled">Select ..</option>
 									<option value="Male"
@@ -89,11 +99,12 @@
 								</select>
 							</div>
 							<div class="col-md-2">
-								<label>DOB<span class="mandatory">*</span></label> <input
+								<label>DOB<span class="mandatory">*</span></label> 
+								<input
 									type="text" name="customer_dob"
 									data-date-format="yyyy-mm-dd" value="<%if (customer != null) {%><%=MyDateTimeUtils.SqlToRegularDate(customer.getDob().toString())%><%} %>"
 									required="required" id="customer_dob"
-									class="form-control input-sm">
+									class="form-control input-sm" readonly="readonly">
 							</div>
 						</div>
 					</div>
@@ -102,7 +113,8 @@
 						<div class="row">
 
 							<div class="col-md-3">
-								<label>Address<span class="mandatory">*</span></label> <input
+								<label>Address<span class="mandatory">*</span></label> 
+								<input
 									type="text" name="customer_address"
 									value="<%if (customer != null) {%><%=customer.getAddress()%><%}%>"
 									required="required" id="customer_address"
@@ -110,7 +122,8 @@
 									placeholder="Address" onblur="this.value = this.value.trim();">
 							</div>
 							<div class="col-md-3">
-								<label>ID proof 1</label> <input
+								<label>ID proof 1</label> 
+								<input
 									type="number" name="customer_proof1"
 									value="<%if (customer != null && customer.getIdProof1()!=null) {%><%=customer.getIdProof1()%><%}%>"
 									id="customer_proof1" class="form-control input-sm"
@@ -118,7 +131,8 @@
 							</div>
 
 							<div class="col-md-3">
-								<label>ID proof 2</label> <input
+								<label>ID proof 2</label> 
+								<input
 									type="text" name="customer_proof2"
 									value="<%if (customer != null && customer.getIdProof2()!=null) {%><%=customer.getIdProof2()%><%}%>"
 									id="customer_proof2" class="form-control input-sm"
@@ -164,7 +178,7 @@
 						</div>
 					</div>
 					<%
-					if (customer == null) {
+					if (customer == null && !(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) )) {
 					%>
 					<div class="form-group">
 						<div class="row">
@@ -176,6 +190,11 @@
 					<%
 					}
 					%>
+					
+					
+					<%if(lead!=null){ %>
+						<input type="hidden" name="lead_id" value="<%=lead.getLeadId() %>" >
+					<%} %>
 
 
 					<div class="row">
@@ -190,7 +209,7 @@
 							} else {
 							%>
 							<button type="submit" class="btn btn-sm submit-btn"
-								formaction="CustomerAddSubmit.htm" formmethod="post" >Add</button>
+								formaction="CustomerAddSubmit.htm" formmethod="post" onclick="return confirm('Are you sure to Submit?')">Add</button>
 							<%
 							}
 							%>
