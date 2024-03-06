@@ -2,10 +2,7 @@ package com.main.controller;
 
 import com.main.CrmException;
 import com.main.configs.enums.UserTypes;
-import com.main.model.CrmUser;
-import com.main.model.Customer;
-import com.main.model.CustomerStateTransactions;
-import com.main.model.LeadForm;
+import com.main.model.*;
 import com.main.service.CrmUserService;
 import com.main.service.CustomerService;
 import com.main.service.LeadService;
@@ -116,6 +113,7 @@ public class CustomerController {
                 req.setAttribute("CustomerTransactions",customerService.getCustomerTransactions(customer.getCustomerId()));
                 req.setAttribute("CustomerTransactionStates",customerService.getAllCustomerStatus());
                 req.setAttribute("CustomerPayments",customerService.getCustomerPayments(customer.getCustomerId()));
+                req.setAttribute("CustomerScoreHistory",customerService.getCustomerScoreHistory(customer.getCustomerId()));
                 return "customer/CustomerDetailsView";
             } else {
                 throw new CrmException("Failed to fetch Customer Info");
@@ -152,7 +150,7 @@ public class CustomerController {
                 req.setAttribute("lead",lead);
             }
 
-
+            req.setAttribute("CustomerScoreHistory",customerService.getCustomerScoreHistory(customer.getCustomerId()));
             req.setAttribute("customer",customer);
             return "customer/CustomerAdd";
         } catch (Exception e) {
@@ -173,10 +171,6 @@ public class CustomerController {
             String customer_address = req.getParameter("customer_address");
             String customer_proof1 = req.getParameter("customer_proof1");
             String customer_proof2 = req.getParameter("customer_proof2");
-            String customer_open_cibil = req.getParameter("customer_open_cibil");
-            String customer_cibil_open_date = req.getParameter("customer_cibil_open_date");
-            String customer_close_cibil = req.getParameter("customer_close_cibil");
-            String customer_cibil_close_date = req.getParameter("customer_cibil_close_date");
             String customer_id = req.getParameter("customer_id");
             String lead_id = req.getParameter("lead_id");
 
@@ -196,10 +190,6 @@ public class CustomerController {
                     .address(customer_address)
                     .idProof1(customer_proof1)
                     .idProof2(customer_proof2)
-                    .openCibilScore(customer_open_cibil.equalsIgnoreCase("")? null:Integer.parseInt(customer_open_cibil))
-                    .openDate((customer_cibil_open_date==null || customer_open_cibil.equalsIgnoreCase(""))?null:LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_cibil_open_date)))
-                    .closeCibilScore(customer_close_cibil.equalsIgnoreCase("")?null:Integer.parseInt(customer_close_cibil))
-                    .closeDate((customer_cibil_close_date==null || customer_close_cibil.equalsIgnoreCase(""))?null: LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_cibil_close_date)))
                     .customerId(customer_id)
                     .userId(userId)
                     .isActive(1)
@@ -305,5 +295,51 @@ public class CustomerController {
             return "static/error";
         }
     }
+
+
+    @RequestMapping("CustomerScoreAddSubmit.htm")
+    public String customerScoreAddSubmit(HttpServletRequest req, HttpSession ses) throws Exception {
+        try {
+
+            String customer_score = req.getParameter("customer_score");
+            String customer_score_date = req.getParameter("customer_score_date");
+            String customerId = req.getParameter("customer_id");
+            CustomerScoreHistory score = CustomerScoreHistory.builder()
+                    .customerId(customerId)
+                    .score(Integer.parseInt(customer_score))
+                    .scoreDate(LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_score_date)))
+                    .build();
+
+            customerService.addCustomerScoreHistory(score);
+
+            ses.setAttribute("customerId", customerId);
+            return "redirect:/CustomerDetailsView.htm";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "static/error";
+        }
+    }
+
+    @RequestMapping("CustomerDelete.htm")
+    public String customerDelete(HttpServletRequest req, HttpSession ses,RedirectAttributes redir) throws Exception {
+        try {
+
+            String customerId  = req.getParameter("customer_id");
+            long result=customerService.customerDelete(customerId);
+
+            if (result !=0) {
+                redir.addAttribute("successMessage", "Customer Deleted Successfully");
+            } else {
+                redir.addAttribute("failureMessage", "Customer Delete Unsuccessful");
+            }
+
+            return "redirect:/CustomerList.htm";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "static/error";
+        }
+    }
+
+
 
 }

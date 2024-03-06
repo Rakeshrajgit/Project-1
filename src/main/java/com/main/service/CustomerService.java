@@ -28,6 +28,9 @@ public class CustomerService {
     private CustomerPaymentsRepo customerPaymentsRepo;
 
     @Autowired
+    private CustomerScoreHistoryRepo customerScoreHistoryRepo;
+
+    @Autowired
     private LeadRepo leadRepo;
 
     @Autowired
@@ -225,5 +228,36 @@ public class CustomerService {
 
     public List<CustomerPayments> getCustomerPayments(String customerId){
         return customerPaymentsRepo.findByCustomerIdOrderByTransactionDateAsc(customerId);
+    }
+
+    public List<CustomerScoreHistory> getCustomerScoreHistory(String customerId){
+        return customerScoreHistoryRepo.findByCustomerIdOrderByAddedDateAsc(customerId);
+    }
+
+    @Transactional
+    public CustomerScoreHistory addCustomerScoreHistory(CustomerScoreHistory scoreHistory){
+        Customer customer = customerRepo.findByCustomerId(scoreHistory.getCustomerId());
+        List<CustomerScoreHistory> ScoreHistory = customerScoreHistoryRepo.findByCustomerIdOrderByAddedDateAsc(scoreHistory.getCustomerId());
+
+        if(ScoreHistory==null || ScoreHistory.isEmpty()){
+            customer.setOpenCibilScore(scoreHistory.getScore());
+            customer.setOpenDate(scoreHistory.getScoreDate());
+        }else {
+            customer.setCloseCibilScore(scoreHistory.getScore());
+            customer.setCloseDate(scoreHistory.getScoreDate());
+        }
+        customerRepo.save(customer);
+
+        customerScoreHistoryRepo.save(scoreHistory);
+
+        return scoreHistory;
+    }
+
+    public long customerDelete(String customerId){
+
+        Customer customer = customerRepo.findByCustomerId(customerId);
+        customer.setIsActive(0);
+        customerRepo.save(customer);
+        return customer.getId();
     }
 }

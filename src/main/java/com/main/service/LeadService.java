@@ -90,6 +90,7 @@ public class LeadService {
 		leadOrg.setLeadLocation(lead.getLeadLocation());
 		leadOrg.setLeadAcqCode(lead.getLeadAcqCode());
 		leadOrg.setBound(lead.getBound());
+		leadOrg.setReferedBy(lead.getReferedBy());
 		leadRepo.save(leadOrg);
 
 		return leadOrg.getId();
@@ -131,4 +132,10 @@ public class LeadService {
 	}
 
 
+    public long leadDelete(String leadId) {
+		LeadForm lead = leadRepo.findByLeadId(leadId);
+		lead.setIsActive(0);
+		leadRepo.save(lead);
+		return lead.getId();
+    }
 }

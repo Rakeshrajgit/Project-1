@@ -45,10 +45,10 @@
 
 	<div class="card-header page-top">
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-6">
 				<h5>Customer Details - <%=customer.getCustomerId() %></h5>
 			</div>
-			<div class="col-md-9 ">
+			<div class="col-md-6 ">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i
 							class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
@@ -129,7 +129,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-3">
-								<label class="label">Opening Cibil :</label>
+								<label class="label">Opening Score :</label>
 								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getOpenCibilScore() %></span>
 							</div>
 							<div class="col-md-3">
@@ -137,7 +137,7 @@
 								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getOpenDate()!=null?MyDateTimeUtils.SqlToRegularDate(customer.getOpenDate().toString()):"-" %></span>
 							</div>
 							<div class="col-md-3">
-								<label class="label">Closing Cibil :</label>
+								<label class="label">Closing Score :</label>
 								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getCloseCibilScore() %></span>
 							</div>
 							<div class="col-md-3">

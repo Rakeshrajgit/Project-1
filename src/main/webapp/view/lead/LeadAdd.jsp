@@ -35,13 +35,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="email">Email <span class="mandatory">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" required onblur="this.value=this.value.trim();">
-                            </div>
-
-                            <div class="form-group">
                                 <label for="phoneNo">Phone Number <span class="mandatory">*</span></label>
                                 <input type="tel" class="form-control" id="phoneNo" name="phno" required pattern="[0-9]{10}" placeholder="1234567890" onblur="this.value=this.value.trim();">
+                            </div>
+                            
+                              <div class="form-group">
+                                <label for="email">Email </label>
+                                <input type="email" class="form-control" id="email" name="email"  onblur="this.value=this.value.trim();">
                             </div>
 
                             <div class="form-group">
@@ -51,12 +51,18 @@
 
                             <div class="form-group">
                                 <label for="source">Source:<span class="mandatory">*</span></label> <br>
-                                <select  class="form-control " name="source" required>
+                                <select  class="form-control selectpicker" name="source" required id="lead_source">
                                     <%for(LeadAcqTypes sourcetype : sourceTypes){ %>
-                                    	<option value="<%=sourcetype.getLeadAcqCode()%>"><%=sourcetype.getLeadAcqType() %></option>
+                                    	<option value="<%=sourcetype.getLeadAcqCode()%>" data-supporting-value="<%=sourcetype.getReferalType()%>"><%=sourcetype.getLeadAcqType() %></option>
                                     <%} %>
                                 </select>
                             </div>
+                            <div class="row" style=" padding: 5px; display:none;" id="source_ref_by">
+					   			<div class="col-md-12">
+						   			<label>Referred By<span class="mandatory">*</span></label>
+						   			<input type="text" class="form-control" name="refered_by" id="reffered_by" maxlength="100" onblur="this.value=this.value.trim();">
+					   			</div>
+							</div>
                             
                             <div class="form-group">
                                 <label for="source">Bound:<span class="mandatory">*</span></label> <br>
@@ -87,4 +93,27 @@
     </div>
 
 </body>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	  // Event listener for select change
+	  $('#lead_source').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+	    // Get selected options
+	    var selectedOptions = $(this).find('option:selected');
+
+		if(selectedOptions.data('supporting-value')===1){
+            $("#reffered_by").attr('required', 'required');
+            $("#source_ref_by").css("display", "block");
+         } else {
+ 			$("#reffered_by").removeAttr('required')
+            $("#source_ref_by").css("display", "none");
+         }
+	  });
+	});
+
+
+</script>
+
 </html>

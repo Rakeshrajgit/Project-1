@@ -243,7 +243,9 @@ margin-left=10px;
 		        <%} %>
 		        <th>Registered Date </th>
 		        <th>Info  </th>
-		        <th>Update Info </th>
+		        <%if(adm_man){ %>
+		        	<th>Action</th>
+		        <%} %>
 		        <th>Status </th>
 		    <tr>
 		
@@ -263,7 +265,7 @@ margin-left=10px;
 		        	<%if(adm_man){ %>
 		        	<td>
 		        		<select id="customer-<%=customer.getCustomerId() %>" name="userId" onchange="updateAgentForCustomer('<%=customer.getCustomerId()%>',this.value);">
-			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
 			            		<option value="" <%if(customer.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
@@ -275,7 +277,14 @@ margin-left=10px;
 		        	<%} %>
 					<td><%= MyDateTimeUtils.SqlToRegularDate(customer.getRegisterDate().toString()) %></td>
 					<td><button type="submit" class="btn btn-sm misc-btn" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
-					<td><button class="btn btn-sm update-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerEdit.htm" >Update</button></td>
+					<%if(adm_man){ %>
+					<td>
+						<button class="btn btn-sm update-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerEdit.htm" >Update</button>
+						<button class="btn btn-sm delete-btn" type="submit" name="customer_id" value="<%=customer.getCustomerId() %>" formmethod="post" formaction="CustomerDelete.htm" onclick="return confirm('Are you sure to delete?')">
+						<i class="fa-solid fa-trash-can" ></i>
+						</button>
+					</td>
+					<%} %>
 					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=customer.getFullName() %>','<%=customer.getCustomerId() %>','<%=customer.getCustomerStatusCode() %>')" >Status</button></td>
 
 				</tr>
@@ -340,12 +349,12 @@ margin-left=10px;
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12">
 				   			<span>Remarks<span class="mandatory">*</span></span>
-				   			<textarea class="form-control" name="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
+				   			<textarea class="form-control" name="modal_status_remarks" id="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
 			   			</div>
 					</div>
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12" align="center">
-				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
+				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_customer_id" id="modal_btn_customer_id" value="" onclick="return onStatusSubmit()">Submit </button>
 			   			</div>
 					</div>
 				</form>
@@ -357,6 +366,21 @@ margin-left=10px;
 
 
 </body>
+
+
+<script type="text/javascript">
+
+function onStatusSubmit(){
+
+	var $remarks = $("#modal_status_remarks").val();
+	if($remarks.trim().length >25){
+		return confirm('Are you sure to Submit?')
+	}else {
+		alert("Remarks should be minimum 25 characters ");
+		return false;
+	}
+}	
+</script>
 
 <script type="text/javascript">
 

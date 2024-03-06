@@ -179,7 +179,6 @@ margin-left=10px;
 		
 		  <tr>
 		  		<th>SN</th>
-		  		<th>Id</th>
 		  		<th>UserId</th>
 		  		<th>UserName</th>
 		        <th>UserEmail</th>
@@ -195,15 +194,11 @@ margin-left=10px;
 				
 				<tr>
 				 	<td><%=i++ %></td>
-				 	<td><%=user.getId()%></td>
 				 	<td><%=user.getUserId()%></td>
 					<td><%=user.getUserName()%></td>
 					<td><%=user.getUserEmail()%></td>
 					<td><button type="submit" class="btn btn-sm update-btn" name="userId" value="<%=user.getUserId()%>" formmethod="get" formaction="updatingUser.htm" >Update</button></td>
-					
 					<td><button type="submit" class="btn btn-sm delete-btn" name="userId" value="<%=user.getUserId()%>" formmethod="get" formaction="deleteUser.htm" onclick="return confirm('Are you sure to Delete?')">Delete</button></td>	
-		        	
-		        	
 		        </tr>
 			<%}%>
 		        

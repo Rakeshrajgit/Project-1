@@ -44,6 +44,7 @@ public class LeadController{
 		String source = req.getParameter("source");
 		String bound = req.getParameter("bound");
 		String selfAssign = req.getParameter("assign_self");
+		String refered_by = req.getParameter("refered_by");
 		
 		LeadForm lead = LeadForm.builder()
 				.leadName(name)
@@ -52,6 +53,7 @@ public class LeadController{
 				.leadLocation(location)
 				.leadAcqCode(source)
 				.bound(bound)
+				.referedBy(refered_by)
 				.build();
 		if(selfAssign!=null && selfAssign.equalsIgnoreCase("yes")){
 			lead.setUserId(userId);
@@ -153,6 +155,7 @@ public class LeadController{
 		String source = req.getParameter("source");
 		String bound = req.getParameter("bound");
 		String leadId = req.getParameter("lead_id");
+		String refered_by = req.getParameter("refered_by");
 
 
 		LeadForm lead = LeadForm.builder()
@@ -162,6 +165,7 @@ public class LeadController{
 				.leadPhoneNo(phone)
 				.leadLocation(location)
 				.leadAcqCode(source)
+				.referedBy(refered_by)
 				.bound(bound)
 				.build();
 
@@ -235,6 +239,26 @@ public class LeadController{
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
+			return "static/error";
+		}
+	}
+
+	@RequestMapping("LeadDelete.htm")
+	public String LeadDelete(HttpServletRequest req, HttpSession ses,RedirectAttributes redir) throws Exception {
+		try {
+
+			String leadId  = req.getParameter("lead_id");
+			long result=leadService.leadDelete(leadId);
+
+			if (result !=0) {
+				redir.addAttribute("successMessage", "Lead Deleted Successfully");
+			} else {
+				redir.addAttribute("failureMessage", "Lead Delete Unsuccessful");
+			}
+
+			return "redirect:/LeadList.htm";
+		} catch (Exception e) {
+			e.printStackTrace();
 			return "static/error";
 		}
 	}

@@ -1,3 +1,5 @@
+<%@page import="com.main.model.CustomerScoreHistory"%>
+<%@page import="java.util.List"%>
 <%@page import="com.main.model.LeadForm"%>
 <%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="com.main.utils.MyDateTimeUtils"%>
@@ -20,6 +22,10 @@
 	Customer customer = (Customer) request.getAttribute("customer");
 	LeadForm lead =(LeadForm) request.getAttribute("lead");
     String userType = (String) session.getAttribute("UserType");
+    
+ 	boolean adm_man = userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString());
+	
+ 	List<CustomerScoreHistory> cusScoreHistory = (List<CustomerScoreHistory>) request.getAttribute("CustomerScoreHistory");
 %>
 
 
@@ -141,45 +147,8 @@
 
 						</div>
 					</div>
-					<hr>
-					<div class="form-group">
-						<div class="row">
-
-							<div class="col-md-3">
-								<label>Opening Cibil </label> <input type="number"
-									name="customer_open_cibil"
-									value="<%if (customer != null && customer.getOpenCibilScore()!=null) {%><%=customer.getOpenCibilScore()%><%}%>"
-									id="customer_open_cibil" class="form-control input-sm" min="0"
-									max="900" placeholder="Opening Cibil Score" >
-							</div>
-							<div class="col-md-2">
-								<label>Opening Date</label> <input type="text"
-									name="customer_cibil_open_date" 
-									data-date-format="yyyy-mm-dd"
-									value="<%if (customer != null && customer.getOpenDate()!=null) {%><%=MyDateTimeUtils.SqlToRegularDate(customer.getOpenDate().toString())%><%}%>"
-									id="customer_cibil_open_date" class="form-control input-sm">
-							</div>
-
-							<div class="col-md-3">
-								<label>Closing Cibil</label> <input type="number"
-									name="customer_close_cibil"
-									value="<%if (customer != null && customer.getCloseCibilScore()!=null) {%><%=customer.getCloseCibilScore()%><%}%>"
-									id="customer_close_cibil" class="form-control input-sm" min="0"
-									max="900" maxlength="255" placeholder="Closing Cibil Score">
-							</div>
-							<div class="col-md-2">
-								<label>Closing Date</label> <input type="text"
-									name="customer_cibil_close_date" 
-									data-date-format="yyyy-mm-dd"
-									value="<%if (customer != null && customer.getCloseCibilScore()!=null) {%><%=MyDateTimeUtils.SqlToRegularDate(customer.getCloseDate().toString())%><%}%>"
-									id="customer_cibil_close_date" class="form-control input-sm">
-							</div>
-
-						</div>
-					</div>
-					<%
-					if (customer == null && !(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) )) {
-					%>
+				
+					<% if (customer == null && !(userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) )) { %>
 					<div class="form-group">
 						<div class="row">
 							<div class="col-md-12">
@@ -197,6 +166,7 @@
 					<%} %>
 
 
+				<%if(adm_man){ %>
 					<div class="row">
 						<div class="col-12" align="center">
 							<%
@@ -215,9 +185,57 @@
 							%>
 						</div>
 					</div>
-
+				<%} %>
 
 				</form>
+				<hr>
+				<%if(customer != null){ %>
+				<form>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-4">
+								<table class="table table-bordered table-hover table-striped table-condensed"  id="myTable">
+									<tr>
+										<th style="width: 50%;padding:5px;">Date </th>
+										<th style="width: 50%;padding:5px;">Score</th>
+									</tr>
+									<%for(CustomerScoreHistory score : cusScoreHistory){ %>
+										<tr>
+											<td style=""><%=MyDateTimeUtils.SqlToRegularDate(score.getScoreDate().toString()) %> </td>
+											<td style=""><%=score.getScore() %> </td>
+										</tr>
+									<%} %>
+								</table>	
+							</div>	
+						
+						
+							<div class="col-md-2">
+								<label> Date</label> <input type="text"
+									name="customer_score_date" 
+									data-date-format="yyyy-mm-dd"
+									value=""
+									id="customer_score_date" class="form-control input-sm"  required="required" readonly="readonly">
+							</div>
+							<div class="col-md-2">
+								<label> Score </label> <input type="number"
+									name="customer_score"
+									value=""
+									id="customer_score" class="form-control input-sm" min="0"
+									max="900" placeholder="Opening Score" required="required">
+							</div>
+						<div class="col-md-2">
+							<label>Action</label>
+							<div class="col-md-1" align="center">
+								<button type="submit" class="btn btn-sm submit-btn"
+								formaction="CustomerScoreAddSubmit.htm" formmethod="post" onclick="return confirm('Are you sure to Submit?')">Add</button>
+							</div>
+						</div>
+						
+					</div>
+					<input type="hidden" name="customer_id" value="<%=customer.getCustomerId()%>">
+					</div>
+				</form>	
+				<%} %>
 			</div>
 
 
@@ -239,7 +257,7 @@
 				}
 			});
 			
-			$('#customer_cibil_close_date').daterangepicker({
+			$('#customer_score_date').daterangepicker({
 				"singleDatePicker" : true,
 				"linkedCalendars" : false,
 				"showCustomRangeLabel" : true,
@@ -251,17 +269,6 @@
 				}
 			});
 			
-			$('#customer_cibil_open_date').daterangepicker({
-				"singleDatePicker" : true,
-				"linkedCalendars" : false,
-				"showCustomRangeLabel" : true,
-				"maxDate" : new Date(),
-				"cancelClass" : "btn-default",
-				showDropdowns : true,
-				locale : {
-					format : 'DD-MM-YYYY'
-				}
-			});
 
 		});
 		

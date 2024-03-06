@@ -13,5 +13,6 @@ public class LeadAcqTypes {
     private Integer id;
     private String leadAcqCode;
     private String leadAcqType;
+    private int referalType;
 
 }

@@ -36,5 +36,6 @@ public class LeadForm extends BaseEntity{
     private String customerId;
     private int leadPoints;
     private String remarks;
+    private String referedBy;
     private int isActive;
 }

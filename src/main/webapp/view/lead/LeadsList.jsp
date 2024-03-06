@@ -252,7 +252,10 @@ margin-left=10px;
 		        <%} %>
 		        <th>Lead Score</th>
 		        <th>Info</th>
-		        <th>Update</th>
+		        <%if(adm_man){ %>
+		        	<th>Action</th>
+		        <%} %>
+		        
 		        <th>Status</th>
 		        <th>Add To Customer</th>
 		    <tr>
@@ -273,7 +276,8 @@ margin-left=10px;
 		        	<%if(adm_man){ %>
 		        	<td>
 		        		<select id="lead-<%=lead.getLeadId() %>" name="userId" onchange="updateAgentForLead('<%=lead.getLeadId()%>',this.value);">
-			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){ %>
+		        			
+			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
 			            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
 			            	<%} %>
 			                <%for(CrmUser agent : agents ){ %>
@@ -284,7 +288,14 @@ margin-left=10px;
 		        	<%} %>
 					<td><%= lead.getLeadPoints() %></td>  
 					<td><button type="submit" class="btn btn-sm misc-btn" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectLeadDetailsView.htm" >Info</button></td>
-					<td><button class="btn btn-sm update-btn" type="submit" name="lead_id" value="<%=lead.getLeadId() %>" formmethod="post" formaction="LeadEdit.htm" >Update</button></td>
+					<%if(adm_man){ %>
+					<td>
+						<button class="btn btn-sm update-btn" type="submit" name="lead_id" value="<%=lead.getLeadId() %>" formmethod="post" formaction="LeadEdit.htm" >Update</button>
+						<button class="btn btn-sm delete-btn" type="submit" name="lead_id" value="<%=lead.getLeadId() %>" formmethod="post" formaction="LeadDelete.htm" onclick="return confirm('Are you sure to delete?')">
+							<i class="fa-solid fa-trash-can" ></i>
+						</button>
+					</td>
+					<%} %>
 					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=lead.getLeadName() %>','<%=lead.getLeadId() %>','<%=lead.getLeadStatus() %>')" >Status</button></td>
 					<td>
 						<%if(lead.getLeadStatus().equalsIgnoreCase("IIR") && lead.getConvertedToCustomer()==0){ %>
@@ -356,12 +367,12 @@ margin-left=10px;
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12"> 
 				   			<span>Remarks<span class="mandatory">*</span></span>
-				   			<textarea class="form-control" name="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
+				   			<textarea class="form-control" name="modal_status_remarks" id="modal_status_remarks" rows="5" cols="50" onblur="this.value=this.value.trim();" required="required"></textarea>
 			   			</div>
 					</div>
 					<div class="row" style=" padding: 5px" >
 			   			<div class="col-md-12" align="center"> 
-				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_lead_id" id="modal_btn_lead_id" value="" onclick="return confirm('Are you sure to Submit?')">Submit </button>
+				   			<button type="submit" class="btn btn-sm submit-btn" name="modal_lead_id" id="modal_btn_lead_id" value="" onclick="return onStatusSubmit()">Submit </button>
 			   			</div>
 					</div>
 				</form>
@@ -372,6 +383,20 @@ margin-left=10px;
 									
 
 </body>
+
+<script type="text/javascript">
+
+function onStatusSubmit(){
+
+	var $remarks = $("#modal_status_remarks").val();
+	if($remarks.trim().length >25){
+		return confirm('Are you sure to Submit?')
+	}else {
+		alert("Remarks should be minimum 25 characters ");
+		return false;
+	}
+}	
+</script>
 
 <script type="text/javascript">
 function openStatusModal($lead_name, $lead_id, $status_code){
