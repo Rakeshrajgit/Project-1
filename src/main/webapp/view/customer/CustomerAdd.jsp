@@ -108,7 +108,7 @@
 								<label>DOB<span class="mandatory">*</span></label> 
 								<input
 									type="text" name="customer_dob"
-									data-date-format="yyyy-mm-dd" value="<%if (customer != null) {%><%=MyDateTimeUtils.SqlToRegularDate(customer.getDob().toString())%><%} %>"
+									data-date-format="yyyy-mm-dd" value="<%if (customer != null) {%><%=MyDateTimeUtils.sqlToRegularDate(customer.getDob().toString())%><%} %>"
 									required="required" id="customer_dob"
 									class="form-control input-sm" readonly="readonly">
 							</div>
@@ -201,7 +201,7 @@
 									</tr>
 									<%for(CustomerScoreHistory score : cusScoreHistory){ %>
 										<tr>
-											<td style=""><%=MyDateTimeUtils.SqlToRegularDate(score.getScoreDate().toString()) %> </td>
+											<td style=""><%=MyDateTimeUtils.sqlToRegularDate(score.getScoreDate().toString()) %> </td>
 											<td style=""><%=score.getScore() %> </td>
 										</tr>
 									<%} %>

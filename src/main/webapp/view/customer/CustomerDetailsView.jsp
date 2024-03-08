@@ -97,7 +97,7 @@
 							</div>
 							<div class="col-md-3">
 								<label class="label">DOB :</label>
-								<span class="value">&nbsp;&nbsp;&nbsp;<%=MyDateTimeUtils.SqlToRegularDate(customer.getDob().toString()) %></span>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=MyDateTimeUtils.sqlToRegularDate(customer.getDob().toString()) %></span>
 							</div>
 						</div>
 						
@@ -134,7 +134,7 @@
 							</div>
 							<div class="col-md-3">
 								<label class="label">Opening Date :</label>
-								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getOpenDate()!=null?MyDateTimeUtils.SqlToRegularDate(customer.getOpenDate().toString()):"-" %></span>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getOpenDate()!=null?MyDateTimeUtils.sqlToRegularDate(customer.getOpenDate().toString()):"-" %></span>
 							</div>
 							<div class="col-md-3">
 								<label class="label">Closing Score :</label>
@@ -142,7 +142,7 @@
 							</div>
 							<div class="col-md-3">
 								<label class="label">Closing Date :</label>
-								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getCloseDate()!=null?MyDateTimeUtils.SqlToRegularDate(customer.getCloseDate().toString()):"-" %></span>
+								<span class="value">&nbsp;&nbsp;&nbsp;<%=customer.getCloseDate()!=null?MyDateTimeUtils.sqlToRegularDate(customer.getCloseDate().toString()):"-" %></span>
 							</div>
 						</div>
 						

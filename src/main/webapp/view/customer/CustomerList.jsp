@@ -227,11 +227,11 @@ margin-left=10px;
 		
 		        <div class="flex-item">Registered between
 		            <input type="text" name="customer_added_from" data-date-format="yyyy-mm-dd"
-		            				value="<%=MyDateTimeUtils.SqlToRegularDate(fromDate) %>"
+		            				value="<%=MyDateTimeUtils.sqlToRegularDate(fromDate) %>"
 									required="required" id="customer_added_from" class=" input-sm" readonly="readonly">
 					 -
 		           <input type="text" name="customer_added_to" data-date-format="yyyy-mm-dd"
-		           					value="<%=MyDateTimeUtils.SqlToRegularDate(endDate) %>"
+		           					value="<%=MyDateTimeUtils.sqlToRegularDate(endDate) %>"
 									required="required" id="customer_added_to" class=" input-sm" readonly="readonly">
 		        </div>
 
@@ -290,7 +290,7 @@ margin-left=10px;
 		             	</select>
 		        	</td>
 		        	<%} %>
-					<td><%= MyDateTimeUtils.SqlToRegularDate(customer.getRegisterDate().toString()) %></td>
+					<td><%= MyDateTimeUtils.sqlToRegularDate(customer.getRegisterDate().toString()) %></td>
 					<td><button type="submit" class="btn btn-sm misc-btn" name="customerId" value="<%=customer.getCustomerId() %>" formmethod="get" formaction="RedirectCustomerDetailsView.htm" >Info</button></td>
 					<%if(adm_man){ %>
 					<td>

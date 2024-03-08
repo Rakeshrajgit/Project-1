@@ -210,7 +210,7 @@ public class MyDateTimeUtils {
         return pfirstday;
     }
 
-    public static String SqlToRegularDate(String sqldate) throws ParseException {
+    public static String sqlToRegularDate(String sqldate) throws ParseException {
         return regularDateFormat.format(sqlDateFormat.parse(sqldate));
     }
 
