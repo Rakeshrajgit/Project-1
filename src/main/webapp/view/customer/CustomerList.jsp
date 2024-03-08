@@ -357,7 +357,7 @@ margin-left=10px;
 					<div class="row" style=" padding: 5px; display:none;" id="modal_explicit_payment_row">
 			   			<div class="col-md-12">
 				   			<label>Full Payment Amount<span class="mandatory">*</span></label>
-				   			<input type="number" class="form-control" name="full_payment_amount" id="modal_full_payment_amount" value="0" min="0">
+				   			<input type="number" class="form-control" name="full_payment_amount" id="modal_full_payment_amount" value="" min="1">
 			   			</div>
 					</div>
 
@@ -442,6 +442,7 @@ $(document).ready(function() {
             $("#modal_explicit_payment_row").css("display", "block");
          } else {
  			$("#modal_full_payment_amount").removeAttr('required')
+ 			$("#modal_full_payment_amount").val('');
             $("#modal_explicit_payment_row").css("display", "none");
          }
 	  });

@@ -94,8 +94,8 @@
 							<div class="col-md-2">
 								<label>Gender<span class="mandatory">*</span></label> 
 								<select class="form-control select2 " name="customer_gender"
-									required="required" >
-									<option disabled="disabled">Select ..</option>
+									required="required" > 
+									<option value="" disabled="disabled" selected>Select ..</option>
 									<option value="Male"
 										<%if (customer != null && customer.getGender().equalsIgnoreCase("Male")) {%>
 										selected <%}%>>Male</option>
@@ -166,11 +166,11 @@
 					<%} %>
 
 
-				<%if(adm_man){ %>
+				
 					<div class="row">
 						<div class="col-12" align="center">
 							<%
-							if (customer != null) {
+							if (adm_man && customer != null) {
 							%>
 							<button type="submit" class="btn btn-sm update-btn"
 								name="customer_id" value="<%=customer.getCustomerId()%>"
@@ -185,7 +185,7 @@
 							%>
 						</div>
 					</div>
-				<%} %>
+				
 
 				</form>
 				<hr>
