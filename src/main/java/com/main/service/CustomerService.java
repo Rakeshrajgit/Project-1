@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,7 +45,7 @@ public class CustomerService {
     }
 
     public Customer getCustomerByCustomerId(String customerId){
-        return customerRepo.findByCustomerId(customerId);
+        return customerRepo.findByCustomerId(customerId).orElse(null);
     }
 
     public List<Customer> getCustomerOpen(String customerId,LocalDate fromDate,LocalDate toDate,String customerStatusCode){
@@ -76,10 +77,14 @@ public class CustomerService {
     }
 
     public Long updateAgentForCustomer(String appNo, String agentId){
-        Customer customer = customerRepo.findByCustomerId(appNo);
-        customer.setUserId(agentId.equalsIgnoreCase("")?null:agentId);
-        customerRepo.save(customer);
-        return customer.getId();
+        Customer customer = customerRepo.findByCustomerId(appNo).orElse(null);
+        if(customer!=null) {
+            customer.setUserId(agentId.equalsIgnoreCase("") ? null : agentId);
+            customerRepo.save(customer);
+            return customer.getId();
+        }else{
+            return 0L;
+        }
     }
 
     public List<CustomerStates> getAllCustomerStatus(){
@@ -134,7 +139,10 @@ public class CustomerService {
         return customerRepo.save(customer);
     }
     private Customer customerEdit(Customer customer){
-        Customer customerOrg = customerRepo.findByCustomerId(customer.getCustomerId());
+        Customer customerOrg = customerRepo.findByCustomerId(customer.getCustomerId()).orElse(null);
+        if(customerOrg==null){
+            return null;
+        }
         customerOrg.setFullName(customer.getFullName());
         customerOrg.setEmail(customer.getEmail());
         customerOrg.setPhoneNo(customer.getPhoneNo());
@@ -161,7 +169,11 @@ public class CustomerService {
     @Transactional
     public long updateCustomerStatusCode( CustomerStateTransactions transaction, String full_payment_amount) throws Exception {
         CustomerStates state_new =  customerStatesRepo.findByCustomerStatusCode(transaction.getCustomerStatusCodeTo());
-        Customer customer = customerRepo.findByCustomerId(transaction.getCustomerId());
+        Customer customer = customerRepo.findByCustomerId(transaction.getCustomerId()).orElse(null);
+
+        if(customer==null){
+            return 0L;
+        }
 
         int payment_amount = 0;
 
@@ -241,7 +253,8 @@ public class CustomerService {
 
     @Transactional
     public CustomerScoreHistory addCustomerScoreHistory(CustomerScoreHistory scoreHistory){
-        Customer customer = customerRepo.findByCustomerId(scoreHistory.getCustomerId());
+        Customer customer = customerRepo.findByCustomerId(scoreHistory.getCustomerId()).orElse(null);
+        if (customer==null) return null;
         List<CustomerScoreHistory> ScoreHistory = customerScoreHistoryRepo.findByCustomerIdOrderByAddedDateAsc(scoreHistory.getCustomerId());
 
         if(ScoreHistory==null || ScoreHistory.isEmpty()){
@@ -260,7 +273,7 @@ public class CustomerService {
 
     public long customerDelete(String customerId){
 
-        Customer customer = customerRepo.findByCustomerId(customerId);
+        Customer customer = customerRepo.findByCustomerId(customerId).orElseThrow();
         customer.setIsActive(0);
         customerRepo.save(customer);
         return customer.getId();

@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerRepo extends JpaRepository<Customer, Integer> {
-    Customer findByCustomerId(String customerId);
+    Optional<Customer> findByCustomerId(String customerId);
     List<Customer> findByUserId(String userId);
     List<Customer> findByCustomerIdIsNull();
 

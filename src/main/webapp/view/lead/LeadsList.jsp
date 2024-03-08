@@ -208,9 +208,7 @@ margin-left=10px;
 			</div>
 		
 		</div>
-	
-		<%@ include file="../static/successFailureMsg.jsp" %>
-	
+		
 		
 		<form action="LeadList.htm" method="post" style="margin-top:10px;">
 		    <div class="LeadStage">

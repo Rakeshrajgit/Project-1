@@ -138,8 +138,12 @@ public class CustomerController {
         try {
             String customerId = req.getParameter("appNo");
             String agentId = req.getParameter("agentId");
-            customerService.updateAgentForCustomer(customerId, agentId);
-            return "Agent assigned successfully !";
+            long result = customerService.updateAgentForCustomer(customerId, agentId);
+            if(result>0) {
+                return "Agent assigned successfully !";
+            }else{
+                return "Agent assignment unsuccessful !";
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
             return "Agent assignment unsuccessful !";
@@ -159,10 +163,14 @@ public class CustomerController {
                 req.setAttribute("lead",lead);
             }
 
-            req.setAttribute("CustomerScoreHistory",customerService.getCustomerScoreHistory(customer.getCustomerId()));
+            if(customer!=null){
+                req.setAttribute("CustomerScoreHistory",customerService.getCustomerScoreHistory(customer.getCustomerId()));
+            }
+
             req.setAttribute("customer",customer);
             return "customer/CustomerAdd";
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             return "static/Error";
         }
@@ -307,7 +315,7 @@ public class CustomerController {
 
 
     @RequestMapping("CustomerScoreAddSubmit.htm")
-    public String customerScoreAddSubmit(HttpServletRequest req, HttpSession ses) throws Exception {
+    public String customerScoreAddSubmit(HttpServletRequest req, HttpSession ses, RedirectAttributes redir) throws Exception {
         try {
 
             String customer_score = req.getParameter("customer_score");
@@ -319,7 +327,13 @@ public class CustomerController {
                     .scoreDate(LocalDate.parse(MyDateTimeUtils.regularToSqlDate(customer_score_date)))
                     .build();
 
-            customerService.addCustomerScoreHistory(score);
+            CustomerScoreHistory history = customerService.addCustomerScoreHistory(score);
+
+            if(history!=null){
+                redir.addAttribute("successMessage", "Customer score added Successfully");
+            } else {
+                redir.addAttribute("failureMessage", "Customer score adding Unsuccessful");
+            }
 
             ses.setAttribute("customerId", customerId);
             return "redirect:/CustomerDetailsView.htm";
