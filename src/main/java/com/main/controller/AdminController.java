@@ -26,6 +26,7 @@ public class AdminController {
 	@GetMapping(value ="Dashboard.htm")
 	public String Login(HttpServletRequest req)
 	{
+
 		return "static/dashboard";
 	}
 

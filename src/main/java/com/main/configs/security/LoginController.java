@@ -110,9 +110,6 @@ public class LoginController {
                     .build();
             crmService.LoginStampingInsert(stamping);
 
-//            if(login.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){
-//                return "redirect:/Dashboard.htm";
-//            }
             return "redirect:/Dashboard.htm";
         } catch (Exception e) {
             logger.error(new Date() + " Login Issue Occured When Login By " + req.getUserPrincipal().getName(), e);
