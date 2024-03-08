@@ -103,6 +103,10 @@
 						
 						<div class="row">
 							<div class="col-md-3">
+								<label class="label" style="color: red">Agent :</label>
+								<span class="value" style="color: red">&nbsp;&nbsp;&nbsp;<%=lead.getUserId() %></span>
+							</div>
+							<div class="col-md-3">
 								<label class="label" style="color: red">Status :</label>
 								<span class="value" style="color: red">&nbsp;&nbsp;&nbsp;<%=leadStatesMap.get(lead.getLeadStatus()).getLeadStatus() %></span>
 							</div>

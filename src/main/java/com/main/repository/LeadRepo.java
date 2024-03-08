@@ -27,4 +27,8 @@ public interface LeadRepo extends JpaRepository<LeadForm, Long> {
 
     LeadForm findByLeadId(String leadId);
 
+    @Query(value = "CALL lead_search(:searchQuery)", nativeQuery = true)
+    List<LeadForm> leadSearch(@Param("searchQuery") String searchQuery);
+
+
 }

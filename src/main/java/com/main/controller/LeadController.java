@@ -74,6 +74,7 @@ public class LeadController{
 
 			String start = req.getParameter("lead_added_from");
 			String end = req.getParameter("lead_added_to");
+			String lead_search_query = req.getParameter("lead_search_query");
 
 			LocalDate startDate = LocalDate.now().minusMonths(1);
 			LocalDate endDate = LocalDate.now();
@@ -105,7 +106,11 @@ public class LeadController{
 				leadScore="0";
 			}
 
-			leadList = leadService.getLeadsOpen(userId,startDate,endDate,leadStatusCode,Integer.parseInt(leadScore));
+			if(lead_search_query!=null &&  lead_search_query.trim().length()>0) {
+				leadList = leadService.getLeadSearch(lead_search_query);
+			}else{
+				leadList = leadService.getLeadsOpen(userId, startDate, endDate, leadStatusCode, Integer.parseInt(leadScore));
+			}
 			req.setAttribute("leadStatusList",leadService.getAllLeadStatus());
 			req.setAttribute("Agents", agents);
 			req.setAttribute("leadList", leadList);

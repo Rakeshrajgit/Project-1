@@ -177,13 +177,28 @@ margin-left=10px;
 	
 	<%@ include file="../static/successFailureMsg.jsp" %>
 
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
 
-		<form action="CustomerAdd.htm" method="get" style="float: right;">
-              <input type="submit" class="btn btn-sm add-btn" value="add">
-        </form>
-
-		<% } %>
+		<div class="row" align="right" >
+			<div class="col-md-8" ></div>
+			<div class="col-md-3" align="right">
+				<form action="CustomerList.htm" method="post" class="form-inline" style="float: right;">
+				  
+				  <div class="form-group mx-sm-3 mb-2">
+				    <label 	><h5>Search :&nbsp;&nbsp;</h5></label>
+				    <input type="text" name="customer_search_query" class="form-control" placeholder="min 4 chaaracters"  pattern=".{4,}" maxlength="100"  required="required" onblur="this.value=this.value.trim()">
+				  </div>
+				  <button type="submit" class="btn mb-2" style="background-color: #F9E897"><i class="fa fa-search" aria-hidden="true" style="color: #124076;"></i></button>
+				</form>
+				
+			</div>
+			<div class="col-md-1" >
+				<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+					<form action="CustomerAdd.htm" method="get" style="float: right;">
+			              <input type="submit" class="btn btn-sm add-btn" value="add">
+			        </form>
+				<% } %>
+			</div>
+		</div>
 		<form action="CustomerList.htm" method="post">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Customer Stage

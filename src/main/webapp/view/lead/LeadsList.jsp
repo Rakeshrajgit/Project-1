@@ -166,28 +166,53 @@ margin-left=10px;
 			<div class="col-md-3">
 				<h5>Leads List</h5>
 			</div>
-				<div class="col-md-9 ">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
-						<li class="breadcrumb-item active " aria-current="page">Leads List</li>
-					</ol>
-				</div>
+			<div  class="col-md-6 " >
+				
 			</div>
+			
+			
+			<div class="col-md-3 ">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
+					<li class="breadcrumb-item active " aria-current="page">Leads List</li>
+				</ol>
+			</div>
+		</div>
 	</div>	
 	<div class="page card dashboard-card">
 	
 	<div class="card-body" >
+		<%@ include file="../static/successFailureMsg.jsp" %>
+	
+		<div class="row" align="right" >
+			<div class="col-md-8" ></div>
+			<div class="col-md-3" align="right">
+				<form action="LeadList.htm" method="post" class="form-inline" style="float: right;">
+				  
+				  <div class="form-group mx-sm-3 mb-2">
+				    <label for="lead_search_query"	><h5>Search :&nbsp;&nbsp;</h5></label>
+				    <input type="text" class="form-control" id="lead_search_query" placeholder="min 4 chaaracters" name="lead_search_query" pattern=".{4,}" maxlength="100"  required="required" onblur="this.value=this.value.trim()">
+				  </div>
+				  <button type="submit" class="btn mb-2" style="background-color: #F9E897"><i class="fa fa-search" aria-hidden="true" style="color: #124076;"></i></button>
+				</form>
+				
+			</div>
+			<div class="col-md-1" >
+				<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
+		
+				<form action="LeadAdd.htm" method="get" style="float: right;">
+		              <input type="submit" class="btn btn-sm add-btn" value="Add">
+		        </form>
+				
+				<% } %>
+			</div>
+		
+		</div>
 	
 		<%@ include file="../static/successFailureMsg.jsp" %>
 	
-		<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())|| userType.equalsIgnoreCase(UserTypes.ROLE_AGENT.toString())){ %>
 		
-		<form action="LeadAdd.htm" method="get" style="float: right;">
-              <input type="submit" class="btn btn-sm add-btn" value="Add">
-        </form>
-		
-		<% } %>
-		<form action="LeadList.htm" method="post">
+		<form action="LeadList.htm" method="post" style="margin-top:10px;">
 		    <div class="LeadStage">
 		        <div class="flex-item" >Lead Stage
 		            <select id="Lead_stage_dd" name="Lead_status_code">
@@ -232,7 +257,6 @@ margin-left=10px;
 		        	<button type="submit" class="btn btn-sm submit-btn">Submit</button>
 		        </div>
 		    </div>
-		
 		 
 		</form>
 		
@@ -296,7 +320,11 @@ margin-left=10px;
 						</button>
 					</td>
 					<%} %>
-					<td><button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=lead.getLeadName() %>','<%=lead.getLeadId() %>','<%=lead.getLeadStatus() %>')" >Status</button></td>
+					<td>
+						<%if(lead.getConvertedToCustomer()==0){ %>
+						<button class="btn btn-sm submit-btn" type="button" onclick="openStatusModal('<%=lead.getLeadName() %>','<%=lead.getLeadId() %>','<%=lead.getLeadStatus() %>')" >Status</button>
+						<%} %>
+					</td>
 					<td>
 						<%if(lead.getLeadStatus().equalsIgnoreCase("IIR") && lead.getConvertedToCustomer()==0){ %>
 							<button class="btn btn-sm submit-btn" name="lead_to_customer"  value="<%=lead.getLeadId()%>" formaction="CustomerAdd.htm" formmethod="post" onclick="retuen confirm('Are You sure to ass this Lead to Customers ?')">

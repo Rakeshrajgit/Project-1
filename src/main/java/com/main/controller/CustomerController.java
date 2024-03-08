@@ -44,6 +44,9 @@ public class CustomerController {
 
             String start = req.getParameter("customer_added_from");
             String end = req.getParameter("customer_added_to");
+            String customer_search_query = req.getParameter("customer_search_query");
+
+
             LocalDate startDate = LocalDate.now().minusMonths(1);
             LocalDate endDate = LocalDate.now();
             if(start!=null){
@@ -68,7 +71,13 @@ public class CustomerController {
                 userId = (String) ses.getAttribute("userId");
                 agents.add(crmUserService.getUsersByUserId(userId));
             }
-            customerList = customerService.getCustomerOpen(userId,startDate,endDate,customerStatusCode);
+
+            if(customer_search_query!=null &&  customer_search_query.trim().length()>0) {
+                customerList = customerService.customerSearch(customer_search_query);
+            }else{
+                customerList = customerService.getCustomerOpen(userId, startDate, endDate, customerStatusCode);
+            }
+
             req.setAttribute("customerStatusList",customerService.getAllCustomerStatus());
             req.setAttribute("Agents", agents);
             req.setAttribute("CustomerList", customerList);

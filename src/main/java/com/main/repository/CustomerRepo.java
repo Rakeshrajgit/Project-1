@@ -23,5 +23,7 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
     @Query(value = "CALL customer_list_close (:userId,:fromDate,:toDate,:customerStatusCode)", nativeQuery = true)
     List<Customer> findByCustomerClosed(@Param("userId") String userId, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("customerStatusCode") String customerStatusCode);
 
+    @Query(value= "CALL customer_search(:searchQuery)", nativeQuery = true)
+    List<Customer> customerSearch(@Param("searchQuery") String searchQuery);
 
 }

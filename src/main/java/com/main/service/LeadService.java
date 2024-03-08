@@ -66,6 +66,10 @@ public class LeadService {
 		return leadRepo.findByLeadFormOpen(userId,startDate,endDate,leadStatusCode, leadScore);
 	}
 
+	public List<LeadForm> getLeadSearch(String searchQuery) {
+		return leadRepo.leadSearch(searchQuery);
+	}
+
 
 	public List<LeadStates> getAllLeadStatus() {
 		return leadStatesRepo.findAll();

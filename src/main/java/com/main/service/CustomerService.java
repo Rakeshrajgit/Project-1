@@ -51,6 +51,11 @@ public class CustomerService {
         return customerRepo.findByCustomerOpen(customerId,fromDate,toDate,customerStatusCode);
     }
 
+    public List<Customer> customerSearch(String searchQuery){
+        return customerRepo.customerSearch(searchQuery);
+    }
+
+
     public List<Customer> getCustomerClosed(String customerId,LocalDate fromDate,LocalDate toDate,String customerStatusCode){
         return customerRepo.findByCustomerClosed(customerId,fromDate,toDate,customerStatusCode);
     }
