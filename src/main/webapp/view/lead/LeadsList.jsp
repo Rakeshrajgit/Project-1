@@ -237,7 +237,7 @@ margin-left=10px;
 		        </div>
 		
 		        <div class="flex-item">Registered between
-		            <input type="text" name="Lead_added_from" data-date-format="yyyy-mm-dd" 
+		           <input type="text" name="Lead_added_from" data-date-format="yyyy-mm-dd" 
 		            				value="<%=MyDateTimeUtils.sqlToRegularDate(fromDate) %>"
 									required="required" id="Lead_added_from" class=" input-sm" readonly="readonly">
 					 - 
@@ -409,6 +409,41 @@ margin-left=10px;
 									
 
 </body>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	$('#Lead_added_from').daterangepicker({
+		"singleDatePicker" : true,
+		"linkedCalendars" : false,
+		"showCustomRangeLabel" : true,
+		"maxDate" : new Date(),
+		"cancelClass" : "btn-default",
+		showDropdowns : true,
+		locale : {
+			format : 'DD-MM-YYYY'
+		}
+	});
+
+	$('#Lead_added_to').daterangepicker({
+		"singleDatePicker" : true,
+		"linkedCalendars" : false,
+		"showCustomRangeLabel" : true,
+		"maxDate" : new Date(),
+		"cancelClass" : "btn-default",
+		showDropdowns : true,
+		locale : {
+			format : 'DD-MM-YYYY'
+		}
+	});
+
+
+});
+
+
+</script>
+
 
 <script type="text/javascript">
 

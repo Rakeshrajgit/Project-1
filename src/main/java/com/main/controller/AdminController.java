@@ -1,9 +1,17 @@
 package com.main.controller;
 
 import com.main.configs.enums.UserTypes;
+import com.main.configs.security.UserServiceImpl;
+import com.main.dto.AgentCollectionDto;
 import com.main.model.CrmUser;
+import com.main.model.LeadAcqTypes;
+import com.main.model.LeadForm;
+import com.main.service.AdminService;
 import com.main.service.CrmUserService;
+import com.main.service.LeadService;
+import com.main.utils.MyDateTimeUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -23,9 +35,59 @@ public class AdminController {
 	@Autowired
 	private CrmUserService crmUserService;
 
+	@Autowired
+	private LeadService leadService;
+
+	@Autowired
+	private AdminService adminService;
+
 	@GetMapping(value ="Dashboard.htm")
-	public String Login(HttpServletRequest req)
-	{
+	public String Login(HttpServletRequest req, HttpServletResponse res,HttpSession ses) throws ParseException {
+		String userIdSes = (String) ses.getAttribute("userId");
+		CrmUser user = crmUserService.getUsersByUserId(userIdSes);
+
+
+		String userId = req.getParameter("userId");
+		String fromDate = req.getParameter("fromDate");
+		String toDate = req.getParameter("toDate");
+
+
+
+		if(userId==null) {
+			if(user.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || user.getRole().equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString())){
+				userId = "A";
+			}else{
+				userId = userIdSes;
+			}
+		}
+
+		if(fromDate==null || toDate==null){
+			toDate = LocalDate.now().toString();
+			fromDate = LocalDate.now().minusDays(7).toString();
+		}else{
+			toDate = MyDateTimeUtils.regularToSqlDate(toDate);
+			fromDate = MyDateTimeUtils.regularToSqlDate(fromDate);
+		}
+
+		if(user.getRole().equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || user.getRole().equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) ){
+			List<LeadAcqTypes> leadSourceTypes = leadService.getLeadSource();
+			List<LeadForm> leads = leadService.getLeadsByRegisteredBetween(LocalDate.parse(fromDate).atStartOfDay(), LocalDate.parse(toDate).atTime(LocalTime.MAX),1);
+
+			req.setAttribute("leadSourceCount",leadService.getLeadDBSourceCount(leads,leadSourceTypes));
+			req.setAttribute("leadDateCount",leadService.getLeadDBDateCount(leads,LocalDate.parse(fromDate),LocalDate.parse(toDate)));
+		}else{
+			req.setAttribute("leadSourceCount",new HashMap<>());
+			req.setAttribute("leadDateCount",new HashMap<>());
+		}
+
+		req.setAttribute("agentCollectionData",adminService.getAgentCollectionData(userId,user.getRole(),LocalDate.parse(fromDate), LocalDate.parse(toDate)));
+		req.setAttribute("fromDate", MyDateTimeUtils.sqlToRegularDate(fromDate));
+		req.setAttribute("toDate", MyDateTimeUtils.sqlToRegularDate(toDate));
+		req.setAttribute("userId_dd",userId);
+		req.setAttribute("agentsList",crmUserService.getUsersByRole(UserTypes.ROLE_AGENT.toString()));
+		req.setAttribute("userType",user.getRole());
+
+
 
 		return "static/dashboard";
 	}

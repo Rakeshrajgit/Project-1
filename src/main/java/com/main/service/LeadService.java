@@ -7,8 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class LeadService {
@@ -142,4 +147,54 @@ public class LeadService {
 		leadRepo.save(lead);
 		return lead.getId();
     }
+
+	public List<LeadForm> getLeadsByRegisteredBetween(LocalDateTime fromDate, LocalDateTime toDate, int isActive){
+		return leadRepo.findByRegisteredDateBetweenAndIsActiveOrderByRegisteredDateAsc(fromDate,toDate,isActive);
+	}
+
+	public Map<String, Long> getLeadDBSourceCount(List<LeadForm> leads, List<LeadAcqTypes> leadSourceTypes  ){
+
+		Map<String, Long> sourceCountMapTemp = new LinkedHashMap<>();
+		for(LeadForm lead : leads){
+			if(sourceCountMapTemp.get(lead.getLeadAcqCode()) == null){
+				sourceCountMapTemp.put(lead.getLeadAcqCode(),1L);
+			}else {
+				sourceCountMapTemp.put(lead.getLeadAcqCode(),sourceCountMapTemp.get(lead.getLeadAcqCode())+1);
+			}
+		}
+
+		Map<String, Long> sourceCountMap = new LinkedHashMap<>();
+
+		for(LeadAcqTypes src : leadSourceTypes){
+
+			if(sourceCountMapTemp.get(src.getLeadAcqCode())==null){
+				sourceCountMap.put(src.getLeadAcqType(),0L);
+			}else{
+				sourceCountMap.put(src.getLeadAcqType(),sourceCountMapTemp.get(src.getLeadAcqCode()));
+			}
+
+		}
+
+		return sourceCountMap;
+	}
+
+	public Map<LocalDate, Long> getLeadDBDateCount(List<LeadForm> leads, LocalDate fromDate,LocalDate toDate ){
+
+		Map<LocalDate, Long> leadDateCount =  new LinkedHashMap<>();
+		while(fromDate.isBefore(toDate) || fromDate.isEqual(toDate) ){
+			leadDateCount.put(fromDate,0L);
+			fromDate = fromDate.plusDays(1);
+		}
+
+
+		for(LeadForm lead : leads){
+
+			LocalDate regDate = lead.getRegisteredDate().toLocalDate();
+			leadDateCount.put(regDate,leadDateCount.get(regDate)+1);
+
+		}
+		return leadDateCount;
+	}
+
+
 }

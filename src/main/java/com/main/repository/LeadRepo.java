@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LeadRepo extends JpaRepository<LeadForm, Long> {
@@ -30,5 +31,5 @@ public interface LeadRepo extends JpaRepository<LeadForm, Long> {
     @Query(value = "CALL lead_search(:searchQuery)", nativeQuery = true)
     List<LeadForm> leadSearch(@Param("searchQuery") String searchQuery);
 
-
+    List<LeadForm> findByRegisteredDateBetweenAndIsActiveOrderByRegisteredDateAsc(LocalDateTime fromDate, LocalDateTime toDate, int isActive);
 }
