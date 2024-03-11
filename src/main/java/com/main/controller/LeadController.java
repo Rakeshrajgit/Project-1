@@ -1,9 +1,11 @@
 package com.main.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.main.CrmException;
 import com.main.configs.enums.UserTypes;
 import com.main.model.*;
 import com.main.service.LeadService;
+import com.main.utils.CrmUtils;
 import com.main.utils.MyDateTimeUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +27,7 @@ public class LeadController{
 	@Autowired
 	private LeadService leadService;
 
+
 	@GetMapping(value ="LeadAdd.htm")
 	public String form(HttpServletRequest req)
 	{
@@ -33,7 +36,7 @@ public class LeadController{
 	}
 
 	@PostMapping(value="LeadAddSubmit.htm")
-	public String AddLead(HttpServletRequest req,HttpSession ses)
+	public String AddLead(HttpServletRequest req,HttpSession ses,RedirectAttributes redir)
 	{
 		String userId = (String) ses.getAttribute("userId");
 
@@ -58,8 +61,13 @@ public class LeadController{
 		if(selfAssign!=null && selfAssign.equalsIgnoreCase("yes")){
 			lead.setUserId(userId);
 		}
+		LeadForm result = leadService.saveLead(lead);
 
-		leadService.saveLead(lead);
+		if (result !=null) {
+			redir.addAttribute("successMessage", "Lead added Successfully");
+		} else {
+			redir.addAttribute("failureMessage", "Lead adding Unsuccessful");
+		}
 
 		return "redirect:/LeadList.htm";
 	}
@@ -152,7 +160,7 @@ public class LeadController{
 	}
 
 	@PostMapping("LeadEditSubmit.htm")
-	public String LeadEditSubmit(HttpServletRequest req) {
+	public String LeadEditSubmit(HttpServletRequest req, RedirectAttributes redir) {
 		String name= req.getParameter("name");
 		String email= req.getParameter("email");
 		Long phone = Long.parseLong(req.getParameter("phno"));
@@ -174,7 +182,14 @@ public class LeadController{
 				.bound(bound)
 				.build();
 
-		leadService.updateLead(lead);
+		long result = leadService.updateLead(lead);
+
+		if (result !=0) {
+			redir.addAttribute("successMessage", "Lead Updated Successfully");
+		} else {
+			redir.addAttribute("failureMessage", "Lead Update Unsuccessful");
+		}
+
 		return "redirect:/LeadList.htm"; // Redirect to lead list page after updating
 	}
 

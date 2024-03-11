@@ -1,8 +1,10 @@
 package com.main.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.main.CrmException;
 import com.main.model.*;
 import com.main.repository.*;
+import com.main.utils.CrmUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,9 @@ public class CustomerService {
 
     @Autowired
     private CustomerViewPunchingRepo customerViewPunchingRepo;
+
+    @Autowired
+    private CustomerInfoUpdatesRepo customerInfoUpdatesRepo;
 
     public List<Customer> getAllCustomer(){
         return customerRepo.findAll();
@@ -91,6 +96,7 @@ public class CustomerService {
         return customerStatesRepo.findAll();
     }
 
+    @Transactional
     public Customer customerAddEdit(Customer customer,String lead_id){
 
         if(customer.getCustomerId()==null || customer.getCustomerId().trim().isEmpty()){
@@ -114,10 +120,18 @@ public class CustomerService {
             }else{
                 customer = customerAdd(customer);
             }
+
             return customer;
         }else {
             return customerEdit(customer);
         }
+
+    }
+
+    private void pushCustomerInfoUpdates(Customer customer){
+        ObjectMapper objectMapper = CrmUtils.getObjectMapper();
+        CustomerInfoUpdates customerInfoUpdates = objectMapper.convertValue(customer, CustomerInfoUpdates.class);
+        customerInfoUpdatesRepo.save(customerInfoUpdates);
 
     }
 
@@ -127,16 +141,9 @@ public class CustomerService {
         customer.setReportInterested("yes");
         customer.setRegisterDate(LocalDate.now());
 
-
-//        CustomerStateTransactions transaction = CustomerStateTransactions.builder()
-//                .customerStatusCodeTo("IIR")
-//                .customerStatusCodeFrom("IIR")
-//                .actionBy(userId)
-//                .customerId(customer.getCustomerId())
-//                .build();
-//        customerStateTransactionsRepo.save(transaction);
-
-        return customerRepo.save(customer);
+        customer =  customerRepo.save(customer);
+        pushCustomerInfoUpdates(customer);
+        return customer;
     }
     private Customer customerEdit(Customer customer){
         Customer customerOrg = customerRepo.findByCustomerId(customer.getCustomerId()).orElse(null);
@@ -156,7 +163,10 @@ public class CustomerService {
         customerOrg.setCloseCibilScore(customer.getCloseCibilScore());
         customerOrg.setCloseDate(customer.getCloseDate());
 
-        return customerRepo.save(customerOrg);
+        customerOrg =  customerRepo.save(customerOrg);
+        pushCustomerInfoUpdates(customerOrg);
+        return customerOrg;
+
     }
 
     private String generateCustomerId(){

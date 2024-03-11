@@ -25,13 +25,9 @@
 		String userId_dd = (String)request.getAttribute("userId_dd");
 		String fromDate =  (String)request.getAttribute("fromDate");
 		String toDate =(String)request.getAttribute("toDate");
-		List<LeadAcqTypes> leadSourceTypes =  ( List<LeadAcqTypes> ) request.getAttribute("leadSourceTypes");
 		Map<String, Long> leadSourceCount = ( Map<String, Long> ) request.getAttribute("leadSourceCount");
 		Map<LocalDate, Long> leadDateCount = ( Map<LocalDate, Long> ) request.getAttribute("leadDateCount");
 
-		
-
-		
 	%>
 
 	<div class="row" style="padding: 5px">

@@ -296,17 +296,16 @@ margin-left=10px;
 					<td><%=leadStatesMap.get(lead.getLeadStatus()).getLeadStatus()%> </td>
 					
 		        	<%if(adm_man){ %>
-		        	<td>
-		        		<select id="lead-<%=lead.getLeadId() %>" name="userId" onchange="updateAgentForLead('<%=lead.getLeadId()%>',this.value);">
-		        			
-			            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
-			            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
-			            	<%} %>
-			                <%for(CrmUser agent : agents ){ %>
-			                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
-			                <%} %>
-		             	</select>
-		        	</td>
+			        	<td>
+			        		<select id="lead-<%=lead.getLeadId() %>" name="userId" <%if(lead.getConvertedToCustomer()==0){ %> onchange="updateAgentForLead('<%=lead.getLeadId()%>',this.value);" <%} %>>
+				            	<%if(userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString())){ %>
+				            		<option value="" <%if(lead.getUserId()==null){%> <%} %>style="color: red">UnAssigned</option>
+				            	<%} %>
+				                <%for(CrmUser agent : agents ){ %>
+				                	<option value="<%=agent.getUserId()%>" <%if(agent.getUserId().equalsIgnoreCase(lead.getUserId())){%> selected<% }%>><%=agent.getUserName() %>( <%=agent.getUserId() %> )</option>
+				                <%} %>
+			             	</select>
+			        	</td>
 		        	<%} %>
 					<td><%= lead.getLeadPoints() %></td>  
 					<td><button type="submit" class="btn btn-sm misc-btn" name="leadId" value="<%=lead.getLeadId() %>" formmethod="get" formaction="RedirectLeadDetailsView.htm" >Info</button></td>

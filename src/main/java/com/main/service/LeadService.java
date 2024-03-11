@@ -1,19 +1,20 @@
 package com.main.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.main.CrmException;
 import com.main.model.*;
 import com.main.repository.*;
+import com.main.utils.CrmUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class LeadService {
@@ -34,6 +35,9 @@ public class LeadService {
 	private LeadsStateTransactionsRepo leadsStateTransactionsRepo;
 
 	@Autowired
+	private LeadsInfoUpdatesRepo leadsInfoUpdatesRepo;
+
+	@Autowired
 	private LeadViewPunchingRepo leadViewPunchingRepo;
 
 	public LeadForm saveLead(LeadForm lead){
@@ -44,8 +48,9 @@ public class LeadService {
 		lead.setLeadPoints(10);
 		lead.setCallsCount(0);
 		lead.setIsActive(1);
-
-		return leadRepo.save(lead);
+		leadRepo.save(lead);
+		pushLeadInfoUpdates(lead);
+		return lead;
 	}
 	private String generateLeadId(){
 		String regex = "LEA-"+LocalDate.now().toString().replace("-","")+"-";
@@ -80,17 +85,19 @@ public class LeadService {
 		return leadStatesRepo.findAll();
 	}
 
-	public Long updateAgentForLead(String leadId, String agentId){
+	@Transactional
+	public void updateAgentForLead(String leadId, String agentId){
 		LeadForm lead = leadRepo.findByLeadId(leadId);
 		lead.setUserId(agentId.equalsIgnoreCase("")?null : agentId);
 		leadRepo.save(lead);
-		return lead.getId();
+		pushLeadInfoUpdates(lead);
 	}
 
 	public LeadForm getLeadByLeadId(String leadId) {
 		return leadRepo.findByLeadId(leadId);
 	}
 
+	@Transactional
 	public long updateLead(LeadForm lead) {
 		LeadForm leadOrg = leadRepo.findByLeadId(lead.getLeadId());
 		leadOrg.setLeadName(lead.getLeadName());
@@ -101,8 +108,15 @@ public class LeadService {
 		leadOrg.setBound(lead.getBound());
 		leadOrg.setReferedBy(lead.getReferedBy());
 		leadRepo.save(leadOrg);
-
+		pushLeadInfoUpdates(leadOrg);
 		return leadOrg.getId();
+	}
+
+	private void pushLeadInfoUpdates(LeadForm lead){
+		ObjectMapper objectMapper = CrmUtils.getObjectMapper();
+		LeadsInfoUpdates leadsInfoUpdates = objectMapper.convertValue(lead, LeadsInfoUpdates.class);
+		leadsInfoUpdatesRepo.save(leadsInfoUpdates);
+
 	}
 
 	public long updateLeadStatusCode(LeadsStateTransactions transaction)throws CrmException {

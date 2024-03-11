@@ -1,9 +1,13 @@
 package com.main.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -13,23 +17,21 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table(name = "leads_info_updates")
-@EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LeadsInfoUpdates {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     private String leadId;
-    private String userId; //user id of agent
+    private String userId;
     private String leadAcqCode;
     private String leadName;
     private String leadEmail;
     private Long leadPhoneNo;
     private String leadLocation;
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime registeredDate;
     private int convertedToCustomer;
     private String leadStatus;
@@ -40,10 +42,6 @@ public class LeadsInfoUpdates {
     private String remarks;
     private String referedBy;
     private int isActive;
-
-    @CreatedBy
-    protected String createdBy;
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    protected LocalDateTime createdDate;
+    protected String updatedBy;
+    protected LocalDateTime updatedDate;
 }
