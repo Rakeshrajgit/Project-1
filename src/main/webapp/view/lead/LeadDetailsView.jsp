@@ -1,3 +1,4 @@
+<%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="com.main.utils.MyDateTimeUtils"%>
@@ -30,13 +31,14 @@
 		LeadForm lead = (LeadForm) request.getAttribute("LeadDetails");
 		List<LeadsStateTransactions> custTransactions = (List<LeadsStateTransactions>) request.getAttribute("LeadTransactions");
 		List<LeadStates> leadStates = (List<LeadStates>) request.getAttribute("LeadTransactionStates");
-		
+		String userType = (String) request.getAttribute("userType");
 		
 		Map<String,LeadStates> leadStatesMap = new HashMap();
 		
 		for(LeadStates state : leadStates){
 			leadStatesMap.put(state.getLeadStatusCode(),state);
 		}
+		boolean adm_type=userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString());
 		
 	%>
 
@@ -46,7 +48,15 @@
 			<div class="col-md-3">
 				<h5>Lead Details - <%=lead.getLeadId() %></h5>
 			</div>
-			<div class="col-md-9 ">
+			<div class="col-md-5">
+				<%if(adm_type){ %>
+				<form>
+					<button type="submit" class="btn btn-sm preview-btn" name="leadId" value="<%=lead.getLeadId()%>" formaction="LeadInfoUpdateHistory.htm" formmethod="POST">Info History</button>
+					<%-- <button type="submit" class="btn btn-sm preview-btn" name="leadId" value="<%=lead.getLeadId()%>" formaction="LeadInfoUpdateHistory.htm" formmethod="POST">View History</button> --%>
+				</form>
+				<%} %>
+			</div>
+			<div class="col-md-4 ">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i
 							class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>
@@ -125,7 +135,9 @@
 					<hr>
 					
 					<div class="row">
-						<div class="col-md-12" align="center"><h4 style="font-weight: 600;" >State Transactions</h4></div>
+						<div class="col-md-12" align="center">
+						<h4 style="font-weight: 600;" >State Transactions</h4>
+						</div>
 					</div>
 					<div class="row">
 					<div class="table-responsive">

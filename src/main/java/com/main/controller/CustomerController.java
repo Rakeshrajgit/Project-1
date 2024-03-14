@@ -123,6 +123,7 @@ public class CustomerController {
                 req.setAttribute("CustomerTransactionStates",customerService.getAllCustomerStatus());
                 req.setAttribute("CustomerPayments",customerService.getCustomerPayments(customer.getCustomerId()));
                 req.setAttribute("CustomerScoreHistory",customerService.getCustomerScoreHistory(customer.getCustomerId()));
+                req.setAttribute("userType",userType);
                 return "customer/CustomerDetailsView";
             } else {
                 throw new CrmException("Failed to fetch Customer Info");
@@ -363,6 +364,19 @@ public class CustomerController {
         }
     }
 
+    @RequestMapping("CustomerInfoUpdateHistory.htm")
+    public String CustomerInfoUpdateHistory(HttpServletRequest req, HttpSession ses,RedirectAttributes redir) throws Exception {
+        try {
 
+            String customerId  = req.getParameter("customerId");
+            req.setAttribute("customerInfoUpdates",customerService.getCustomerInfoUpdates(customerId));
+            req.setAttribute("crmUsers", crmUserService.getAllUsersMap());
+            req.setAttribute("customerId", customerId);
+            return "customer/CustomerInfoUpdateHistory";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "static/error";
+        }
+    }
 
 }

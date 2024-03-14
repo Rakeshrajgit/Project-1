@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CrmUserService {
@@ -53,6 +55,14 @@ public class CrmUserService {
 
     public List<CrmUser> getAllUsers(){
         return crmUserRepository.findByIsActive(1);
+    }
+
+    public Map<String, CrmUser> getAllUsersMap(){
+
+        List<CrmUser> crmUsers = getAllUsers();
+        Map<String, CrmUser> crmUserHashMap= new HashMap<>();
+        crmUsers.forEach(user-> crmUserHashMap.put(user.getUserId(),user));
+        return crmUserHashMap;
     }
 
     public long deleteUser(String userId) {

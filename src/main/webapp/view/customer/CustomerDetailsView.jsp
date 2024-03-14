@@ -1,3 +1,4 @@
+<%@page import="com.main.configs.enums.UserTypes"%>
 <%@page import="com.main.model.CustomerPayments"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
@@ -32,23 +33,34 @@
 		List<CustomerStateTransactions> custTransactions = (List<CustomerStateTransactions>) request.getAttribute("CustomerTransactions");
 		List<CustomerStates> custStates = (List<CustomerStates>) request.getAttribute("CustomerTransactionStates");
 		List<CustomerPayments> custPayments = (List<CustomerPayments>) request.getAttribute("CustomerPayments");
-		
+		String userType = (String) request.getAttribute("userType");
 		
 		Map<String,CustomerStates> cusStatesMap = new HashMap();
 		
 		for(CustomerStates state : custStates){
 			cusStatesMap.put(state.getCustomerStatusCode(),state);
 		}
+		boolean adm_type=userType.equalsIgnoreCase(UserTypes.ROLE_ADMIN.toString()) || userType.equalsIgnoreCase(UserTypes.ROLE_MANAGER.toString());
+
 		
 	%>
 
 
 	<div class="card-header page-top">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-3">
 				<h5>Customer Details - <%=customer.getCustomerId() %></h5>
 			</div>
-			<div class="col-md-6 ">
+			<div class="col-md-5">
+				<%if(adm_type){ %>
+				<form>
+					<button type="submit" class="btn btn-sm preview-btn" name="customerId" value="<%=customer.getCustomerId()%>" formaction="CustomerInfoUpdateHistory.htm" formmethod="POST">Info History</button>
+					<%-- <button type="submit" class="btn btn-sm preview-btn" name="leadId" value="<%=customer.getCustomerId()%>" formaction="CustomerInfoUpdateHistory.htm" formmethod="POST">View History</button> --%>
+				</form>
+				<%} %>
+						
+			</div>
+			<div class="col-md-4 ">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item ml-auto"><a href="Dashboard.htm"><i
 							class=" fa-solid fa-house-chimney fa-sm"></i> Home</a></li>

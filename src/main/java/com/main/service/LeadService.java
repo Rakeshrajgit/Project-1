@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,11 @@ public class LeadService {
 
 	public List<LeadAcqTypes> getLeadSource(){
 		return leadAcqTypesRepo.findAll();
+	}
+	public Map<String,LeadAcqTypes> getLeadSourceMap(){
+		Map<String,LeadAcqTypes> stringLeadAcqTypesMap = new LinkedHashMap<>();
+		leadAcqTypesRepo.findAll().forEach(acq -> stringLeadAcqTypesMap.put(acq.getLeadAcqCode(),acq));
+		return stringLeadAcqTypesMap;
 	}
 
 	public List<CrmUser> getUsersByRole(String role){
@@ -208,6 +214,10 @@ public class LeadService {
 
 		}
 		return leadDateCount;
+	}
+
+	public List<LeadsInfoUpdates> getLeadInfoUpdates(String leadId){
+		return leadsInfoUpdatesRepo.findByLeadIdOrderByUpdatedDateAsc(leadId);
 	}
 
 

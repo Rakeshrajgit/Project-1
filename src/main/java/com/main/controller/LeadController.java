@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.main.CrmException;
 import com.main.configs.enums.UserTypes;
 import com.main.model.*;
+import com.main.service.CrmUserService;
 import com.main.service.LeadService;
 import com.main.utils.CrmUtils;
 import com.main.utils.MyDateTimeUtils;
@@ -26,6 +27,9 @@ public class LeadController{
 
 	@Autowired
 	private LeadService leadService;
+
+	@Autowired
+	private CrmUserService crmUserService;
 
 
 	@GetMapping(value ="LeadAdd.htm")
@@ -253,6 +257,7 @@ public class LeadController{
 				req.setAttribute("LeadDetails", lead);
 				req.setAttribute("LeadTransactions",leadService.getLeadTransactions(lead.getLeadId()));
 				req.setAttribute("LeadTransactionStates",leadService.getAllLeadStatus());
+				req.setAttribute("userType",userType);
 				return "lead/LeadDetailsView";
 			} else {
 				throw new CrmException("Failed to fetch Lead Info");
@@ -277,6 +282,23 @@ public class LeadController{
 			}
 
 			return "redirect:/LeadList.htm";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "static/error";
+		}
+	}
+
+	@RequestMapping("LeadInfoUpdateHistory.htm")
+	public String LeadInfoUpdateHistory(HttpServletRequest req, HttpSession ses,RedirectAttributes redir) throws Exception {
+		try {
+
+			String leadId  = req.getParameter("leadId");
+			req.setAttribute("LeadInfoUpdates",leadService.getLeadInfoUpdates(leadId));
+			req.setAttribute("CrmUsers", crmUserService.getAllUsersMap());
+			req.setAttribute("leadSourcesMap", leadService.getLeadSourceMap());
+			req.setAttribute("leadId", leadId);
+
+			return "lead/LeadInfoUpdateHistory";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "static/error";

@@ -81,12 +81,15 @@ public class CustomerService {
         customerViewPunchingRepo.save(punch);
     }
 
+    @Transactional
     public Long updateAgentForCustomer(String appNo, String agentId){
         Customer customer = customerRepo.findByCustomerId(appNo).orElse(null);
         if(customer!=null) {
             customer.setUserId(agentId.equalsIgnoreCase("") ? null : agentId);
             customerRepo.save(customer);
+            pushCustomerInfoUpdates(customer);
             return customer.getId();
+
         }else{
             return 0L;
         }
@@ -135,6 +138,7 @@ public class CustomerService {
 
     }
 
+    @Transactional
     private Customer customerAdd(Customer customer){
         customer.setCustomerId(generateCustomerId());
         customer.setCustomerStatusCode("IIR");
@@ -145,6 +149,8 @@ public class CustomerService {
         pushCustomerInfoUpdates(customer);
         return customer;
     }
+
+    @Transactional
     private Customer customerEdit(Customer customer){
         Customer customerOrg = customerRepo.findByCustomerId(customer.getCustomerId()).orElse(null);
         if(customerOrg==null){
@@ -287,5 +293,9 @@ public class CustomerService {
         customer.setIsActive(0);
         customerRepo.save(customer);
         return customer.getId();
+    }
+
+    public List<CustomerInfoUpdates> getCustomerInfoUpdates(String customerId){
+        return customerInfoUpdatesRepo.findByCustomerIdOrderByUpdatedDateAsc(customerId);
     }
 }

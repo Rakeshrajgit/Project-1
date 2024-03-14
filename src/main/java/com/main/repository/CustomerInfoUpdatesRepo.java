@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CustomerInfoUpdatesRepo extends JpaRepository<CustomerInfoUpdates,Long> {
 
-    List<CustomerInfoUpdates> findByCustomerId(String customerId);
+    List<CustomerInfoUpdates> findByCustomerIdOrderByUpdatedDateAsc(String customerId);
 }
